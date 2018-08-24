@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Arial';
+  src: url('fonts/Arial.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'KaiTi';
+  src: url('fonts/KaiTi.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Calibri';
+  src: url('fonts/Calibri.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'MicrosoftYaHei';
+  src: url('fonts/MicrosoftYaHei.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SongTi';
+  src: url('fonts/SongTi.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Wingdings2';
+  src: url('fonts/Wingdings2.ttf') format('truetype');
+}
