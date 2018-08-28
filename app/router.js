@@ -7,9 +7,13 @@
 // app/router.js
 module.exports = app => {
   const { router, controller } = app;
+
   router.get('/', controller.home.index);
-  router.get('/news', controller.news.list);
-  router.get('/user', controller.user.list);
-  router.resources('topics3', '/api/v2/topics', controller.topics);
-  router.resources('upload', '/upload', controller.upload);
+  router.post('/upload', controller.upload.create);
+  router.get('/download-center', controller.download.index);
+  router.get('/download', controller.download.download);
+  router.get('/download-image', controller.download.downloadImage);
+  router.resources('user', '/users', controller.user);
+  // router.resources('users', '/users/:id', controller.user);
+  router.post('/login', controller.login.login);
 };

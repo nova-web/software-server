@@ -5,7 +5,6 @@ const path = require('path');
 const awaitWriteStream = require('await-stream-ready').write;
 const sendToWormhole = require('stream-wormhole');
 const formidable = require('formidable');
-// const Controller = require('../../core/base_controller');
 const Controller = require('egg').Controller;
 
 class FileController extends Controller {
@@ -24,11 +23,6 @@ class FileController extends Controller {
    * @param isAjax 上传方式
    */
   async create() {
-    // const { ctx, logger } = this;
-    // ctx.body = { topic_id: 22 };
-    // ctx.status = 200;
-
-    console.log('upload file...');
     const { ctx, logger } = this;
     const extraParams = await this.parse(ctx.req);
     let { multipleFile, customName, isAjax } = extraParams && extraParams['fields'];
@@ -50,11 +44,8 @@ class FileController extends Controller {
       }
       urls.push(target);
     }
-    // this.success({ urls });
-    ctx.body = { topic_id: 22 };
+    ctx.body = { status: 1 };
     ctx.status = 200;
-    // if (isAjax === 'yes') {
-    // }
   }
 }
 
