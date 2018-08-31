@@ -1,39 +1,36 @@
 const Controller = require('egg').Controller;
 
 class UserController extends Controller {
+  //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.user.getUser();
+    const list = await this.ctx.service.user.getData();
     this.ctx.success(list);
-  }
-
-  async new() {
-    this.ctx.success('new-' + this.ctx.params.id);
-  }
-
-  async show() {
-    this.ctx.success('show-' + this.ctx.params.id);
-  }
-
-  async edit() {
-    this.ctx.success('edit-' + this.ctx.params.id);
   }
 
   //新增数据 post
   async create() {
-    const id = await this.ctx.service.user.addUser();
+    const id = await this.ctx.service.user.addData(this.ctx.params);
     this.ctx.success({ userId: id });
   }
 
   //更新数据 put
   async update() {
-    const id = await this.ctx.service.user.addUser();
-    this.ctx.success('update-' + this.ctx.params.id);
+    const len = await this.ctx.service.user.updateData(this.ctx.params.id, this.ctx.query);
+    if (len) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail('用户不存在！');
+    }
   }
 
-  //更新数据 delete
+  //删除数据 delete
   async destroy() {
-    const userId = await this.ctx.service.user.delUser(this.ctx.params.id);
-    this.ctx.success({ userId });
+    const len = await this.ctx.service.user.delData(this.ctx.params.id);
+    if (len) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail('用户不存在！');
+    }
   }
 }
 
