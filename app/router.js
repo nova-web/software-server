@@ -14,6 +14,6 @@ module.exports = app => {
   router.get('/download', controller.download.download);
   router.get('/download-image', controller.download.downloadImage);
   router.resources('user', '/users', controller.user);
-  // router.resources('users', '/users/:id', controller.user);
+  router.resources('role', '/roles', controller.role);
   router.post('/login', controller.login.login);
 };

@@ -1,19 +1,23 @@
 const Service = require('egg').Service;
 
-let userId = 0;
 class UserService extends Service {
-  async getUser() {
-    return await this.app.mysql.select('employee');
+  async getData() {
+    return await this.app.mysql.select('sys_user');
   }
 
-  async addUser() {
-    let user = await this.app.mysql.insert('employee', { name: 2, roleId: 2 });
-    return user.insertId;
+  async addData(params) {
+    let result = await this.app.mysql.insert('sys_user', params);
+    return result.insertId;
   }
 
-  async delUser(id) {
-    const userId = await this.app.mysql.delete('employee', { id });
-    return userId;
+  async updateData(id, query) {
+    const result = await this.app.mysql.update('sys_user', { id, ...query });
+    return result.affectedRows;
+  }
+
+  async delData(id) {
+    const result = await this.app.mysql.delete('sys_user', { id });
+    return result.affectedRows;
   }
 }
 

@@ -17,6 +17,11 @@ exports.validate = {
   package: 'egg-validate'
 };
 
+exports.sequelize = {
+  enable: false,
+  package: 'egg-sequelize'
+};
+
 // exports.assets = {
 //   enable: true,
 //   package: 'egg-view-assets'
