@@ -15,36 +15,15 @@ module.exports = appInfo => {
     csrf: false
   };
 
-  // config.mysql = {
-  //   client: {
-  //     host: 'localhost',
-  //     port: '3306',
-  //     user: 'root',
-  //     password: 'root',
-  //     database: 'mysql'
-  //   },
-  //   app: true,
-  //   agent: false
-  // };
-
-  config.mysql = {
-    client: {
-      host: '172.16.6.8',
-      port: '3306',
-      user: 'root',
-      password: 'root',
-      database: 'software-upgrade'
-    },
-    app: true,
-    agent: false
+  config.sequelize = {
+    dialect: 'mysql',
+    host: 'localhost',
+    password: 'root',
+    port: 3306,
+    database: 'software-upgrade',
+    username: 'root',
+    timezone: '+08:00' //东八时区
   };
-
-  // config.sequelize = {
-  //   dialect: 'mysql',
-  //   host: '172.16.6.121',
-  //   port: 3306,
-  //   database: 'onlinedb'
-  // };
 
   // 添加 view 配置
   // config.view = {

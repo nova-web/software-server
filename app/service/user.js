@@ -2,22 +2,26 @@ const Service = require('egg').Service;
 
 class UserService extends Service {
   async getData() {
-    return await this.app.mysql.select('sys_user');
+    return await this.ctx.model.User.findAll({
+      attributes: {
+        exclude: ['created_at', 'updated_at', 'password']
+      }
+    });
   }
 
   async addData(params) {
-    let result = await this.app.mysql.insert('sys_user', params);
-    return result.insertId;
+    let result = await this.ctx.model.User.create({ ...params });
+    return result.dataValues;
   }
 
-  async updateData(id, query) {
-    const result = await this.app.mysql.update('sys_user', { id, ...query });
-    return result.affectedRows;
+  async updateData(id, params) {
+    let result = await this.ctx.model.User.update({ ...params }, { where: { id } });
+    return result[0];
   }
 
   async delData(id) {
-    const result = await this.app.mysql.delete('sys_user', { id });
-    return result.affectedRows;
+    const result = await this.ctx.model.User.destroy({ where: { id } });
+    return result;
   }
 }
 

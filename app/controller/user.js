@@ -9,13 +9,13 @@ class UserController extends Controller {
 
   //新增数据 post
   async create() {
-    const id = await this.ctx.service.user.addData(this.ctx.params);
-    this.ctx.success({ userId: id });
+    const result = await this.ctx.service.user.addData(this.ctx.request.body);
+    this.ctx.success({ id: result.id });
   }
 
   //更新数据 put
   async update() {
-    const len = await this.ctx.service.user.updateData(this.ctx.params.id, this.ctx.query);
+    const len = await this.ctx.service.user.updateData(this.ctx.params.id, this.ctx.request.body);
     if (len) {
       this.ctx.success({ status: 1 });
     } else {
