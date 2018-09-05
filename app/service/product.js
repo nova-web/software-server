@@ -2,27 +2,26 @@ const Service = require('egg').Service;
 
 class ProductService extends Service {
   async getData() {
-    let result = await this.app.mysql.select('sys_product');
-    result.forEach(item => {
-      item.update_time = this.ctx.helper.formatDate(item.update_time, 'yyyy/MM/dd hh:mm:ss');
-      item.create_time = this.ctx.helper.formatDate(item.create_time, 'yyyy/MM/dd hh:mm:ss');
+    return await this.ctx.model.Product.findAll({
+      attributes: {
+        exclude: ['created_at', 'updated_at', 'password']
+      }
     });
-    return result;
   }
 
   async addData(params) {
-    let result = await this.app.mysql.insert('sys_product', { ...params, create_time: this.app.mysql.literals.now });
-    return result.insertId;
+    let result = await this.ctx.model.Product.create({ ...params });
+    return result.dataValues;
   }
 
   async updateData(id, params) {
-    const result = await this.app.mysql.update('sys_product', { id, ...params, update_time: this.app.mysql.literals.now });
-    return result.affectedRows;
+    let result = await this.ctx.model.Product.update({ ...params }, { where: { id } });
+    return result[0];
   }
 
   async delData(id) {
-    const result = await this.app.mysql.delete('sys_product', { id });
-    return result.affectedRows;
+    const result = await this.ctx.model.Product.destroy({ where: { id } });
+    return result;
   }
 }
 

@@ -4,40 +4,45 @@ var moment = require('moment');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
-  const User = app.model.define(
-    'sys_user',
+  const Package = app.model.define(
+    'sys_package',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      username: {
+      versions: {
         type: STRING(20),
         defaultValue: ''
       },
-      password: {
-        type: STRING(20),
-        defaultValue: ''
-      },
-      phone: {
+      fit_pro: {
         type: STRING,
         defaultValue: ''
       },
-      email: {
+      url: {
+        type: STRING,
+        defaultValue: ''
+      },
+      size: {
         type: STRING,
         defaultValue: ''
       },
       remark: {
-        type: STRING,
+        type: TEXT,
         defaultValue: ''
       },
       status: {
         type: INTEGER,
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
+      },
+      version_type: {
+        type: INTEGER(20),
+        defaultValue: 0,
+        comment: '类型：1体验版|2正式版'
       },
       createdBy: {
         field: 'created_by',
@@ -83,9 +88,9 @@ module.exports = app => {
     }
   );
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
+  Package.sync().then(function(result) {
+    console.log('同步Package表成功');
   });
 
-  return User;
+  return Package;
 };
