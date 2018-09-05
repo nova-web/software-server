@@ -7,37 +7,39 @@ module.exports = app => {
   const { STRING, INTEGER, DATE } = Sequelize;
 
   const User = app.model.define(
-    'sys_user2',
+    'sys_acl2',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      username: {
+      code: {
         type: STRING(20),
         defaultValue: ''
       },
-      password: {
+      name: {
         type: STRING(20),
-        defaultValue: ''
-      },
-      phone: {
-        type: STRING,
-        defaultValue: ''
-      },
-      email: {
-        type: STRING,
-        defaultValue: ''
-      },
-      remark: {
-        type: STRING,
         defaultValue: ''
       },
       status: {
         type: INTEGER,
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
+      },
+      nodeId: {
+        field: 'node_id',
+        type: INTEGER,
+        defaultValue: 0
+      },
+      parentId: {
+        field: 'parent_id',
+        type: INTEGER,
+        defaultValue: 0
+      },
+      remark: {
+        type: STRING,
+        defaultValue: ''
       },
       createdBy: {
         field: 'created_by',
@@ -84,7 +86,7 @@ module.exports = app => {
   );
 
   User.sync().then(function(result) {
-    console.log('同步User表成功');
+    console.log('同步Acl表成功');
   });
 
   return User;

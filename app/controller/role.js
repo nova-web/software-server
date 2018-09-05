@@ -9,8 +9,8 @@ class RoleController extends Controller {
 
   //新增数据 post
   async create() {
-    const id = await this.ctx.service.role.addData(this.ctx.request.body);
-    this.ctx.success({ userId: id });
+    const result = await this.ctx.service.role.addData(this.ctx.request.body);
+    this.ctx.success({ id: result.id });
   }
 
   //更新数据 put

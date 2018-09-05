@@ -6,38 +6,21 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE } = Sequelize;
 
-  const User = app.model.define(
-    'sys_user2',
+  const RoleAcl = app.model.define(
+    'sys_role_acl2',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      username: {
-        type: STRING(20),
-        defaultValue: ''
+      roleId: {
+        field: 'role_id',
+        type: INTEGER
       },
-      password: {
-        type: STRING(20),
-        defaultValue: ''
-      },
-      phone: {
-        type: STRING,
-        defaultValue: ''
-      },
-      email: {
-        type: STRING,
-        defaultValue: ''
-      },
-      remark: {
-        type: STRING,
-        defaultValue: ''
-      },
-      status: {
-        type: INTEGER,
-        defaultValue: 1,
-        comment: '状态：1有效|0无效|2删除'
+      aclId: {
+        field: 'acl_id',
+        type: INTEGER
       },
       createdBy: {
         field: 'created_by',
@@ -83,9 +66,9 @@ module.exports = app => {
     }
   );
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
+  RoleAcl.sync().then(function(result) {
+    console.log('同步Role_Acl表成功');
   });
 
-  return User;
+  return RoleAcl;
 };

@@ -2,27 +2,26 @@ const Service = require('egg').Service;
 
 class RoleService extends Service {
   async getData() {
-    let result = await this.app.mysql.select('sys_role');
-    result.forEach(item => {
-      item.update_time = this.ctx.helper.formatDate(item.update_time, 'yyyy/MM/dd hh:mm:ss');
-      item.create_time = this.ctx.helper.formatDate(item.create_time, 'yyyy/MM/dd hh:mm:ss');
+    return await this.ctx.model.Role.findAll({
+      attributes: {
+        exclude: ['created_at', 'updated_at']
+      }
     });
-    return result;
   }
 
   async addData(params) {
-    let result = await this.app.mysql.insert('sys_role', { ...params, create_time: this.app.mysql.literals.now });
-    return result.insertId;
+    let result = await this.ctx.model.Role.create({ ...params });
+    return result.dataValues;
   }
 
   async updateData(id, params) {
-    const result = await this.app.mysql.update('sys_role', { id, ...params, update_time: this.app.mysql.literals.now });
-    return result.affectedRows;
+    let result = await this.ctx.model.Role.update({ ...params }, { where: { id } });
+    return result[0];
   }
 
   async delData(id) {
-    const result = await this.app.mysql.delete('sys_role', { id });
-    return result.affectedRows;
+    const result = await this.ctx.model.Role.destroy({ where: { id } });
+    return result;
   }
 }
 

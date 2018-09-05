@@ -15,8 +15,8 @@ module.exports = app => {
   router.get('/download-image', controller.download.downloadImage);
   router.resources('user', '/users', controller.user);
   router.resources('role', '/roles', controller.role);
-  router.resources('product', '/products', controller.product);
-  router.resources('equipment', '/equipments', controller.equipment);
-  router.resources('firmware', '/firmwares', controller.firmware);
+  router.resources('acl', '/acls', controller.acl);
+  router.resources('role_user', '/role.do', controller.role_user);
+  router.resources('role_acl', '/acl.do', controller.role_acl);
   router.post('/login', controller.login.login);
 };

@@ -6,28 +6,16 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE } = Sequelize;
 
-  const User = app.model.define(
-    'sys_user2',
+  const Role = app.model.define(
+    'sys_role2',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      username: {
+      name: {
         type: STRING(20),
-        defaultValue: ''
-      },
-      password: {
-        type: STRING(20),
-        defaultValue: ''
-      },
-      phone: {
-        type: STRING,
-        defaultValue: ''
-      },
-      email: {
-        type: STRING,
         defaultValue: ''
       },
       remark: {
@@ -83,9 +71,9 @@ module.exports = app => {
     }
   );
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
+  Role.sync().then(function(result) {
+    console.log('同步Role表成功');
   });
 
-  return User;
+  return Role;
 };
