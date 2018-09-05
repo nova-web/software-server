@@ -6,38 +6,30 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE } = Sequelize;
 
-  const User = app.model.define(
-    'sys_user',
+  const Syslog = app.model.define(
+    'sys_log',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      username: {
+      target: {
         type: STRING(20),
         defaultValue: ''
       },
-      password: {
+      operator: {
         type: STRING(20),
-        defaultValue: ''
-      },
-      phone: {
-        type: STRING,
-        defaultValue: ''
-      },
-      email: {
-        type: STRING,
         defaultValue: ''
       },
       remark: {
         type: STRING,
         defaultValue: ''
       },
-      status: {
+      operate_type: {
         type: INTEGER,
         defaultValue: 1,
-        comment: '状态：1有效|0无效|2删除'
+        comment: '状态：1新增|0修改|2删除'
       },
       createdBy: {
         field: 'created_by',
@@ -83,9 +75,9 @@ module.exports = app => {
     }
   );
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
+  Syslog.sync().then(function(result) {
+    console.log('同步Syslog表成功');
   });
 
-  return User;
+  return Syslog;
 };

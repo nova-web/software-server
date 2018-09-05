@@ -16,7 +16,10 @@ module.exports = app => {
   router.resources('user', '/users', controller.user);
   router.resources('role', '/roles', controller.role);
   router.resources('acl', '/acls', controller.acl);
-  router.resources('role_user', '/role.do', controller.role_user);
-  router.resources('role_acl', '/acl.do', controller.role_acl);
+  router.resources('roleuser', '/roledo', controller.role_user);
+  router.resources('roleacl', '/acldo', controller.role_acl);
+  router.resources('product', '/products', controller.product);
+  router.resources('package', '/package', controller.package);
+  router.resources('syslog', '/syslog', controller.syslog);
   router.post('/login', controller.login.login);
 };
