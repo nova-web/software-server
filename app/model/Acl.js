@@ -85,9 +85,9 @@ module.exports = app => {
     }
   );
 
-  Acl.sync().then(function(result) {
-    console.log('同步Acl表成功');
-  });
+  // Acl.sync().then(function(result) {
+  //   console.log('同步Acl表成功');
+  // });
 
   return Acl;
 };

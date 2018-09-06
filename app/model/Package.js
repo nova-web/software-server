@@ -88,9 +88,9 @@ module.exports = app => {
     }
   );
 
-  Package.sync().then(function(result) {
-    console.log('同步Package表成功');
-  });
+  // Package.sync().then(function(result) {
+  //   console.log('同步Package表成功');
+  // });
 
   return Package;
 };

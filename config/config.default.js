@@ -15,6 +15,8 @@ module.exports = appInfo => {
     csrf: false
   };
 
+  config.pageSize = 10;
+
   config.sequelize = {
     dialect: 'mysql',
     host: '172.16.6.102',
