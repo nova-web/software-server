@@ -7,7 +7,7 @@ module.exports = app => {
   const { STRING, INTEGER, DATE } = Sequelize;
 
   const Role = app.model.define(
-    'sys_role2',
+    'sys_role',
     {
       id: {
         type: INTEGER,

@@ -5,7 +5,8 @@ class UserService extends Service {
     return await this.ctx.model.User.findAll({
       attributes: {
         exclude: ['created_at', 'updated_at', 'password']
-      }
+      },
+      include: [this.ctx.app.model.Role]
     });
   }
 

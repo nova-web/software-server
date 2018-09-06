@@ -18,10 +18,6 @@ module.exports = app => {
         type: STRING(20),
         defaultValue: ''
       },
-      operator: {
-        type: STRING(20),
-        defaultValue: ''
-      },
       remark: {
         type: STRING,
         defaultValue: ''

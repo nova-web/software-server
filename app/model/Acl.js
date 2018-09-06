@@ -6,8 +6,8 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE } = Sequelize;
 
-  const User = app.model.define(
-    'sys_acl2',
+  const Acl = app.model.define(
+    'sys_acl',
     {
       id: {
         type: INTEGER,
@@ -85,9 +85,9 @@ module.exports = app => {
     }
   );
 
-  User.sync().then(function(result) {
+  Acl.sync().then(function(result) {
     console.log('同步Acl表成功');
   });
 
-  return User;
+  return Acl;
 };

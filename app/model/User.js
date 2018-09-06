@@ -83,6 +83,19 @@ module.exports = app => {
     }
   );
 
+  app.beforeStart(async () => {
+    console.log('---------', app.model.Acl);
+    // RoleUser.belongsTo(User);
+    // User.hasMany(Task);
+    // const RoleUser = app.model.import('./RoleUser');
+    // User.belongsToMany(app.model.Role, { through: app.model.RoleUser });
+    // app.model.Role.belongsToMany(User, { through: app.model.RoleUser });
+
+    User.belongsToMany(app.model.Role, { through: app.model.RoleUser, foreignKey: 'userId' });
+    app.model.Role.belongsToMany(User, { through: app.model.RoleUser, foreignKey: 'roleId' });
+    await app.model.sync();
+  });
+
   User.sync().then(function(result) {
     console.log('同步User表成功');
   });
