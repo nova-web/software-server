@@ -6,11 +6,23 @@ class UserService extends Service {
       attributes: {
         exclude: ['created_at', 'updated_at', 'password']
       },
-      include: [this.ctx.app.model.Role]
+      include: [
+        {
+          model: this.ctx.app.model.Role,
+          attributes: {
+            exclude: ['created_at', 'updated_at', 'remark', 'status', 'createdBy', 'updatedBy']
+          },
+          as: 'roles',
+          through: {
+            attributes: []
+          }
+        }
+      ]
     });
   }
 
   async addData(params) {
+    console.log(params);
     let result = await this.ctx.model.User.create({ ...params });
     return result.dataValues;
   }

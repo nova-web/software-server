@@ -84,15 +84,8 @@ module.exports = app => {
   );
 
   app.beforeStart(async () => {
-    console.log('---------', app.model.Acl);
-    // RoleUser.belongsTo(User);
-    // User.hasMany(Task);
-    // const RoleUser = app.model.import('./RoleUser');
-    // User.belongsToMany(app.model.Role, { through: app.model.RoleUser });
-    // app.model.Role.belongsToMany(User, { through: app.model.RoleUser });
-
-    User.belongsToMany(app.model.Role, { through: app.model.RoleUser, foreignKey: 'userId' });
-    app.model.Role.belongsToMany(User, { through: app.model.RoleUser, foreignKey: 'roleId' });
+    User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'userId' });
+    app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'roleId' });
     await app.model.sync();
   });
 
