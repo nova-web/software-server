@@ -128,5 +128,6 @@ module.exports = {
       createdBy: 'init',
       updatedBy: 'init'
     }
-  ]
+  ],
+  acl: []
 };
