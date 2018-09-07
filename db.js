@@ -32,12 +32,12 @@ module.exports = {
     },
     {
       type: 'stage',
-      name: '开发版',
+      name: '内部转测版',
       code: 'stage_01'
     },
     {
       type: 'stage',
-      name: 'beta版',
+      name: '体验版',
       code: 'stage_02'
     },
     {
@@ -89,33 +89,44 @@ module.exports = {
       type: 'dept',
       name: '云显产品线',
       code: 'dept_03'
+    },
+    {
+      type: 'package',
+      name: '硬件',
+      code: 'package_01'
+    },
+    {
+      type: 'package',
+      name: '软件',
+      code: 'package_02'
     }
   ],
   user: [
     {
       date: new Date(),
+      name: '系统管理员',
       username: 'admin',
       password: 'admin',
       phone: '88888888',
       email: 'admin@admin.com',
       remark: '超级管理员',
-      createBy: 'init',
-      updateBy: 'init'
+      createdBy: 'init',
+      updatedBy: 'init'
     }
   ],
   role: [
     {
       name: 'admin',
       remark: '超级管理员拥有一切权利',
-      createBy: 'init',
-      updateBy: 'init'
+      createdBy: 'init',
+      updatedBy: 'init'
     }
   ],
   config: [
     {
       type: 'service',
-      createBy: 'init',
-      updateBy: 'init'
+      createdBy: 'init',
+      updatedBy: 'init'
     }
   ]
 };

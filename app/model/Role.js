@@ -20,11 +20,11 @@ module.exports = app => {
         validate: {
           notEmpty: true
         },
-        allowNull: false
+        allowNull: false,
+        comment: '角色名称'
       },
       remark: {
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       status: {
         type: INTEGER,
@@ -39,13 +39,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdAt: {
         field: 'created_at',
@@ -81,9 +79,15 @@ module.exports = app => {
     }
   );
 
+  app.beforeStart(async () => {
+    Role.belongsToMany(app.model.Acl, { as: 'roles', through: 'sys_role_acl', foreignKey: 'acl_id' });
+    app.model.Acl.belongsToMany(Role, { through: 'sys_role_acl', foreignKey: 'role_id' });
+    await app.model.sync();
+  });
+
   Role.sync().then(function(result) {
     console.log('同步Role表成功');
-    Role.bulkCreate(dbData.role);
+    Role.bulkCreate(dbData.role, { ignoreDuplicates: true });
   });
 
   return Role;
