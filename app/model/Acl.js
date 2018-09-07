@@ -1,6 +1,7 @@
 'use strict';
 
 var moment = require('moment');
+var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
@@ -14,23 +15,22 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
-      nodeId: {
-        field: 'node_id',
-        type: INTEGER,
-        defaultValue: 0
-      },
       parentId: {
         field: 'parent_id',
         type: INTEGER,
-        defaultValue: 0
+        comment: '父权限id'
       },
       code: {
         type: STRING(20),
-        defaultValue: ''
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
+        comment: '权限码'
       },
       name: {
         type: STRING(20),
-        defaultValue: ''
+        comment: '权限名称'
       },
       status: {
         type: INTEGER,
@@ -38,18 +38,15 @@ module.exports = app => {
         comment: '状态：1有效|0无效|2删除'
       },
       remark: {
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdBy: {
         field: 'created_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdAt: {
         field: 'created_at',
@@ -87,6 +84,7 @@ module.exports = app => {
 
   Acl.sync().then(function(result) {
     console.log('同步Acl表成功');
+    Acl.bulkCreate(dbData.acl, { ignoreDuplicates: true });
   });
 
   return Acl;

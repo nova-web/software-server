@@ -29,7 +29,15 @@ module.exports = app => {
           notEmpty: true
         },
         allowNull: false,
-        comment: '类别'
+        comment: '字典类型'
+      },
+      name: {
+        type: STRING(20),
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
+        comment: '字典名称'
       },
       code: {
         type: STRING(20),
@@ -37,7 +45,7 @@ module.exports = app => {
           notEmpty: true
         },
         allowNull: false,
-        comment: '字典代码'
+        comment: '字典编码'
       }
     },
     {
@@ -48,7 +56,7 @@ module.exports = app => {
 
   Dict.sync().then(function(result) {
     console.log('同步Dict表成功', result);
-    Dict.bulkCreate(dbData.dict);
+    Dict.bulkCreate(dbData.dict, { ignoreDuplicates: true });
   });
 
   return Dict;

@@ -56,12 +56,10 @@ module.exports = app => {
           isEmail: {
             msg: '邮箱格式不正确'
           }
-        },
-        defaultValue: ''
+        }
       },
       remark: {
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       status: {
         type: INTEGER,
@@ -76,13 +74,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdAt: {
         field: 'created_at',
@@ -119,14 +115,14 @@ module.exports = app => {
   );
 
   app.beforeStart(async () => {
-    User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'userId' });
-    app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'roleId' });
+    User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'user_id' });
+    app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'role_id' });
     await app.model.sync();
   });
 
   User.sync().then(function(result) {
     console.log('同步User表成功');
-    User.bulkCreate(dbData.user);
+    User.bulkCreate(dbData.user, { ignoreDuplicates: true });
   });
 
   return User;
