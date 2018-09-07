@@ -49,7 +49,7 @@ module.exports = app => {
         comment: '版本日志'
       },
       publishBy: {
-        filed: 'publish_by',
+        field: 'publish_by',
         type: STRING,
         validate: {
           notEmpty: true
@@ -58,7 +58,7 @@ module.exports = app => {
         comment: '发布人'
       },
       stage: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
@@ -73,7 +73,7 @@ module.exports = app => {
         comment: '文件大小'
       },
       fitPro: {
-        filed: 'fit_pro',
+        field: 'fit_pro',
         type: STRING,
         comment: '适应产品'
       },

@@ -6,7 +6,7 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
-  const Package = app.model.define(
+  const ProductLog = app.model.define(
     'nova_product_log',
     {
       id: {
@@ -33,7 +33,7 @@ module.exports = app => {
         comment: '版本日志'
       },
       publishBy: {
-        filed: 'publish_by',
+        field: 'publish_by',
         type: STRING,
         validate: {
           notEmpty: true
@@ -42,7 +42,7 @@ module.exports = app => {
         comment: '发布人'
       },
       stage: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
@@ -64,7 +64,7 @@ module.exports = app => {
         type: STRING
       },
       fitPro: {
-        filed: 'fit_pro',
+        field: 'fit_pro',
         type: STRING,
         comment: '适应产品'
       },
@@ -123,9 +123,9 @@ module.exports = app => {
     }
   );
 
-  Package.sync().then(function(result) {
-    console.log('同步Package表成功');
+  ProductLog.sync().then(function(result) {
+    console.log('同步ProductLog表成功');
   });
 
-  return Package;
+  return ProductLog;
 };

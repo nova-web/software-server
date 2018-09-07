@@ -50,7 +50,7 @@ module.exports = app => {
         comment: '项目经理'
       },
       type: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['package_01', 'package_02']],
@@ -61,7 +61,7 @@ module.exports = app => {
         comment: '种类：1硬件|0软件'
       },
       stage: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
@@ -72,7 +72,7 @@ module.exports = app => {
         comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
       area: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['area_01', 'area_02']],
@@ -83,7 +83,7 @@ module.exports = app => {
         comment: '范围：1国内 | 0国外'
       },
       dept: {
-        type: INTEGER(20),
+        type: STRING(20),
         validate: {
           isIn: {
             args: [['dept_01', 'dept_02', 'dept_03']],

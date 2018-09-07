@@ -6,7 +6,7 @@ module.exports = app => {
   const Sequelize = app.Sequelize;
   const { STRING, INTEGER, DATE } = Sequelize;
 
-  const Syslog = app.model.define(
+  const Log = app.model.define(
     'sys_log',
     {
       id: {
@@ -84,9 +84,9 @@ module.exports = app => {
     }
   );
 
-  Syslog.sync().then(function(result) {
-    console.log('同步Syslog表成功');
+  Log.sync().then(function(result) {
+    console.log('同步Log表成功');
   });
 
-  return Syslog;
+  return Log;
 };
