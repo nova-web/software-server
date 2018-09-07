@@ -115,13 +115,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdAt: {
         field: 'created_at',

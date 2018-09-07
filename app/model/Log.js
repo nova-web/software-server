@@ -16,39 +16,41 @@ module.exports = app => {
       },
       target: {
         type: STRING,
-        defaultValue: ''
+        comment: '操作对象'
       },
       operateType: {
         field: 'operate_type',
         type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1, 2]],
+            msg: '非法状态码'
+          }
+        },
         defaultValue: 1,
-        comment: '操作类型：1新增|0修改|2删除'
+        comment: '操作类型：0新增|1修改|2删除'
       },
       ip: {
         type: STRING,
-        defaultValue: 'ip地址',
-        comment: '操作时间'
+        comment: 'ip'
       },
       operateTime: {
+        field: 'operate_time',
         type: STRING,
-        defaultValue: '',
         comment: '操作时间'
       },
       operateContent: {
         field: 'operate_content',
         type: STRING,
-        defaultValue: '',
         comment: '操作内容'
       },
       createdBy: {
         field: 'created_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING,
-        defaultValue: ''
+        type: STRING
       },
       createdAt: {
         field: 'created_at',
