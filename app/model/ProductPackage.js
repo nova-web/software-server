@@ -1,78 +1,63 @@
 'use strict';
 
 var moment = require('moment');
-var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
-  const User = app.model.define(
-    'sys_user',
+  const Package = app.model.define(
+    'nova_product_package',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      name: {
-        type: STRING(20),
-        validate: {
-          notEmpty: true
-        },
+      productId: {
+        type: INTEGER,
         allowNull: false,
-        comment: '姓名'
+        comment: '产品id'
       },
-      code: {
+      versions: {
         type: STRING(20),
-        comment: '员工编号'
-      },
-      username: {
-        type: STRING(20),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
-        comment: '账号'
-      },
-      password: {
-        type: STRING(20),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
-        comment: '密码'
-      },
-      phone: {
-        type: STRING,
-        validate: {
-          isDecimal: true
-        },
-        comment: '手机号'
-      },
-      email: {
-        type: STRING,
-        validate: {
-          isEmail: {
-            msg: '邮箱格式不正确'
-          }
-        },
         defaultValue: ''
       },
-      remark: {
+      url: {
         type: STRING,
         defaultValue: ''
+      },
+      size: {
+        type: STRING,
+        defaultValue: ''
+      },
+      fitPro: {
+        filed: 'fit_pro',
+        type: STRING,
+        defaultValue: '',
+        comment: '适应产品'
+      },
+      versionLog: {
+        field: 'version_log',
+        type: TEXT,
+        defaultValue: '',
+        comment: '版本日志'
+      },
+      publishBy: {
+        filed: 'publish_by',
+        type: STRING,
+        defaultValue: '',
+        comment: '发布人'
       },
       status: {
         type: INTEGER,
-        validate: {
-          isIn: {
-            args: [[0, 1, 2]],
-            msg: '非法状态码'
-          }
-        },
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
+      },
+      version_type: {
+        type: INTEGER(20),
+        defaultValue: 0,
+        comment: '类型：1体验版|2正式版'
       },
       createdBy: {
         field: 'created_by',
@@ -118,16 +103,9 @@ module.exports = app => {
     }
   );
 
-  app.beforeStart(async () => {
-    User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'userId' });
-    app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'roleId' });
-    await app.model.sync();
+  Package.sync().then(function(result) {
+    console.log('同步Package表成功');
   });
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
-    User.bulkCreate(dbData.user);
-  });
-
-  return User;
+  return Package;
 };

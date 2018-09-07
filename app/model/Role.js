@@ -1,6 +1,7 @@
 'use strict';
 
 var moment = require('moment');
+var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
@@ -16,7 +17,10 @@ module.exports = app => {
       },
       name: {
         type: STRING(20),
-        defaultValue: ''
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false
       },
       remark: {
         type: STRING,
@@ -24,6 +28,12 @@ module.exports = app => {
       },
       status: {
         type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1, 2]],
+            msg: '非法状态码'
+          }
+        },
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
       },
@@ -71,9 +81,10 @@ module.exports = app => {
     }
   );
 
-  // Role.sync().then(function(result) {
-  //   console.log('同步Role表成功');
-  // });
+  Role.sync().then(function(result) {
+    console.log('同步Role表成功');
+    Role.bulkCreate(dbData.role);
+  });
 
   return Role;
 };

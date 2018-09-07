@@ -15,17 +15,30 @@ module.exports = app => {
         autoIncrement: true
       },
       target: {
-        type: STRING(20),
-        defaultValue: ''
-      },
-      remark: {
         type: STRING,
         defaultValue: ''
       },
-      operate_type: {
+      operateType: {
+        field: 'operate_type',
         type: INTEGER,
         defaultValue: 1,
-        comment: '状态：1新增|0修改|2删除'
+        comment: '操作类型：1新增|0修改|2删除'
+      },
+      ip: {
+        type: STRING,
+        defaultValue: 'ip地址',
+        comment: '操作时间'
+      },
+      operateTime: {
+        type: STRING,
+        defaultValue: '',
+        comment: '操作时间'
+      },
+      operateContent: {
+        field: 'operate_content',
+        type: STRING,
+        defaultValue: '',
+        comment: '操作内容'
       },
       createdBy: {
         field: 'created_by',
@@ -71,9 +84,9 @@ module.exports = app => {
     }
   );
 
-  // Syslog.sync().then(function(result) {
-  //   console.log('同步Syslog表成功');
-  // });
+  Syslog.sync().then(function(result) {
+    console.log('同步Syslog表成功');
+  });
 
   return Syslog;
 };

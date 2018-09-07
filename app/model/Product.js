@@ -7,28 +7,39 @@ module.exports = app => {
   const { STRING, INTEGER, DATE } = Sequelize;
 
   const Product = app.model.define(
-    'sys_product',
+    'nova_product',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
+      modelId: {
+        field: 'model_id',
+        type: STRING(20),
+        defaultValue: ''
+      },
       name: {
         type: STRING(20),
         defaultValue: ''
+      },
+      proModel: {
+        type: STRING(20),
+        field: 'pro_model',
+        comment: '产品型号'
       },
       type: {
         type: INTEGER(20),
         defaultValue: 1,
         comment: '种类：1硬件|0软件'
       },
-      pro_status: {
+      proStatus: {
+        field: 'pro_status',
         type: INTEGER(20),
         defaultValue: 0,
         comment: '种类：0未发布|2已试用|1已发布|3已下架'
       },
-      latest_version: {
+      version: {
         type: STRING(20),
         defaultValue: ''
       },
@@ -42,15 +53,27 @@ module.exports = app => {
         defaultValue: 0,
         comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
-      position: {
+      area: {
         type: INTEGER(20),
         defaultValue: 1,
         comment: '范围：1国内 | 0国外'
       },
-      pro_line: {
+      dept: {
         type: INTEGER(20),
         defaultValue: 1,
         comment: '产品线：1视频 | 2同步 | 3云显'
+      },
+      projectManager: {
+        field: 'project_manager',
+        type: STRING,
+        defaultValue: '',
+        comment: '项目经理'
+      },
+      productDesc: {
+        field: 'product_desc',
+        type: STRING,
+        defaultValue: '',
+        comment: '产品简介'
       },
       createdBy: {
         field: 'created_by',
@@ -96,9 +119,9 @@ module.exports = app => {
     }
   );
 
-  // Product.sync().then(function(result) {
-  //   console.log('同步Product表成功');
-  // });
+  Product.sync().then(function(result) {
+    console.log('同步Product表成功');
+  });
 
   return Product;
 };
