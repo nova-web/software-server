@@ -66,9 +66,9 @@ module.exports = app => {
     }
   );
 
-  RoleAcl.sync().then(function(result) {
-    console.log('同步Role_Acl表成功');
-  });
+  // RoleAcl.sync().then(function(result) {
+  //   console.log('同步Role_Acl表成功');
+  // });
 
   return RoleAcl;
 };

@@ -96,9 +96,9 @@ module.exports = app => {
     }
   );
 
-  Product.sync().then(function(result) {
-    console.log('同步Product表成功');
-  });
+  // Product.sync().then(function(result) {
+  //   console.log('同步Product表成功');
+  // });
 
   return Product;
 };

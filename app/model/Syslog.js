@@ -71,9 +71,9 @@ module.exports = app => {
     }
   );
 
-  Syslog.sync().then(function(result) {
-    console.log('同步Syslog表成功');
-  });
+  // Syslog.sync().then(function(result) {
+  //   console.log('同步Syslog表成功');
+  // });
 
   return Syslog;
 };

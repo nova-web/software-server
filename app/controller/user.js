@@ -3,7 +3,7 @@ const Controller = require('egg').Controller;
 class UserController extends Controller {
   //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.user.getData();
+    const list = await this.ctx.service.user.getData(this.ctx.request.query);
     this.ctx.success(list);
   }
 
@@ -15,21 +15,21 @@ class UserController extends Controller {
 
   //更新数据 put
   async update() {
-    const len = await this.ctx.service.user.updateData(this.ctx.params.id, this.ctx.request.body);
-    if (len) {
+    const { length = 0, msg = '用户不存在！' } = await this.ctx.service.user.updateData(this.ctx.params.id, this.ctx.request.body);
+    if (length) {
       this.ctx.success({ status: 1 });
     } else {
-      this.ctx.fail('用户不存在！');
+      this.ctx.fail(msg);
     }
   }
 
   //删除数据 delete
   async destroy() {
-    const len = await this.ctx.service.user.delData(this.ctx.params.id);
-    if (len) {
+    const { length = 0, msg = '用户不存在！' } = await this.ctx.service.user.delData(this.ctx.params.id);
+    if (length) {
       this.ctx.success({ status: 1 });
     } else {
-      this.ctx.fail('用户不存在！');
+      this.ctx.fail(msg);
     }
   }
 }

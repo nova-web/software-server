@@ -71,9 +71,9 @@ module.exports = app => {
     }
   );
 
-  Role.sync().then(function(result) {
-    console.log('同步Role表成功');
-  });
+  // Role.sync().then(function(result) {
+  //   console.log('同步Role表成功');
+  // });
 
   return Role;
 };

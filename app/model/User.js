@@ -24,10 +24,20 @@ module.exports = app => {
       },
       phone: {
         type: STRING,
+        validate: {
+          isDecimal: {
+            msg: '手机号格式不正确'
+          }
+        },
         defaultValue: ''
       },
       email: {
         type: STRING,
+        validate: {
+          isEmail: {
+            msg: '邮箱格式不正确'
+          }
+        },
         defaultValue: ''
       },
       remark: {
@@ -36,6 +46,12 @@ module.exports = app => {
       },
       status: {
         type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1, 2]],
+            msg: '非法状态码'
+          }
+        },
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
       },
@@ -86,12 +102,12 @@ module.exports = app => {
   app.beforeStart(async () => {
     User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'userId' });
     app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'roleId' });
-    await app.model.sync();
+    // await app.model.sync();
   });
 
-  User.sync().then(function(result) {
-    console.log('同步User表成功');
-  });
+  // User.sync().then(function(result) {
+  //   console.log('同步User表成功');
+  // });
 
   return User;
 };
