@@ -4,23 +4,60 @@ var moment = require('moment');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
-  const RoleAcl = app.model.define(
-    'sys_role_acl',
+  const Package = app.model.define(
+    'nova_product_log',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      roleId: {
-        field: 'role_id',
-        type: INTEGER
+      productId: {
+        type: INTEGER,
+        allowNull: false,
+        comment: '产品id'
       },
-      aclId: {
-        field: 'acl_id',
-        type: INTEGER
+      versions: {
+        type: STRING(20),
+        defaultValue: ''
+      },
+      url: {
+        type: STRING,
+        defaultValue: ''
+      },
+      size: {
+        type: STRING,
+        defaultValue: ''
+      },
+      fitPro: {
+        filed: 'fit_pro',
+        type: STRING,
+        defaultValue: '',
+        comment: '适应产品'
+      },
+      versionLog: {
+        field: 'version_log',
+        type: TEXT,
+        defaultValue: '',
+        comment: '版本日志'
+      },
+      publishBy: {
+        filed: 'publish_by',
+        type: STRING,
+        defaultValue: '',
+        comment: '发布人'
+      },
+      status: {
+        type: INTEGER,
+        defaultValue: 1,
+        comment: '状态：1有效|0无效|2删除'
+      },
+      version_type: {
+        type: INTEGER(20),
+        defaultValue: 0,
+        comment: '类型：1体验版|2正式版'
       },
       createdBy: {
         field: 'created_by',
@@ -66,9 +103,9 @@ module.exports = app => {
     }
   );
 
-  // RoleAcl.sync().then(function(result) {
-  //   console.log('同步Role_Acl表成功');
-  // });
+  Package.sync().then(function(result) {
+    console.log('同步Package表成功');
+  });
 
-  return RoleAcl;
+  return Package;
 };

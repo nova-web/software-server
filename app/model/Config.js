@@ -1,48 +1,37 @@
 'use strict';
 
 var moment = require('moment');
+var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
+  const { INTEGER, BOOLEAN, STRING, DATE } = Sequelize;
 
-  const Package = app.model.define(
-    'sys_package',
+  const Config = app.model.define(
+    'sys_config',
     {
       id: {
         type: INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      versions: {
-        type: STRING(20),
-        defaultValue: ''
-      },
-      fit_pro: {
+      type: {
         type: STRING,
-        defaultValue: ''
-      },
-      url: {
-        type: STRING,
-        defaultValue: ''
-      },
-      size: {
-        type: STRING,
-        defaultValue: ''
-      },
-      remark: {
-        type: TEXT,
-        defaultValue: ''
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false
       },
       status: {
         type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1, 2]],
+            msg: '非法状态码'
+          }
+        },
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
-      },
-      version_type: {
-        type: INTEGER(20),
-        defaultValue: 0,
-        comment: '类型：1体验版|2正式版'
       },
       createdBy: {
         field: 'created_by',
@@ -88,9 +77,10 @@ module.exports = app => {
     }
   );
 
-  // Package.sync().then(function(result) {
-  //   console.log('同步Package表成功');
-  // });
+  Config.sync().then(function(result) {
+    console.log('同步Config表成功');
+    Config.bulkCreate(dbData.config);
+  });
 
-  return Package;
+  return Config;
 };

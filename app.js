@@ -12,7 +12,7 @@ module.exports = app => {
   });
 
   app.on('error', (err, ctx) => {
-    // console.log('error111----------', err);
+    console.log('error111----------', err);
   });
   app.on('request', ctx => {
     console.log(`--------------${ctx.request.method}请求${ctx.request.url}--------------`);

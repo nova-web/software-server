@@ -51,22 +51,24 @@ class UserService extends Service {
     });
   }
 
-  async addData(params) {
-    let result = await this.ctx.model.User.create(
-      {
-        ...params,
-        roles: params.operator
-      },
-      {
-        include: [
-          {
-            model: this.ctx.app.model.Role,
-            as: 'roles'
-          }
-        ]
-      }
-    );
-    return result;
+  async addData({ username, roles = [], phone, email, password, remark }) {
+    if (!(roles instanceof Array)) {
+      return {};
+    }
+
+    if (!roles.length) {
+      return { msg: '请分配角色！' };
+    }
+
+    let role = await this.ctx.model.Role.findAll({ where: { id: { $in: roles }, status: 1 } });
+
+    if (roles.length !== role.length) {
+      return { msg: '部分角色无效！' };
+    }
+
+    let user = await this.ctx.model.User.create({ username, phone, email, password, remark });
+    user.setRoles(role);
+    return { result: user };
   }
 
   async updateData(id, params) {

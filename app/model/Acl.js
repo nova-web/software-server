@@ -14,6 +14,16 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
+      nodeId: {
+        field: 'node_id',
+        type: INTEGER,
+        defaultValue: 0
+      },
+      parentId: {
+        field: 'parent_id',
+        type: INTEGER,
+        defaultValue: 0
+      },
       code: {
         type: STRING(20),
         defaultValue: ''
@@ -26,16 +36,6 @@ module.exports = app => {
         type: INTEGER,
         defaultValue: 1,
         comment: '状态：1有效|0无效|2删除'
-      },
-      nodeId: {
-        field: 'node_id',
-        type: INTEGER,
-        defaultValue: 0
-      },
-      parentId: {
-        field: 'parent_id',
-        type: INTEGER,
-        defaultValue: 0
       },
       remark: {
         type: STRING,
@@ -85,9 +85,9 @@ module.exports = app => {
     }
   );
 
-  // Acl.sync().then(function(result) {
-  //   console.log('同步Acl表成功');
-  // });
+  Acl.sync().then(function(result) {
+    console.log('同步Acl表成功');
+  });
 
   return Acl;
 };
