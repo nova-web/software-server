@@ -23,7 +23,7 @@ module.exports = app => {
         allowNull: false,
         comment: '产品id'
       },
-      versions: {
+      version: {
         type: STRING(20),
         validate: {
           notEmpty: true
@@ -50,7 +50,7 @@ module.exports = app => {
       },
       publishBy: {
         field: 'publish_by',
-        type: STRING,
+        type: STRING(20),
         validate: {
           notEmpty: true
         },
@@ -69,7 +69,7 @@ module.exports = app => {
         comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
       size: {
-        type: STRING,
+        type: STRING(20),
         comment: '文件大小'
       },
       fitPro: {
@@ -90,11 +90,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING
+        type: STRING(20)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING
+        type: STRING(20)
       },
       createdAt: {
         field: 'created_at',

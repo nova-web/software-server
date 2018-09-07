@@ -32,21 +32,27 @@ module.exports = app => {
         type: STRING(20),
         comment: '权限名称'
       },
-      status: {
-        type: INTEGER,
-        defaultValue: 1,
-        comment: '状态：1有效|0无效|2删除'
-      },
       remark: {
         type: STRING
       },
+      status: {
+        type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1, 2]],
+            msg: '非法状态码'
+          }
+        },
+        defaultValue: 1,
+        comment: '状态：1有效|0无效|2删除'
+      },
       createdBy: {
         field: 'created_by',
-        type: STRING
+        type: STRING(20)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING
+        type: STRING(20)
       },
       createdAt: {
         field: 'created_at',

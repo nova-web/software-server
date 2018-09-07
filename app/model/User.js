@@ -36,7 +36,7 @@ module.exports = app => {
         comment: '账号'
       },
       password: {
-        type: STRING(20),
+        type: STRING,
         validate: {
           notEmpty: true
         },
@@ -44,7 +44,7 @@ module.exports = app => {
         comment: '密码'
       },
       phone: {
-        type: STRING,
+        type: STRING(20),
         validate: {
           isDecimal: true
         },
@@ -74,11 +74,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING
+        type: STRING(20)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING
+        type: STRING(20)
       },
       createdAt: {
         field: 'created_at',

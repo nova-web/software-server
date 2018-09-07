@@ -15,14 +15,6 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
-      name: {
-        type: STRING,
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
-        comment: '姓名'
-      },
       type: {
         type: STRING(20),
         validate: {

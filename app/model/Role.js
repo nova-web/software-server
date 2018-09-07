@@ -39,11 +39,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING
+        type: STRING(20)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING
+        type: STRING(20)
       },
       createdAt: {
         field: 'created_at',

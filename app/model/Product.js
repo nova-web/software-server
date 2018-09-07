@@ -4,7 +4,7 @@ var moment = require('moment');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
   const Product = app.model.define(
     'nova_product',
@@ -29,9 +29,9 @@ module.exports = app => {
           notEmpty: true
         },
         allowNull: false,
-        comment: '姓名'
+        comment: '设备名称'
       },
-      proModel: {
+      model: {
         field: 'pro_model',
         type: STRING(20),
         validate: {
@@ -42,7 +42,7 @@ module.exports = app => {
       },
       projectManager: {
         field: 'project_manager',
-        type: STRING,
+        type: STRING(20),
         validate: {
           notEmpty: true
         },
@@ -58,7 +58,7 @@ module.exports = app => {
           }
         },
         defaultValue: 'package_01',
-        comment: '种类：1硬件|0软件'
+        comment: '软硬件：1硬件|2软件'
       },
       stage: {
         type: STRING(20),
@@ -69,7 +69,7 @@ module.exports = app => {
           }
         },
         defaultValue: 'stage_11',
-        comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
+        comment: '产品阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
       area: {
         type: STRING(20),
@@ -80,7 +80,7 @@ module.exports = app => {
           }
         },
         defaultValue: 'area_01',
-        comment: '范围：1国内 | 0国外'
+        comment: '产品所属区域：1国内 | 2国外'
       },
       dept: {
         type: STRING(20),
@@ -95,11 +95,11 @@ module.exports = app => {
       },
       version: {
         type: STRING(20),
-        comment: '版本'
+        comment: '版本号'
       },
       productDesc: {
         field: 'product_desc',
-        type: STRING,
+        type: TEXT,
         comment: '产品简介'
       },
       status: {

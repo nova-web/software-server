@@ -16,7 +16,7 @@ module.exports = app => {
         autoIncrement: true
       },
       type: {
-        type: STRING,
+        type: STRING(20),
         validate: {
           notEmpty: true
         },
@@ -36,11 +36,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING
+        type: STRING(20)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING
+        type: STRING(20)
       },
       createdAt: {
         field: 'created_at',
@@ -78,7 +78,7 @@ module.exports = app => {
 
   Config.sync().then(function(result) {
     console.log('同步Config表成功');
-    Config.bulkCreate(dbData.config);
+    Config.bulkCreate(dbData.config, { ignoreDuplicates: true });
   });
 
   return Config;
