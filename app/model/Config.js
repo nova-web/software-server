@@ -20,7 +20,8 @@ module.exports = app => {
         validate: {
           notEmpty: true
         },
-        allowNull: false
+        allowNull: false,
+        comment: '类型'
       },
       status: {
         type: INTEGER,

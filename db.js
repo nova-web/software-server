@@ -94,6 +94,7 @@ module.exports = {
   user: [
     {
       date: new Date(),
+      name: 'xxx',
       username: 'admin',
       password: 'admin',
       phone: '88888888',

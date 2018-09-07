@@ -15,23 +15,29 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
+      name: {
+        type: STRING,
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
+        comment: '姓名'
+      },
       type: {
         type: STRING(20),
         validate: {
           notEmpty: true
         },
-        allowNull: false
-      },
-      name: {
-        type: STRING,
-        defaultValue: ''
+        allowNull: false,
+        comment: '类别'
       },
       code: {
         type: STRING(20),
         validate: {
           notEmpty: true
         },
-        allowNull: false
+        allowNull: false,
+        comment: '字典代码'
       }
     },
     {
