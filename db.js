@@ -32,17 +32,17 @@ module.exports = {
     },
     {
       type: 'stage',
-      name: '内部转测版',
+      name: '开发',
       code: 'stage_01'
     },
     {
       type: 'stage',
-      name: '体验版',
+      name: '测试',
       code: 'stage_02'
     },
     {
       type: 'stage',
-      name: '正式版',
+      name: '发布',
       code: 'stage_03'
     },
     {
@@ -57,23 +57,18 @@ module.exports = {
     },
     {
       type: 'stage',
-      name: '试产',
+      name: '销售样机',
       code: 'stage_13'
     },
     {
       type: 'stage',
-      name: '销售样机',
+      name: '量产',
       code: 'stage_14'
     },
     {
       type: 'stage',
-      name: '量产',
-      code: 'stage_15'
-    },
-    {
-      type: 'stage',
       name: '停产',
-      code: 'stage_16'
+      code: 'stage_15'
     },
     {
       type: 'dept',
@@ -99,6 +94,16 @@ module.exports = {
       type: 'package',
       name: '软件',
       code: 'package_02'
+    },
+    {
+      type: 'device_state',
+      name: '正常',
+      code: 'device_state_01'
+    },
+    {
+      type: 'device_state',
+      name: '异常',
+      code: 'device_state_02'
     }
   ],
   user: [

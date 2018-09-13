@@ -15,7 +15,7 @@ module.exports = app => {
         autoIncrement: true
       },
       target: {
-        type: STRING(20),
+        type: STRING(30),
         comment: '操作对象'
       },
       operateType: {
@@ -31,7 +31,7 @@ module.exports = app => {
         comment: '操作类型：0新增|1修改|2删除'
       },
       ip: {
-        type: STRING(20),
+        type: STRING(30),
         comment: 'ip'
       },
       operateTime: {
@@ -46,11 +46,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       createdAt: {
         field: 'created_at',

@@ -1,7 +1,6 @@
 'use strict';
 
 var moment = require('moment');
-var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
@@ -16,7 +15,7 @@ module.exports = app => {
         autoIncrement: true
       },
       name: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -39,11 +38,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       createdAt: {
         field: 'created_at',
@@ -87,7 +86,6 @@ module.exports = app => {
 
   Role.sync().then(function(result) {
     console.log('同步Role表成功');
-    Role.bulkCreate(dbData.role, { ignoreDuplicates: true });
   });
 
   return Role;

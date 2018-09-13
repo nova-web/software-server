@@ -1,7 +1,6 @@
 'use strict';
 
 var moment = require('moment');
-var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
@@ -16,7 +15,7 @@ module.exports = app => {
         autoIncrement: true
       },
       name: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -24,11 +23,11 @@ module.exports = app => {
         comment: '姓名'
       },
       code: {
-        type: STRING(20),
+        type: STRING(30),
         comment: '员工编号'
       },
       username: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -44,7 +43,7 @@ module.exports = app => {
         comment: '密码'
       },
       phone: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isDecimal: true
         },
@@ -57,9 +56,6 @@ module.exports = app => {
             msg: '邮箱格式不正确'
           }
         }
-      },
-      remark: {
-        type: STRING
       },
       status: {
         type: INTEGER,
@@ -74,11 +70,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       createdAt: {
         field: 'created_at',
@@ -122,7 +118,6 @@ module.exports = app => {
 
   User.sync().then(function(result) {
     console.log('同步User表成功');
-    User.bulkCreate(dbData.user, { ignoreDuplicates: true });
   });
 
   return User;

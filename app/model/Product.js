@@ -16,24 +16,16 @@ module.exports = app => {
       },
       modelId: {
         field: 'model_id',
-        type: STRING(20),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
+        type: STRING(30),
         comment: '设备modelId'
       },
       name: {
-        type: STRING(20),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
-        comment: '设备名称'
+        type: STRING(30),
+        comment: '产品名称'
       },
       model: {
-        field: 'pro_model',
-        type: STRING(20),
+        field: 'model',
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -42,7 +34,7 @@ module.exports = app => {
       },
       projectManager: {
         field: 'project_manager',
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -50,7 +42,7 @@ module.exports = app => {
         comment: '项目经理'
       },
       type: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isIn: {
             args: [['package_01', 'package_02']],
@@ -61,18 +53,18 @@ module.exports = app => {
         comment: '软硬件：1硬件|2软件'
       },
       stage: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isIn: {
-            args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
+            args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15']],
             msg: '非法状态码'
           }
         },
-        defaultValue: 'stage_11',
-        comment: '产品阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
+        defaultValue: 'stage_13',
+        comment: '产品阶段：软件--1开发 2测试 3发布 | 硬件--11原型机 12研发样机 13销售样机 14量产 15停产'
       },
       area: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isIn: {
             args: [['area_01', 'area_02']],
@@ -83,7 +75,7 @@ module.exports = app => {
         comment: '产品所属区域：1国内 | 2国外'
       },
       dept: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isIn: {
             args: [['dept_01', 'dept_02', 'dept_03']],
@@ -93,8 +85,20 @@ module.exports = app => {
         defaultValue: 'dept_01',
         comment: '产品线：1视频 | 2同步 | 3云显'
       },
+      publishState: {
+        field: 'publish_state',
+        type: STRING(30),
+        validate: {
+          isIn: {
+            args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
+            msg: '非法状态码'
+          }
+        },
+        defaultValue: 'pro_state_01',
+        comment: '发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架'
+      },
       version: {
-        type: STRING(20),
+        type: STRING(30),
         comment: '版本号'
       },
       productDesc: {

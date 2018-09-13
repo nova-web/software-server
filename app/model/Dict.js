@@ -1,7 +1,6 @@
 'use strict';
 
 var moment = require('moment');
-var dbData = require('../../db');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
@@ -16,7 +15,7 @@ module.exports = app => {
         autoIncrement: true
       },
       type: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -24,7 +23,7 @@ module.exports = app => {
         comment: '字典类型'
       },
       name: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -32,7 +31,7 @@ module.exports = app => {
         comment: '字典名称'
       },
       code: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -48,7 +47,6 @@ module.exports = app => {
 
   Dict.sync().then(function(result) {
     console.log('同步Dict表成功', result);
-    Dict.bulkCreate(dbData.dict, { ignoreDuplicates: true });
   });
 
   return Dict;

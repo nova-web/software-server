@@ -24,7 +24,7 @@ module.exports = app => {
         comment: '产品id'
       },
       version: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -50,7 +50,7 @@ module.exports = app => {
       },
       publishBy: {
         field: 'publish_by',
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -58,7 +58,7 @@ module.exports = app => {
         comment: '发布人'
       },
       stage: {
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
@@ -68,8 +68,20 @@ module.exports = app => {
         defaultValue: 'stage_11',
         comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
+      publishState: {
+        field: 'publish_state',
+        type: STRING(30),
+        validate: {
+          isIn: {
+            args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
+            msg: '非法状态码'
+          }
+        },
+        defaultValue: 'pro_state_01',
+        comment: '发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架'
+      },
       size: {
-        type: STRING(20),
+        type: STRING(30),
         comment: '文件大小'
       },
       fitPro: {
@@ -90,11 +102,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       createdAt: {
         field: 'created_at',

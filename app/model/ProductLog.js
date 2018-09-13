@@ -25,7 +25,7 @@ module.exports = app => {
       },
       deviceId: {
         field: 'device_id',
-        type: STRING(20),
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
@@ -33,12 +33,28 @@ module.exports = app => {
         comment: '设备id'
       },
       ip: {
-        type: STRING(20),
+        type: STRING(30),
         comment: 'ip'
       },
       version: {
-        type: STRING(20),
+        type: STRING(30),
         comment: '最新版本'
+      },
+      screen: {
+        type: STRING(30),
+        comment: '屏体大小'
+      },
+      deviceState: {
+        field: 'device_state',
+        type: STRING(30),
+        validate: {
+          isIn: {
+            args: [['dev_state_01', 'dev_state_02']],
+            msg: '非法状态码'
+          }
+        },
+        defaultValue: 'dev_state_01',
+        comment: '设备状态：1正常 | 2异常'
       },
       status: {
         type: INTEGER,
@@ -53,11 +69,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(20)
+        type: STRING(30)
       },
       createdAt: {
         field: 'created_at',
