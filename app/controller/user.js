@@ -3,6 +3,7 @@ const Controller = require('egg').Controller;
 class UserController extends Controller {
   //查询所有数据 get
   async index() {
+    console.log(this.ctx.session);
     const list = await this.ctx.service.user.getData(this.ctx.request.query);
     this.ctx.success(list);
   }

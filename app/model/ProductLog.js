@@ -32,17 +32,19 @@ module.exports = app => {
         allowNull: false,
         comment: '设备id'
       },
-      ip: {
+      softwareIp: {
+        field: 'software_ip',
         type: STRING(30),
-        comment: 'ip'
+        comment: '软件ip'
       },
       version: {
         type: STRING(30),
         comment: '最新版本'
       },
-      screen: {
-        type: STRING(30),
-        comment: '屏体大小'
+      deviceInfo: {
+        field: 'device_info',
+        type: TEXT,
+        comment: '设备信息'
       },
       deviceState: {
         field: 'device_state',
@@ -69,11 +71,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(30)
+        type: INTEGER
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(30)
+        type: INTEGER
       },
       createdAt: {
         field: 'created_at',

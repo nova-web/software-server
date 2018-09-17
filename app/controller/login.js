@@ -2,11 +2,14 @@ const Controller = require('egg').Controller;
 
 class LoginController extends Controller {
   async login() {
-    const result = await this.ctx.service.login.login(this.ctx.request.body);
+    const { ctx } = this;
+    const result = await ctx.service.login.login(ctx.request.body);
     if (result) {
-      this.ctx.success({ userId: result });
+      ctx.session.user = result;
+      console.log(ctx.session);
+      ctx.success({ userId: result });
     } else {
-      this.ctx.fail('用户名或密码错误');
+      ctx.fail('用户名或密码错误');
     }
   }
 }

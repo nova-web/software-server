@@ -4,7 +4,7 @@ var moment = require('moment');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
 
   const Log = app.model.define(
     'sys_log',
@@ -30,9 +30,10 @@ module.exports = app => {
         defaultValue: 1,
         comment: '操作类型：0新增|1修改|2删除'
       },
-      ip: {
+      softwareIp: {
+        field: 'software_ip',
         type: STRING(30),
-        comment: 'ip'
+        comment: '软件ip'
       },
       operateTime: {
         field: 'operate_time',
@@ -41,16 +42,16 @@ module.exports = app => {
       },
       operateContent: {
         field: 'operate_content',
-        type: STRING,
+        type: TEXT,
         comment: '操作内容'
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(30)
+        type: INTEGER
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(30)
+        type: INTEGER
       },
       createdAt: {
         field: 'created_at',

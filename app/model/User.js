@@ -17,7 +17,9 @@ module.exports = app => {
       name: {
         type: STRING(30),
         validate: {
-          notEmpty: true
+          notEmpty: {
+            msg: '姓名不能为空！'
+          }
         },
         allowNull: false,
         comment: '姓名'
@@ -35,7 +37,7 @@ module.exports = app => {
         comment: '账号'
       },
       password: {
-        type: STRING,
+        type: STRING(32),
         validate: {
           notEmpty: true
         },
@@ -50,7 +52,7 @@ module.exports = app => {
         comment: '手机号'
       },
       email: {
-        type: STRING,
+        type: STRING(30),
         validate: {
           isEmail: {
             msg: '邮箱格式不正确'
@@ -70,11 +72,11 @@ module.exports = app => {
       },
       createdBy: {
         field: 'created_by',
-        type: STRING(30)
+        type: INTEGER
       },
       updatedBy: {
         field: 'udpated_by',
-        type: STRING(30)
+        type: INTEGER
       },
       createdAt: {
         field: 'created_at',

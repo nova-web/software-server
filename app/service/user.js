@@ -51,7 +51,7 @@ class UserService extends Service {
     });
   }
 
-  async addData({ username, roles = [], phone, email, password, remark }) {
+  async addData({ username, roles = [], phone, email, password, remark, name }) {
     if (!(roles instanceof Array)) {
       return {};
     }
@@ -66,7 +66,7 @@ class UserService extends Service {
       return { msg: '部分角色无效！' };
     }
 
-    let user = await this.ctx.model.User.create({ username, phone, email, password, remark });
+    let user = await this.ctx.model.User.create({ username, phone, email, password, remark, name });
     user.setRoles(role);
     return { result: user };
   }

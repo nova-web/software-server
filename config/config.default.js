@@ -27,21 +27,7 @@ module.exports = appInfo => {
     timezone: '+08:00' //东八时区
   };
 
-  // 添加 view 配置
-  // config.view = {
-  //   defaultViewEngine: 'nunjucks',
-  //   mapping: {
-  //     '.tpl': 'nunjucks'
-  //   }
-  // };
-
-  // config.view = {
-  //   root: path.join(appInfo.baseDir, 'app/assets'),
-  //   mapping: {
-  //     '.js': 'assets'
-  //   }
-  // };
-
+  //静态资源配置TODO
   // config.assets = {
   //   publicPath: '/public/',
   //   devServer: {
@@ -56,6 +42,15 @@ module.exports = appInfo => {
   //     }
   //   }
   // };
+
+  config.onerror = {
+    all(err, ctx) {}
+  };
+
+  config.passportLocal = {
+    usernameField: 'username',
+    passwordField: 'password'
+  };
 
   return config;
 };
