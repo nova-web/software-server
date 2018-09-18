@@ -22,17 +22,7 @@ exports.sequelize = {
 //   package: 'egg-view-assets'
 // };
 
-exports.passport = {
+exports.jwt = {
   enable: true,
-  package: 'egg-passport'
+  package: 'egg-jwt'
 };
-
-exports.passportLocal = {
-  enable: true,
-  package: 'egg-passport-local'
-};
-
-// module.exports.passportGithub = {
-//   enable: true,
-//   package: 'egg-passport-github'
-// };

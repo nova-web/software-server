@@ -9,7 +9,10 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1531883447101_6558';
 
   // add your config here
-  config.middleware = [];
+  config.middleware = ['checktoken'];
+  config.checktoken = {
+    ignore: '/login'
+  };
 
   config.security = {
     csrf: false
@@ -47,9 +50,9 @@ module.exports = appInfo => {
     all(err, ctx) {}
   };
 
-  config.passportLocal = {
-    usernameField: 'username',
-    passwordField: 'password'
+  config.jwt = {
+    secret: 'nova-eus-token',
+    exp: 3600 //秒
   };
 
   return config;

@@ -108,15 +108,13 @@ module.exports = {
   ],
   user: [
     {
-      date: new Date(),
       name: '系统管理员',
+      code: 'Nova0001',
       username: 'admin',
       password: 'admin',
       phone: '88888888',
       email: 'admin@admin.com',
-      remark: '超级管理员',
-      createdBy: 'init',
-      updatedBy: 'init'
+      remark: '超级管理员'
     }
   ],
   role: [

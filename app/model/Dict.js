@@ -14,6 +14,11 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
+      parentId: {
+        field: 'parent_id',
+        type: INTEGER,
+        comment: '父分类id'
+      },
       type: {
         type: STRING(30),
         validate: {
@@ -46,7 +51,7 @@ module.exports = app => {
   );
 
   Dict.sync().then(function(result) {
-    console.log('同步Dict表成功', result);
+    console.log('同步Dict表成功');
   });
 
   return Dict;

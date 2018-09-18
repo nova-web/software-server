@@ -63,7 +63,7 @@ class UserService extends Service {
     let role = await this.ctx.model.Role.findAll({ where: { id: { $in: roles }, status: 1 } });
 
     if (roles.length !== role.length) {
-      return { msg: '部分角色无效！' };
+      return { msg: '无效角色！' };
     }
 
     let user = await this.ctx.model.User.create({ username, phone, email, password, remark, name });
