@@ -10,10 +10,9 @@ module.exports = app => {
   const { router, controller } = app;
 
   router.get('/', controller.home.index);
-  router.post('/upload', controller.upload.create);
-  router.get('/download-center', controller.download.index);
-  router.get('/download', controller.download.download);
-  router.get('/download-image', controller.download.downloadImage);
+  router.get('/packagelist', controller.file.index);
+  router.post('/upload', controller.file.upload);
+  router.get('/download/*', controller.file.download);
   router.resources('user', '/users', controller.user);
   router.resources('role', '/roles', controller.role);
   router.resources('acl', '/acls', controller.acl);
@@ -21,6 +20,7 @@ module.exports = app => {
   router.resources('package', '/package', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);
   router.post('/login', controller.login.login);
+  router.post('/logout', controller.login.logout);
 
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);

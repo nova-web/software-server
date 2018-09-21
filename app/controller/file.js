@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 const awaitWriteStream = require('await-stream-ready').write;
@@ -8,6 +6,10 @@ const formidable = require('formidable');
 const Controller = require('egg').Controller;
 
 class FileController extends Controller {
+  async index() {
+    this.ctx.body = '<a download href="/download/VX5s/v1.rar">v1.rar</a><br><a download href="/download/VX5s/v2.rar">v2.rar</a>';
+  }
+
   async parse(req) {
     const form = new formidable.IncomingForm();
     return new Promise((resolve, reject) => {
@@ -22,7 +24,7 @@ class FileController extends Controller {
    * @param customName 单文件自定义文件名
    * @param isAjax 上传方式
    */
-  async create() {
+  async upload() {
     const { ctx, logger } = this;
     const extraParams = await this.parse(ctx.req);
     let { multipleFile, customName, isAjax } = extraParams && extraParams['fields'];
@@ -47,6 +49,26 @@ class FileController extends Controller {
     ctx.body = { status: 1 };
     ctx.status = 200;
   }
+
+  async download() {
+    // this.ctx.params['0']
+    // let path = this.ctx.params['0'];
+    const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
+    console.log('download...', this.ctx.params['0'], filePath);
+    // this.ctx.attachment('hello.rar');
+    this.ctx.set('Content-Type', 'application/octet-stream');
+    this.ctx.body = fs.createReadStream(filePath);
+  }
+
+  // async downloadImage() {
+  //   const url = 'http://cdn2.ettoday.net/images/1200/1200526.jpg';
+  //   const res = await this.ctx.curl(url, {
+  //     streaming: true
+  //   });
+
+  //   this.ctx.type = 'jpg';
+  //   this.ctx.body = res.res;
+  // }
 }
 
 module.exports = FileController;

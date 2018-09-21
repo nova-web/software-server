@@ -11,7 +11,7 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = ['checktoken'];
   config.checktoken = {
-    ignore: '/login'
+    ignore: ['/login', '/packagelist', '/download/*']
   };
 
   config.security = {
@@ -30,18 +30,25 @@ module.exports = appInfo => {
     timezone: '+08:00' //东八时区
   };
 
-  //静态资源配置TODO
+  // config.view = {
+  //   mapping: {
+  //     '.js': 'assets'
+  //   }
+  // };
+
+  // //静态资源配置TODO
   // config.assets = {
   //   publicPath: '/public/',
   //   devServer: {
   //     debug: false,
-  //     command: 'roadhog dev',
-  //     port: 7003,
+  //     command: 'umi dev',
+  //     port: 7001,
   //     env: {
+  //       APP_ROOT: process.cwd() + '/app/assets',
   //       BROWSER: 'none',
   //       ESLINT: 'none',
-  //       SOCKET_SERVER: 'http://127.0.0.1:7003',
-  //       PUBLIC_PATH: 'http://127.0.0.1:7003'
+  //       // SOCKET_SERVER: 'http://127.0.0.1:7003',
+  //       PUBLIC_PATH: 'http://127.0.0.1:7001'
   //     }
   //   }
   // };
@@ -52,7 +59,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     secret: 'nova-eus-token',
-    exp: 3600 //秒
+    exp: 10 //秒
   };
 
   return config;

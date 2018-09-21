@@ -30,10 +30,10 @@ module.exports = app => {
         defaultValue: 1,
         comment: '操作类型：0新增|1修改|2删除'
       },
-      softwareIp: {
-        field: 'software_ip',
+      ip: {
+        field: 'ip',
         type: STRING(30),
-        comment: '软件ip'
+        comment: '操作主机ip'
       },
       operateTime: {
         field: 'operate_time',

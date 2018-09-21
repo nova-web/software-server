@@ -48,15 +48,8 @@ module.exports = app => {
       },
       deviceState: {
         field: 'device_state',
-        type: STRING(30),
-        validate: {
-          isIn: {
-            args: [['dev_state_01', 'dev_state_02']],
-            msg: '非法状态码'
-          }
-        },
-        defaultValue: 'dev_state_01',
-        comment: '设备状态：1正常 | 2异常'
+        type: STRING,
+        comment: '设备异常状态'
       },
       status: {
         type: INTEGER,

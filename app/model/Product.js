@@ -101,6 +101,11 @@ module.exports = app => {
         type: STRING(30),
         comment: '版本号'
       },
+      fitPro: {
+        field: 'fit_pro',
+        type: STRING,
+        comment: '适配产品'
+      },
       productDesc: {
         field: 'product_desc',
         type: TEXT,

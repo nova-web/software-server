@@ -94,16 +94,6 @@ module.exports = {
       type: 'package',
       name: '软件',
       code: 'package_02'
-    },
-    {
-      type: 'device_state',
-      name: '正常',
-      code: 'device_state_01'
-    },
-    {
-      type: 'device_state',
-      name: '异常',
-      code: 'device_state_02'
     }
   ],
   user: [

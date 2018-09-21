@@ -84,11 +84,6 @@ module.exports = app => {
         type: STRING(30),
         comment: '文件大小'
       },
-      fitPro: {
-        field: 'fit_pro',
-        type: STRING,
-        comment: '适应产品'
-      },
       status: {
         type: INTEGER,
         validate: {
