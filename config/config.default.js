@@ -22,12 +22,13 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'mysql',
-    host: '172.16.6.100',
+    host: 'localhost',
     password: 'root',
     port: 3306,
     database: 'software-upgrade',
     username: 'root',
     timezone: '+08:00' //东八时区
+    // define: { raw: true }
   };
 
   // config.view = {
@@ -59,7 +60,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     secret: 'nova-eus-token',
-    exp: 10 //秒
+    exp: 3600 //秒
   };
 
   return config;

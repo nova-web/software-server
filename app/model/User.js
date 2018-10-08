@@ -30,6 +30,9 @@ module.exports = app => {
       },
       username: {
         type: STRING(30),
+        unique: {
+          msg: '用户名称重复'
+        },
         validate: {
           notEmpty: true
         },
@@ -75,7 +78,7 @@ module.exports = app => {
         type: INTEGER
       },
       updatedBy: {
-        field: 'udpated_by',
+        field: 'updated_by',
         type: INTEGER
       },
       createdAt: {
@@ -113,6 +116,8 @@ module.exports = app => {
   );
 
   app.beforeStart(async () => {
+    // User.belongsTo(User, { as: 'createdByName', foreignKey: 'created_by' });
+    // User.belongsTo(User, { as: 'updatedByName', foreignKey: 'updated_by' });
     User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'user_id' });
     app.model.Role.belongsToMany(User, { through: 'sys_role_user', foreignKey: 'role_id' });
     await app.model.sync();

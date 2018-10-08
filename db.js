@@ -1,3 +1,5 @@
+const md5 = require('md5');
+
 module.exports = {
   dict: [
     {
@@ -99,28 +101,123 @@ module.exports = {
   user: [
     {
       name: '系统管理员',
-      code: 'Nova0001',
+      code: 'Nova0000',
       username: 'admin',
-      password: 'admin',
+      password: md5('admin'),
       phone: '88888888',
-      email: 'admin@admin.com',
-      remark: '超级管理员'
+      email: 'admin@admin.tech',
+      remark: '超级管理员',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '用户1',
+      code: 'Nova0001',
+      username: 'user1',
+      password: md5('user1'),
+      phone: '88888888',
+      email: 'user1@novastar.tech',
+      remark: 'user1',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '用户2',
+      code: 'Nova0002',
+      username: 'user2',
+      password: md5('user2'),
+      phone: '88888888',
+      email: 'user2@novastar.tech',
+      remark: 'user2',
+      createdBy: 1,
+      updatedBy: 1
     }
   ],
   role: [
     {
-      name: 'admin',
+      name: '超级管理员',
       remark: '超级管理员拥有一切权利',
-      createdBy: 'init',
-      updatedBy: 'init'
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '总经理',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '部门经理',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '项目经理',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '普通成员',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
     }
   ],
   config: [
     {
       type: 'service',
-      createdBy: 'init',
-      updatedBy: 'init'
+      createdBy: 1,
+      updatedBy: 1
     }
   ],
-  acl: []
+  acl: [
+    {
+      name: '产品管理',
+      code: '0100',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '权限管理',
+      code: '0200',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
+    },
+    {
+      name: '用户管理',
+      code: '0210',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 2
+    },
+    {
+      name: '用户新增',
+      code: '0211',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 3
+    },
+    {
+      name: '用户修改',
+      code: '0212',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 3
+    },
+    {
+      name: '用户删除',
+      code: '0213',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 3
+    }
+  ]
 };

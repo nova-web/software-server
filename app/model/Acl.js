@@ -20,6 +20,7 @@ module.exports = app => {
         comment: '父权限id'
       },
       code: {
+        unique: true,
         type: STRING(30),
         validate: {
           notEmpty: true
@@ -50,7 +51,7 @@ module.exports = app => {
         type: INTEGER
       },
       updatedBy: {
-        field: 'udpated_by',
+        field: 'updated_by',
         type: INTEGER
       },
       createdAt: {
@@ -86,6 +87,11 @@ module.exports = app => {
       freezeTableName: true
     }
   );
+
+  app.beforeStart(async () => {
+    app.model.Acl.hasOne(app.model.Acl, { as: 'Father', foreignKey: 'parent_id' });
+    await app.model.sync();
+  });
 
   Acl.sync().then(function(result) {
     console.log('同步Acl表成功');

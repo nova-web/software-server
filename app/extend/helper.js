@@ -29,5 +29,28 @@ module.exports = {
     }
     format = format || 'yyyy-MM-dd hh:mm:ss';
     return new Date(nS).format(format);
+  },
+  pick(obj, arr) {
+    return arr.reduce((iter, val) => (val in obj && (iter[val] = obj[val]), iter), {});
+  },
+  // unpick(obj, arr) {
+  //   let newObj = {};
+  //   for (key in obj) {
+  //     if (!arr.includes(key)) {
+  //       newObj[key] = obj[key];
+  //     }
+  //   }
+  //   return newObj;
+  // },
+  whereFilter(obj) {
+    let result = {};
+    for (key in obj) {
+      if (obj[key].length) {
+        result[key] = {
+          $like: `%${obj[key]}%`
+        };
+      }
+    }
+    return result;
   }
 };

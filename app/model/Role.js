@@ -17,13 +17,19 @@ module.exports = app => {
       name: {
         type: STRING(30),
         validate: {
-          notEmpty: true
+          notEmpty: {
+            msg: '角色名不能为空！'
+          }
+        },
+        unique: {
+          msg: '角色名称重复'
         },
         allowNull: false,
         comment: '角色名称'
       },
       remark: {
-        type: STRING
+        type: STRING(30),
+        comment: '描述'
       },
       status: {
         type: INTEGER,
@@ -41,7 +47,7 @@ module.exports = app => {
         type: INTEGER
       },
       updatedBy: {
-        field: 'udpated_by',
+        field: 'updated_by',
         type: INTEGER
       },
       createdAt: {
@@ -79,7 +85,7 @@ module.exports = app => {
   );
 
   app.beforeStart(async () => {
-    Role.belongsToMany(app.model.Acl, { as: 'roles', through: 'sys_role_acl', foreignKey: 'acl_id' });
+    Role.belongsToMany(app.model.Acl, { as: 'acls', through: 'sys_role_acl', foreignKey: 'acl_id' });
     app.model.Acl.belongsToMany(Role, { through: 'sys_role_acl', foreignKey: 'role_id' });
     await app.model.sync();
   });

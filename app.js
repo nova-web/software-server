@@ -1,7 +1,7 @@
 module.exports = app => {
   app.on('error', (err, ctx) => {
     let errMsg = '';
-    if (err.name === 'SequelizeValidationError') {
+    if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
       errMsg = err.errors.map(item => item.message);
     } else {
       errMsg = err.message;

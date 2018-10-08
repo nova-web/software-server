@@ -3,7 +3,7 @@ const Controller = require('egg').Controller;
 class AclController extends Controller {
   //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.acl.getData();
+    const list = await this.ctx.service.acl.getAcls();
     this.ctx.success(list);
   }
 

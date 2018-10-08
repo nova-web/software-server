@@ -50,7 +50,7 @@ module.exports = app => {
         type: INTEGER
       },
       updatedBy: {
-        field: 'udpated_by',
+        field: 'updated_by',
         type: INTEGER
       },
       createdAt: {

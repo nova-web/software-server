@@ -1,12 +1,29 @@
 const Service = require('egg').Service;
 
 class AclService extends Service {
-  async getData() {
-    return await this.ctx.model.Acl.findAll({
-      attributes: {
-        exclude: ['created_at', 'updated_at']
+  createTree(arr, acls) {
+    arr.forEach(item => {
+      let children = acls.filter(acl => acl.parentId === item.id);
+      if (children.length) {
+        item.dataValues.children = children;
+        // Object.assign(item, children);
+        this.createTree(children, acls);
       }
     });
+  }
+
+  async getAcls() {
+    let aclResult = [];
+    let acls = await this.ctx.model.Acl.findAll();
+    acls.forEach(item => {
+      if (!item.parentId) {
+        aclResult.push(item);
+      }
+    });
+
+    this.createTree(aclResult, acls);
+
+    return aclResult;
   }
 
   async addData(params) {

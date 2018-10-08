@@ -9,13 +9,20 @@ const db = require('../db');
 module.exports = app => {
   const { router, controller } = app;
 
+  //用户
+  router.resources('user', '/users', controller.user);
+  router.post('/setUserStatus', controller.user.setStatus);
+  //角色
+  router.resources('role', '/roles', controller.role);
+  router.post('/setRoleStatus', controller.role.setStatus);
+  router.post('/setAuthorize', controller.role.setAuthorize);
+  //权限
+  router.resources('acl', '/acls', controller.acl);
+
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
   router.post('/upload', controller.file.upload);
   router.get('/download/*', controller.file.download);
-  router.resources('user', '/users', controller.user);
-  router.resources('role', '/roles', controller.role);
-  router.resources('acl', '/acls', controller.acl);
   router.resources('product', '/products', controller.product);
   router.resources('package', '/package', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);

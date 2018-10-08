@@ -54,7 +54,6 @@ class FileController extends Controller {
     // this.ctx.params['0']
     // let path = this.ctx.params['0'];
     const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
-    console.log('download...', this.ctx.params['0'], filePath);
     // this.ctx.attachment('hello.rar');
     this.ctx.set('Content-Type', 'application/octet-stream');
     this.ctx.body = fs.createReadStream(filePath);

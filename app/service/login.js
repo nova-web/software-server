@@ -1,12 +1,13 @@
 const Service = require('egg').Service;
+const md5 = require('md5');
 
 class LoginService extends Service {
-  async login({ username = '', password = '' }) {
+  async login({ username, password }) {
     let result = await this.ctx.model.User.findOne({
       attributes: {
-        exclude: ['created_at', 'createdAt', 'updated_at', 'updatedAt', 'password', 'remark', 'status', 'createdBy', 'updatedBy']
+        exclude: ['created_at', 'createdAt', 'updated_at', 'updatedAt', 'password', 'remark', 'status', 'created_by', 'createdBy', 'updated_by', 'updatedBy']
       },
-      where: { username, password }
+      where: { username, password: md5(password) }
     });
     return result;
   }
