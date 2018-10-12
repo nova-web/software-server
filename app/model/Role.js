@@ -85,8 +85,8 @@ module.exports = app => {
   );
 
   app.beforeStart(async () => {
-    Role.belongsToMany(app.model.Acl, { as: 'acls', through: 'sys_role_acl', foreignKey: 'acl_id' });
-    app.model.Acl.belongsToMany(Role, { through: 'sys_role_acl', foreignKey: 'role_id' });
+    Role.belongsToMany(app.model.Acl, { as: 'acls', through: 'sys_role_acl', foreignKey: 'role_id' });
+    app.model.Acl.belongsToMany(Role, { through: 'sys_role_acl', foreignKey: 'acl_id' });
     await app.model.sync();
   });
 

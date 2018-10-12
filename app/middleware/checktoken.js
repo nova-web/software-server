@@ -7,9 +7,9 @@ module.exports = options => {
       let userToken = ctx.cookies.get(`user-${payload.userId}`);
       if (token === userToken) {
         try {
+          ctx.userId = payload.userId;
           ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
           ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
-          ctx.userId = payload.userId;
         } catch (error) {
           ctx.app.jwt.sign({ userId: payload.userId }, ctx.app.config.jwt.secret, { expiresIn: ctx.app.config.jwt.exp });
           ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });

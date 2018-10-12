@@ -21,6 +21,13 @@ Date.prototype.format = function(fmt) {
   return fmt;
 };
 
+Array.prototype.remove = function(val) {
+  var index = this.indexOf(val);
+  if (index > -1) {
+    this.splice(index, 1);
+  }
+};
+
 module.exports = {
   formatDate(nS, format) {
     //日期格式化

@@ -7,6 +7,7 @@ module.exports = appInfo => {
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1531883447101_6558';
+  config.adminPassword = 'admin';
 
   // add your config here
   config.middleware = ['checktoken'];
@@ -60,7 +61,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     secret: 'nova-eus-token',
-    exp: 3600 //秒
+    exp: 360000 //秒
   };
 
   return config;

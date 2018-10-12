@@ -19,7 +19,7 @@ class UserService extends Service {
         status,
         ...this.ctx.helper.whereFilter({ username, name, code }),
         id: {
-          $notIn: [1, this.ctx.userId]
+          $notIn: [this.ctx.userId]
         }
       },
       include: [
@@ -57,10 +57,6 @@ class UserService extends Service {
   }
 
   async addUser({ username, roles = [], phone, email, password, code, name }) {
-    if (!(roles instanceof Array)) {
-      return {};
-    }
-
     let role = await this.ctx.model.Role.findAll({
       where: {
         id: {
@@ -69,12 +65,6 @@ class UserService extends Service {
         status: 1
       }
     });
-
-    if (roles.length !== role.length) {
-      return {
-        msg: '无效角色！'
-      };
-    }
 
     let user = await this.ctx.model.User.create({
       username,
@@ -91,10 +81,8 @@ class UserService extends Service {
   }
 
   async updateUser(id, { name, password, phone, email, roles = [], code }) {
-    if (id == 1) {
-      return {
-        msg: '非法操作!'
-      };
+    if (id != 0 && id == this.ctx.userId) {
+      return { msg: '非法操作!' };
     }
 
     let user = await this.ctx.model.User.findById(id, {
@@ -103,27 +91,23 @@ class UserService extends Service {
           model: this.ctx.app.model.Role,
           as: 'roles'
         }
-      ]
+      ],
+      where: { status: { $in: [0, 1] } }
     });
 
     if (!user) {
-      return {
-        length: 0
-      };
+      return { length: 0 };
     }
 
     let columns = {
       name,
       phone,
       email,
-      roles,
       code,
       updatedBy: this.ctx.userId
     };
     if (password) {
-      Object.assign(columns, {
-        password
-      });
+      Object.assign(columns, { password });
     }
 
     let result = await this.ctx.model.User.update(columns, { where: { id } });
@@ -134,11 +118,13 @@ class UserService extends Service {
   }
 
   async delUser(id) {
+    if (id != 0 && id == this.ctx.userId) {
+      return { msg: '非法操作!' };
+    }
+
     const user = await this.ctx.model.User.findById(id);
     if (user && user.status === 1) {
-      return {
-        msg: '有效用户不能删除！'
-      };
+      return { msg: '有效用户不能删除！' };
     }
 
     let result = await this.ctx.model.User.update({ status: 2 }, { where: { id, status: 0 } });
@@ -146,10 +132,8 @@ class UserService extends Service {
   }
 
   async setStatus({ status, id }) {
-    if (status == 2 || id == 1) {
-      return {
-        msg: '非法操作!'
-      };
+    if (status == 2 || (id != 0 && id == this.ctx.userId)) {
+      return { msg: '非法操作!' };
     }
 
     let result = await this.ctx.model.User.update({ status }, { where: { id } });

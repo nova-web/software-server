@@ -49,7 +49,7 @@ class RoleController extends Controller {
 
   //授权
   async setAuthorize() {
-    const { length = 0, msg = '角色不存在！' } = await this.ctx.service.role.setAcl(this.ctx.request.body);
+    const { length = 0, msg = '角色不存在！' } = await this.ctx.service.role.setAcls(this.ctx.request.body);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {
