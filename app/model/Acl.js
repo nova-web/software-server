@@ -20,7 +20,9 @@ module.exports = app => {
         comment: '父权限id'
       },
       code: {
-        unique: true,
+        unique: {
+          msg: '权限码重复'
+        },
         type: STRING(30),
         validate: {
           notEmpty: true
@@ -29,6 +31,9 @@ module.exports = app => {
         comment: '权限码'
       },
       name: {
+        unique: {
+          msg: '权限名称重复'
+        },
         type: STRING(30),
         comment: '权限名称'
       },

@@ -41,12 +41,24 @@ class RoleService extends Service {
   }
 
   async delRole(id) {
-    const role = await this.ctx.model.Role.findById(id);
-    if (role && role.status === 1) {
-      return { msg: '有效角色不能删除！' };
-    }
+    let role = await this.ctx.model.Role.findById(id, {
+      include: [
+        {
+          model: this.ctx.model.User,
+          as: 'users'
+        }
+      ]
+    });
 
-    //用户被占用 不能设置为无效TODO
+    if (role) {
+      if (role.status === 1) {
+        return { msg: '有效角色不能删除！' };
+      }
+
+      if (role.users.length && status == 0) {
+        return { msg: '有效状态不能设置无效！' };
+      }
+    }
 
     let result = await this.ctx.model.Role.update({ status: 2 }, { where: { id, status: 0 } });
     return { length: result[0] };
@@ -57,8 +69,7 @@ class RoleService extends Service {
       return { msg: '非法操作!' };
     }
 
-    //角色被(user status in [0,1])占用 不能设置为无效TODO
-    let role = await this.ctx.model.Role.findAll({
+    let role = await this.ctx.model.Role.findById(id, {
       include: [
         {
           model: this.ctx.model.User,
@@ -67,7 +78,9 @@ class RoleService extends Service {
       ]
     });
 
-    console.log(role);
+    if (role && role.users.length && status == 0) {
+      return { msg: '有效状态不能设置无效！' };
+    }
 
     let result = await this.ctx.model.Role.update({ status }, { where: { id } });
 

@@ -1,4 +1,5 @@
 const Service = require('egg').Service;
+const pinyin = require('node-pinyin');
 
 class AclService extends Service {
   //创建权限树
@@ -8,7 +9,7 @@ class AclService extends Service {
       if (children.length) {
         let temp = [];
         children.forEach(c => {
-          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'status', 'remark', 'updatedAt', 'parentId']));
+          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'code', 'status', 'remark', 'updatedAt', 'parentId']));
         });
         item.children = temp;
         this.createTree(temp, acls);
@@ -26,78 +27,91 @@ class AclService extends Service {
   }
 
   async getAcls() {
-    let user = await this.ctx.model.User.findById(this.ctx.userId, {
-      include: [
-        {
-          model: this.ctx.model.Role,
-          as: 'roles',
-          include: [
-            {
-              model: this.ctx.model.Acl,
-              as: 'acls'
-            }
-          ]
-        }
-      ]
-    });
     let acls = await this.ctx.model.Acl.findAll();
+    let filterdAcls = [];
 
-    //获取用户权限ids
-    let userAclIds = [];
-    user.roles.forEach(r => {
-      userAclIds = userAclIds.concat(r.acls.map(a => a.id));
-    });
+    if (this.ctx.userId == 0) {
+      filterdAcls = acls;
+    } else {
+      let user = await this.ctx.model.User.findById(this.ctx.userId, {
+        include: [
+          {
+            model: this.ctx.model.Role,
+            as: 'roles',
+            include: [
+              {
+                model: this.ctx.model.Acl,
+                as: 'acls'
+              }
+            ]
+          }
+        ]
+      });
 
-    //获取用户父级权限ids
-    let userParentAclIds = [];
-    userAclIds.forEach(id => {
-      this.filterAcls(id, userParentAclIds, acls);
-    });
+      //获取用户权限ids
+      let userAclIds = [];
+      user.roles.forEach(r => {
+        userAclIds = userAclIds.concat(r.acls.map(a => a.id));
+      });
 
-    //合并用户权限ids
-    userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
+      //获取用户父级权限ids
+      let userParentAclIds = [];
+      userAclIds.forEach(id => {
+        this.filterAcls(id, userParentAclIds, acls);
+      });
 
-    //过滤出用户权限
-    let filterdAcls = acls.filter(a => userAclIds.includes(a.id));
+      //合并用户权限ids
+      userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
+
+      //过滤出用户权限
+      filterdAcls = acls.filter(a => userAclIds.includes(a.id));
+    }
 
     //生成权限树
     let aclTree = [];
     filterdAcls.forEach(item => {
       if (!item.parentId) {
-        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'status', 'remark', 'updatedAt', 'parentId']));
+        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'status', 'remark', 'updatedAt', 'parentId']));
       }
     });
     this.createTree(aclTree, filterdAcls);
     return aclTree;
   }
 
-  async addData(params) {
-    let result = await this.ctx.model.Acl.create({
-      ...params
+  async addAcl({ name, remark, parentId }) {
+    if (parentId) {
+      let parentAcl = await this.ctx.model.Acl.findById(parentId);
+      if (!parentAcl) {
+        return {
+          msg: '无效的父级权限！'
+        };
+      }
+    }
+
+    let code = pinyin(name, {
+      style: 'firstLetter'
+    })
+      .join('')
+      .toUpperCase();
+
+    let acl = await this.ctx.model.Acl.create({
+      name,
+      code,
+      remark,
+      parentId,
+      createdBy: this.ctx.userId,
+      updatedBy: this.ctx.userId
     });
-    return result.dataValues;
+    return { result: acl };
   }
 
-  async updateData(id, params) {
-    let result = await this.ctx.model.Acl.update(
-      {
-        ...params
-      },
-      {
-        where: {
-          id
-        }
-      }
-    );
+  async updateAcl(id, params) {
+    let result = await this.ctx.model.Acl.update({ ...params }, { where: { id } });
     return result[0];
   }
 
   async delData(id) {
-    const result = await this.ctx.model.Acl.destroy({
-      where: {
-        id
-      }
-    });
+    const result = await this.ctx.model.Acl.destroy({ where: { id } });
     return result;
   }
 }
