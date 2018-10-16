@@ -10,9 +10,12 @@ module.exports = appInfo => {
   config.adminPassword = 'admin';
 
   // add your config here
-  config.middleware = ['checktoken'];
+  config.middleware = ['checktoken', 'checkauth'];
   config.checktoken = {
     ignore: ['/login', '/packagelist', '/download/*']
+  };
+  config.checkauth = {
+    ignore: ['/login']
   };
 
   config.security = {

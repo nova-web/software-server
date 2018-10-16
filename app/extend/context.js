@@ -10,7 +10,7 @@ module.exports = {
     this.body = {
       data: '',
       errorCode: 0,
-      errorMsg: msg instanceof Array ? msg : [msg]
+      errorMsg: msg instanceof Array ? msg[0] : msg
     };
   }
 };

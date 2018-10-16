@@ -1,5 +1,5 @@
 const Service = require('egg').Service;
-const pinyin = require('node-pinyin');
+const md5 = require('md5');
 
 class AclService extends Service {
   //创建权限树
@@ -9,12 +9,52 @@ class AclService extends Service {
       if (children.length) {
         let temp = [];
         children.forEach(c => {
-          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'code', 'status', 'remark', 'updatedAt', 'parentId']));
+          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
         });
         item.children = temp;
         this.createTree(temp, acls);
       }
     });
+  }
+
+  //获取权限ids
+  async getAclIds(acls) {
+    let user = await this.ctx.model.User.findById(this.ctx.userId, {
+      include: [
+        {
+          model: this.ctx.model.Role,
+          as: 'roles',
+          include: [
+            {
+              model: this.ctx.model.Acl,
+              as: 'acls'
+            }
+          ]
+        }
+      ]
+    });
+
+    //获取用户权限ids
+    let userAclIds = [];
+    user.roles.forEach(r => {
+      userAclIds = userAclIds.concat(r.acls.map(a => a.id));
+    });
+
+    //获取用户父级权限ids
+    let userParentAclIds = [];
+    userAclIds.forEach(id => {
+      this.filterAcls(id, userParentAclIds, acls);
+    });
+
+    //合并用户权限ids
+    userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
+  }
+
+  //获取权限码表
+  async getAclCodes() {
+    let acls = await this.ctx.model.Acl.findAll();
+    let userAclIds = this.getAclIds(acls);
+    return acls.filter(a => userAclIds.includes(a.id)).map(a => a.code);
   }
 
   //根据权限id过滤权限(找出所有父级权限id)
@@ -33,36 +73,7 @@ class AclService extends Service {
     if (this.ctx.userId == 0) {
       filterdAcls = acls;
     } else {
-      let user = await this.ctx.model.User.findById(this.ctx.userId, {
-        include: [
-          {
-            model: this.ctx.model.Role,
-            as: 'roles',
-            include: [
-              {
-                model: this.ctx.model.Acl,
-                as: 'acls'
-              }
-            ]
-          }
-        ]
-      });
-
-      //获取用户权限ids
-      let userAclIds = [];
-      user.roles.forEach(r => {
-        userAclIds = userAclIds.concat(r.acls.map(a => a.id));
-      });
-
-      //获取用户父级权限ids
-      let userParentAclIds = [];
-      userAclIds.forEach(id => {
-        this.filterAcls(id, userParentAclIds, acls);
-      });
-
-      //合并用户权限ids
-      userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
-
+      let userAclIds = this.getAclIds(acls);
       //过滤出用户权限
       filterdAcls = acls.filter(a => userAclIds.includes(a.id));
     }
@@ -71,14 +82,14 @@ class AclService extends Service {
     let aclTree = [];
     filterdAcls.forEach(item => {
       if (!item.parentId) {
-        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'status', 'remark', 'updatedAt', 'parentId']));
+        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
       }
     });
     this.createTree(aclTree, filterdAcls);
     return aclTree;
   }
 
-  async addAcl({ name, remark, parentId }) {
+  async addAcl({ name, remark, code, url, parentId }) {
     if (parentId) {
       let parentAcl = await this.ctx.model.Acl.findById(parentId);
       if (!parentAcl) {
@@ -88,15 +99,10 @@ class AclService extends Service {
       }
     }
 
-    let code = pinyin(name, {
-      style: 'firstLetter'
-    })
-      .join('')
-      .toUpperCase();
-
     let acl = await this.ctx.model.Acl.create({
       name,
       code,
+      url,
       remark,
       parentId,
       createdBy: this.ctx.userId,
@@ -105,14 +111,56 @@ class AclService extends Service {
     return { result: acl };
   }
 
-  async updateAcl(id, params) {
-    let result = await this.ctx.model.Acl.update({ ...params }, { where: { id } });
-    return result[0];
+  async updateAcl(id, { name, code, url, remark }) {
+    let result = await this.ctx.model.Acl.update({ name, remark, code, url, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
+    return { length: result[0] };
   }
 
-  async delData(id) {
-    const result = await this.ctx.model.Acl.destroy({ where: { id } });
-    return result;
+  async delAcl(id) {
+    let acl = await this.ctx.model.Acl.findById(id, {
+      include: [
+        {
+          model: this.ctx.model.Role,
+          as: 'roles'
+        }
+      ]
+    });
+
+    if (acl) {
+      if (acl.status === 1) {
+        return { msg: '有效权限不能删除！' };
+      }
+
+      if (acl.roles.length && status == 0) {
+        return { msg: `功能正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
+      }
+    }
+
+    let result = await this.ctx.model.Acl.update({ status: 2 }, { where: { id, status: 0 } });
+    return { length: result[0] };
+  }
+
+  async setStatus({ status, id }) {
+    if (status == 2) {
+      return { msg: '非法操作!' };
+    }
+
+    let acl = await this.ctx.model.Acl.findById(id, {
+      include: [
+        {
+          model: this.ctx.model.Role,
+          as: 'roles'
+        }
+      ]
+    });
+
+    if (acl && acl.roles.length && status == 0) {
+      return { msg: `功能正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
+    }
+
+    let result = await this.ctx.model.Acl.update({ status }, { where: { id, status: { $in: [0, 1] } } });
+
+    return { length: result[0] };
   }
 }
 

@@ -136,7 +136,7 @@ class UserService extends Service {
       return { msg: '非法操作!' };
     }
 
-    let result = await this.ctx.model.User.update({ status }, { where: { id } });
+    let result = await this.ctx.model.User.update({ status }, { where: { id, status: { $in: [0, 1] } } });
 
     return { length: result[0] };
   }

@@ -56,7 +56,7 @@ class RoleService extends Service {
       }
 
       if (role.users.length && status == 0) {
-        return { msg: '有效状态不能设置无效！' };
+        return { msg: `角色正在被用户${role.users.map(r => r.name).join('、')}使用中！` };
       }
     }
 
@@ -79,10 +79,10 @@ class RoleService extends Service {
     });
 
     if (role && role.users.length && status == 0) {
-      return { msg: '有效状态不能设置无效！' };
+      return { msg: `角色正在被用户${role.users.map(r => r.name).join('、')}使用中！` };
     }
 
-    let result = await this.ctx.model.Role.update({ status }, { where: { id } });
+    let result = await this.ctx.model.Role.update({ status }, { where: { id, status: { $in: [0, 1] } } });
 
     return { length: result[0] };
   }

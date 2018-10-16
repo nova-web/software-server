@@ -115,14 +115,6 @@ module.exports = app => {
     }
   );
 
-  app.beforeStart(async () => {
-    // User.belongsTo(User, { as: 'createdByName', foreignKey: 'created_by' });
-    // User.belongsTo(User, { as: 'updatedByName', foreignKey: 'updated_by' });
-    User.belongsToMany(app.model.Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'user_id' });
-    app.model.Role.belongsToMany(User, { as: 'users', through: 'sys_role_user', foreignKey: 'role_id' });
-    await app.model.sync();
-  });
-
   User.sync().then(function(result) {
     console.log('同步User表成功');
   });

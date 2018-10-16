@@ -20,15 +20,19 @@ module.exports = app => {
         comment: '父权限id'
       },
       code: {
+        type: STRING(30),
         unique: {
           msg: '权限码重复'
         },
-        type: STRING(30),
         validate: {
           notEmpty: true
         },
-        allowNull: false,
         comment: '权限码'
+      },
+      url: {
+        type: STRING(30),
+        allowNull: false,
+        comment: '权限url'
       },
       name: {
         unique: {
@@ -92,11 +96,6 @@ module.exports = app => {
       freezeTableName: true
     }
   );
-
-  app.beforeStart(async () => {
-    app.model.Acl.hasOne(app.model.Acl, { as: 'Father', foreignKey: 'parent_id' });
-    await app.model.sync();
-  });
 
   Acl.sync().then(function(result) {
     console.log('同步Acl表成功');

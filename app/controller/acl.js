@@ -29,12 +29,31 @@ class AclController extends Controller {
 
   //删除数据 delete
   async destroy() {
-    const len = await this.ctx.service.acl.delData(this.ctx.params.id);
-    if (len) {
+    const { length = 0, msg = '功能不存在！' } = await this.ctx.service.acl.delAcl(this.ctx.params.id);
+    if (length) {
       this.ctx.success({ status: 1 });
     } else {
-      this.ctx.fail('权限不存在！');
+      this.ctx.fail(msg);
     }
+  }
+
+  //置为有效1无效0
+  async setStatus() {
+    const { length = 0, msg = '功能不存在！' } = await this.ctx.service.acl.setStatus(this.ctx.request.body);
+    if (length) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  async getCodes() {
+    // const { length = 0, msg = '用户不存在' } = await this.ctx.service.acl.getAclS(this.ctx.request.body);
+    // if (length) {
+    //   this.ctx.success({ status: 1 });
+    // } else {
+    //   this.ctx.fail(msg);
+    // }
   }
 }
 
