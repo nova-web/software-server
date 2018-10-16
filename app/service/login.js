@@ -7,7 +7,7 @@ class LoginService extends Service {
       attributes: {
         exclude: ['created_at', 'createdAt', 'updated_at', 'updatedAt', 'password', 'remark', 'status', 'created_by', 'createdBy', 'updated_by', 'updatedBy']
       },
-      where: { username, password: md5(password) }
+      where: { username, password: md5(password), status: 1 }
     });
     return result;
   }

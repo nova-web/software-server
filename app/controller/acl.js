@@ -48,12 +48,8 @@ class AclController extends Controller {
   }
 
   async getCodes() {
-    // const { length = 0, msg = '用户不存在' } = await this.ctx.service.acl.getAclS(this.ctx.request.body);
-    // if (length) {
-    //   this.ctx.success({ status: 1 });
-    // } else {
-    //   this.ctx.fail(msg);
-    // }
+    const result = await this.ctx.service.acl.getAclCodes(this.ctx.request.body);
+    this.ctx.success(result);
   }
 }
 

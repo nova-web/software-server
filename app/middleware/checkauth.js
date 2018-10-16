@@ -1,29 +1,26 @@
 module.exports = options => {
   return async function checktoken(ctx, next) {
-    console.log('middleware [checktoken]');
-    let token = ctx.request.header.token;
-    if (token) {
-      let payload = ctx.app.jwt.decode(token);
-      let userToken = ctx.cookies.get(`user-${payload.userId}`);
-      if (token === userToken) {
-        try {
-          ctx.userId = payload.userId;
-          ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
-          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
-        } catch (error) {
-          ctx.app.jwt.sign({ userId: payload.userId }, ctx.app.config.jwt.secret, { expiresIn: ctx.app.config.jwt.exp });
-          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
-        }
-      } else {
-        ctx.status = 401;
-        ctx.fail('token失效');
-        return;
-      }
+    console.log('middleware [checkauth]');
+    if (ctx.userId === 0) {
       await next();
     } else {
-      ctx.status = 401;
-      ctx.fail('未授权');
-      return;
+      const url = ctx.request.method.toLowerCase() + ctx.request.url;
+      const urls = await ctx.service.acl.getAclUrls();
+      console.log(url, urls);
+      let access = false;
+      for (let i = 0; i < urls.length; i++) {
+        if (url.indexOf(urls[i]) !== -1) {
+          access = true;
+          break;
+        }
+      }
+      console.log('access', access);
+      if (access) {
+        await next();
+      } else {
+        ctx.status = 403;
+        ctx.fail('访问受限');
+      }
     }
   };
 };

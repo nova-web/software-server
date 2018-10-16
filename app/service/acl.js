@@ -17,8 +17,21 @@ class AclService extends Service {
     });
   }
 
-  //获取权限ids
-  async getAclIds(acls) {
+  //根据权限id过滤权限(找出所有父级权限id)
+  filterAcls(id, userParentAclIds, acls) {
+    let parentId = acls.filter(item => item.id === id)[0].parentId;
+    if (parentId) {
+      userParentAclIds.push(parentId);
+      this.filterAcls(parentId, userParentAclIds, acls);
+    }
+  }
+
+  //获取权限用户
+  async getFilteredAcls(acls) {
+    if (this.ctx.userId == 0) {
+      return await acls;
+    }
+
     let user = await this.ctx.model.User.findById(this.ctx.userId, {
       include: [
         {
@@ -48,35 +61,13 @@ class AclService extends Service {
 
     //合并用户权限ids
     userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
-  }
 
-  //获取权限码表
-  async getAclCodes() {
-    let acls = await this.ctx.model.Acl.findAll();
-    let userAclIds = this.getAclIds(acls);
-    return acls.filter(a => userAclIds.includes(a.id)).map(a => a.code);
-  }
-
-  //根据权限id过滤权限(找出所有父级权限id)
-  filterAcls(id, userParentAclIds, acls) {
-    let parentId = acls.filter(item => item.id === id)[0].parentId;
-    if (parentId) {
-      userParentAclIds.push(parentId);
-      this.filterAcls(parentId, userParentAclIds, acls);
-    }
+    return acls.filter(a => userAclIds.includes(a.id));
   }
 
   async getAcls() {
     let acls = await this.ctx.model.Acl.findAll();
-    let filterdAcls = [];
-
-    if (this.ctx.userId == 0) {
-      filterdAcls = acls;
-    } else {
-      let userAclIds = this.getAclIds(acls);
-      //过滤出用户权限
-      filterdAcls = acls.filter(a => userAclIds.includes(a.id));
-    }
+    let filterdAcls = await this.getFilteredAcls(acls);
 
     //生成权限树
     let aclTree = [];
@@ -161,6 +152,20 @@ class AclService extends Service {
     let result = await this.ctx.model.Acl.update({ status }, { where: { id, status: { $in: [0, 1] } } });
 
     return { length: result[0] };
+  }
+
+  //获取权限码
+  async getAclCodes() {
+    let acls = await this.ctx.model.Acl.findAll();
+    let filterdAcls = await this.getFilteredAcls(acls);
+    return filterdAcls.map(a => ({ name: a.name, code: a.code }));
+  }
+
+  //获取权限URL
+  async getAclUrls() {
+    let acls = await this.ctx.model.Acl.findAll();
+    let filterdAcls = await this.getFilteredAcls(acls);
+    return filterdAcls.map(a => a.url).filter(i => i);
   }
 }
 

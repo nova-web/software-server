@@ -21,7 +21,7 @@ module.exports = app => {
   //权限
   router.resources('acl', '/acls', controller.acl);
   router.post('/setAclStatus', controller.acl.setStatus);
-  router.post('/getAclCodes', controller.acl.getCodes);
+  router.get('/getAclCodes', controller.acl.getCodes);
 
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
