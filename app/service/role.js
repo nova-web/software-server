@@ -106,6 +106,31 @@ class RoleService extends Service {
     role.setAcls(acl);
     return { length: role };
   }
+
+  async getUserRoles() {
+    let result = [];
+    let roles = [];
+
+    if (this.ctx.userId == 0) {
+      roles = await this.ctx.model.Role.findAll({ where: { status: 1 } });
+    } else {
+      let user = await this.ctx.model.User.findById(this.ctx.userId, {
+        include: [
+          {
+            model: this.ctx.model.Role,
+            as: 'roles',
+            where: { status: 1 }
+          }
+        ]
+      });
+      roles = user.roles;
+    }
+
+    roles.forEach(role => {
+      result.push(this.ctx.helper.pick(role, ['id', 'name']));
+    });
+    return result;
+  }
 }
 
 module.exports = RoleService;

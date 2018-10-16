@@ -5,7 +5,7 @@ module.exports = options => {
       await next();
     } else {
       const url = ctx.request.method.toLowerCase() + ctx.request.url;
-      const urls = await ctx.service.acl.getAclUrls();
+      const urls = await ctx.service.acl.getUserAclUrls();
       let access = false;
       for (let i = 0; i < urls.length; i++) {
         if (url.indexOf(urls[i]) !== -1) {

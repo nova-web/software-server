@@ -15,7 +15,7 @@ module.exports = appInfo => {
     ignore: ['/login', '/packagelist', '/download/*']
   };
   config.checkauth = {
-    ignore: ['/login']
+    ignore: ['/login', '/getUserRoles']
   };
 
   config.security = {

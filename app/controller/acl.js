@@ -47,9 +47,14 @@ class AclController extends Controller {
     }
   }
 
-  async getCodes() {
-    const result = await this.ctx.service.acl.getAclCodes(this.ctx.request.body);
-    this.ctx.success(result);
+  async getUserAclTree() {
+    const list = await this.ctx.service.acl.getUserAclTree();
+    this.ctx.success(list);
+  }
+
+  async getUserAclCodes() {
+    const list = await this.ctx.service.acl.getUserAclCodes(this.ctx.request.body);
+    this.ctx.success(list);
   }
 }
 

@@ -12,16 +12,18 @@ module.exports = app => {
   //登录
   router.post('/login', controller.login.login);
   //用户
-  router.resources('user', '/users', controller.user);
-  router.post('/setUserStatus', controller.user.setStatus);
+  router.resources('user', '/users', controller.user); //用户添删改查
+  router.post('/setUserStatus', controller.user.setStatus); //设置用户状态
   //角色
-  router.resources('role', '/roles', controller.role);
-  router.post('/setRoleStatus', controller.role.setStatus);
-  router.post('/setAuthorize', controller.role.setAuthorize);
+  router.resources('role', '/roles', controller.role); //角色添删改查
+  router.post('/setRoleStatus', controller.role.setStatus); //设置角色状态
+  router.post('/setAuthorize', controller.role.setAuthorize); //给角色授权
+  router.get('/getUserRoles', controller.role.getUserRoles); //获取用户拥有的角色
   //权限
-  router.resources('acl', '/acls', controller.acl);
-  router.post('/setAclStatus', controller.acl.setStatus);
-  router.get('/getAclCodes', controller.acl.getCodes);
+  router.resources('acl', '/acls', controller.acl); //权限添删改查
+  router.post('/setAclStatus', controller.acl.setStatus); //设置权限状态
+  router.get('/getUserAclTree', controller.acl.getUserAclTree); //获取用户拥有的权限树
+  router.get('/getUserAclCodes', controller.acl.getUserAclCodes); //获取用户拥有的权限码
 
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);

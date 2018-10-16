@@ -56,6 +56,11 @@ class RoleController extends Controller {
       this.ctx.fail(msg);
     }
   }
+
+  async getUserRoles() {
+    const list = await this.ctx.service.role.getUserRoles();
+    this.ctx.success(list);
+  }
 }
 
 module.exports = RoleController;

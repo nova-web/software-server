@@ -12,9 +12,6 @@ class UserService extends Service {
     users = await this.ctx.model.User.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
-      // attributes: {
-      //   exclude: ['createdAt', 'created_at', 'updated_at', 'password']
-      // },
       where: {
         status,
         ...this.ctx.helper.whereFilter({ username, name, code }),
@@ -26,18 +23,7 @@ class UserService extends Service {
         {
           model: this.ctx.app.model.Role,
           as: 'roles'
-          // through: {
-          //   attributes: []
-          // },
         }
-        // {
-        //   model: this.ctx.app.model.User,
-        //   as: 'createdByName'
-        // },
-        // {
-        //   model: this.ctx.app.model.User,
-        //   as: 'updatedByName'
-        // }
       ],
       distinct: true
     });
@@ -49,7 +35,6 @@ class UserService extends Service {
         roles.push(this.ctx.helper.pick(role, ['id', 'name']));
       });
       if (!roleId || roles.findIndex(item => item.id == roleId) !== -1) {
-        // result.rows.push(Object.assign(this.ctx.helper.unpick(user.dataValues, ['created_by', 'updated_by', 'createdByName', 'updatedByName']), { roles: roles, createdBy: user.createdByName.name, updatedBy: user.updatedByName.name }, {}));
         result.rows.push(Object.assign(this.ctx.helper.pick(user, ['id', 'code', 'name', 'username', 'phone', 'email', 'updatedAt', 'status']), { roles }));
       }
     });
@@ -110,7 +95,7 @@ class UserService extends Service {
       Object.assign(columns, { password });
     }
 
-    let result = await this.ctx.model.User.update(columns, { where: { id } });
+    let result = await this.ctx.model.User.update(columns, { where: { id, status: { $in: [0, 1] } } });
     let role = await this.ctx.model.Role.findAll({ where: { id: { $in: roles }, status: 1 } });
     user.setRoles(role);
 

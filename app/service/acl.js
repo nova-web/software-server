@@ -2,71 +2,8 @@ const Service = require('egg').Service;
 const md5 = require('md5');
 
 class AclService extends Service {
-  //创建权限树
-  createTree(arr, acls) {
-    arr.forEach(item => {
-      let children = acls.filter(acl => acl.parentId === item.id);
-      if (children.length) {
-        let temp = [];
-        children.forEach(c => {
-          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
-        });
-        item.children = temp;
-        this.createTree(temp, acls);
-      }
-    });
-  }
-
-  //根据权限id过滤权限(找出所有父级权限id)
-  filterAcls(id, userParentAclIds, acls) {
-    let parentId = acls.filter(item => item.id === id)[0].parentId;
-    if (parentId) {
-      userParentAclIds.push(parentId);
-      this.filterAcls(parentId, userParentAclIds, acls);
-    }
-  }
-
-  //获取权限用户
-  async getFilteredAcls(acls) {
-    if (this.ctx.userId == 0) {
-      return await acls;
-    }
-
-    let user = await this.ctx.model.User.findById(this.ctx.userId, {
-      include: [
-        {
-          model: this.ctx.model.Role,
-          as: 'roles',
-          include: [
-            {
-              model: this.ctx.model.Acl,
-              as: 'acls'
-            }
-          ]
-        }
-      ]
-    });
-
-    //获取用户权限ids
-    let userAclIds = [];
-    user.roles.forEach(r => {
-      userAclIds = userAclIds.concat(r.acls.map(a => a.id));
-    });
-
-    //获取用户父级权限ids
-    let userParentAclIds = [];
-    userAclIds.forEach(id => {
-      this.filterAcls(id, userParentAclIds, acls);
-    });
-
-    //合并用户权限ids
-    userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
-
-    return acls.filter(a => userAclIds.includes(a.id));
-  }
-
   async getAcls() {
-    let acls = await this.ctx.model.Acl.findAll();
+    let acls = await this.ctx.model.Acl.findAll({ where: { status: { $in: [0, 1] } } });
     let filterdAcls = await this.getFilteredAcls(acls);
 
     //生成权限树
@@ -82,7 +19,7 @@ class AclService extends Service {
 
   async addAcl({ name, remark, code, url, parentId }) {
     if (parentId) {
-      let parentAcl = await this.ctx.model.Acl.findById(parentId);
+      let parentAcl = await this.ctx.model.Acl.findById(parentId, { where: { status: { $in: [0, 1] } } });
       if (!parentAcl) {
         return {
           msg: '无效的父级权限！'
@@ -154,16 +91,97 @@ class AclService extends Service {
     return { length: result[0] };
   }
 
+  //创建权限树
+  createTree(arr, acls) {
+    arr.forEach(item => {
+      let children = acls.filter(acl => acl.parentId === item.id);
+      if (children.length) {
+        let temp = [];
+        children.forEach(c => {
+          temp.push(this.ctx.helper.pick(c, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
+        });
+        item.children = temp;
+        this.createTree(temp, acls);
+      }
+    });
+  }
+
+  //根据权限id过滤权限(找出所有父级权限id)
+  filterAcls(id, userParentAclIds, acls) {
+    let parentId = acls.filter(item => item.id === id)[0].parentId;
+    if (parentId) {
+      userParentAclIds.push(parentId);
+      this.filterAcls(parentId, userParentAclIds, acls);
+    }
+  }
+
+  //获取用户权限
+  async getFilteredAcls(acls) {
+    if (this.ctx.userId == 0) {
+      return await acls;
+    }
+
+    let user = await this.ctx.model.User.findById(this.ctx.userId, {
+      include: [
+        {
+          model: this.ctx.model.Role,
+          as: 'roles',
+          // where: { status: 1 },
+          include: [
+            {
+              model: this.ctx.model.Acl,
+              as: 'acls'
+              // where: { status: 1 }
+            }
+          ]
+        }
+      ]
+    });
+
+    //获取用户权限ids
+    //TODO此处要过滤有效的角色和有效的权限
+    let userAclIds = [];
+    user.roles.forEach(r => {
+      userAclIds = userAclIds.concat(r.acls.map(a => a.id));
+    });
+
+    //获取用户父级权限ids
+    let userParentAclIds = [];
+    userAclIds.forEach(id => {
+      this.filterAcls(id, userParentAclIds, acls);
+    });
+
+    //合并用户权限ids
+    userAclIds = [...new Set(userAclIds.concat(userParentAclIds))];
+
+    return acls.filter(a => userAclIds.includes(a.id));
+  }
+
+  //获取权限树
+  async getUserAclTree() {
+    let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
+    let filterdAcls = await this.getFilteredAcls(acls);
+
+    let aclTree = [];
+    filterdAcls.forEach(item => {
+      if (!item.parentId) {
+        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
+      }
+    });
+    this.createTree(aclTree, filterdAcls);
+    return aclTree;
+  }
+
   //获取权限码
-  async getAclCodes() {
-    let acls = await this.ctx.model.Acl.findAll();
+  async getUserAclCodes() {
+    let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
     return filterdAcls.map(a => ({ name: a.name, code: a.code }));
   }
 
   //获取权限URL
-  async getAclUrls() {
-    let acls = await this.ctx.model.Acl.findAll();
+  async getUserAclUrls() {
+    let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
     return filterdAcls.map(a => a.url).filter(i => i);
   }
