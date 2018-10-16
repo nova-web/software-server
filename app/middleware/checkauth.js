@@ -6,7 +6,6 @@ module.exports = options => {
     } else {
       const url = ctx.request.method.toLowerCase() + ctx.request.url;
       const urls = await ctx.service.acl.getAclUrls();
-      console.log(url, urls);
       let access = false;
       for (let i = 0; i < urls.length; i++) {
         if (url.indexOf(urls[i]) !== -1) {
@@ -14,7 +13,6 @@ module.exports = options => {
           break;
         }
       }
-      console.log('access', access);
       if (access) {
         await next();
       } else {
