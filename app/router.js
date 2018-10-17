@@ -24,6 +24,7 @@ module.exports = app => {
   router.post('/setAclStatus', controller.acl.setStatus); //设置权限状态
   router.get('/getUserAclTree', controller.acl.getUserAclTree); //获取用户拥有的权限树
   router.get('/getUserAclCodes', controller.acl.getUserAclCodes); //获取用户拥有的权限码
+  router.get('/getRoleAcls', controller.acl.getRoleAcls); //获取角色拥有的权限id
 
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
@@ -33,4 +34,10 @@ module.exports = app => {
   router.resources('package', '/package', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);
   router.post('/logout', controller.login.logout);
+
+  // app.model.User.bulkCreate(db.user);
+  // app.model.Role.bulkCreate(db.role);
+  // app.model.Dict.bulkCreate(db.dict);
+  // app.model.Config.bulkCreate(db.config);
+  // app.model.Acl.bulkCreate(db.acl);
 };

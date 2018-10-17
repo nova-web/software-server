@@ -9,6 +9,10 @@ class UserService extends Service {
     pageNum = Number.parseInt(pageNum);
     status = Number.parseInt(status || 1);
 
+    if (!(status == 0 || status == 1)) {
+      return [];
+    }
+
     users = await this.ctx.model.User.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
@@ -42,6 +46,10 @@ class UserService extends Service {
   }
 
   async addUser({ username, roles = [], phone, email, password, code, name }) {
+    if (await this.ctx.model.User.findOne({ where: { username, status: { $in: [0, 1] } } })) {
+      return { msg: '用户名重复' };
+    }
+
     let role = await this.ctx.model.Role.findAll({
       where: {
         id: {
@@ -67,7 +75,7 @@ class UserService extends Service {
 
   async updateUser(id, { name, password, phone, email, roles = [], code }) {
     if (id != 0 && id == this.ctx.userId) {
-      return { msg: '非法操作!' };
+      return { msg: '无法操作当前用户' };
     }
 
     let user = await this.ctx.model.User.findById(id, {
@@ -104,7 +112,7 @@ class UserService extends Service {
 
   async delUser(id) {
     if (id != 0 && id == this.ctx.userId) {
-      return { msg: '非法操作!' };
+      return { msg: '无法操作当前用户' };
     }
 
     const user = await this.ctx.model.User.findById(id);
@@ -117,8 +125,12 @@ class UserService extends Service {
   }
 
   async setStatus({ status, id }) {
-    if (status == 2 || (id != 0 && id == this.ctx.userId)) {
-      return { msg: '非法操作!' };
+    if (status == 2) {
+      return { msg: '无效状态码' };
+    }
+
+    if (id != 0 && id == this.ctx.userId) {
+      return { msg: '无法操作当前用户' };
     }
 
     let result = await this.ctx.model.User.update({ status }, { where: { id, status: { $in: [0, 1] } } });

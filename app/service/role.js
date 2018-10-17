@@ -8,6 +8,10 @@ class RoleService extends Service {
     pageNum = Number.parseInt(pageNum);
     status = Number.parseInt(status || 1);
 
+    if (!(status == 0 || status == 1)) {
+      return [];
+    }
+
     roles = await this.ctx.model.Role.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
@@ -25,6 +29,10 @@ class RoleService extends Service {
   }
 
   async addRole({ name, remark }) {
+    if (await this.ctx.model.Role.findOne({ where: { name, status: { $in: [0, 1] } } })) {
+      return { msg: '角色名重复' };
+    }
+
     let role = await this.ctx.model.Role.create({
       name,
       remark,
@@ -36,6 +44,14 @@ class RoleService extends Service {
   }
 
   async updateRole(id, { name, remark }) {
+    if (!(await this.ctx.model.Role.findById(id, { where: { status: { $in: [0, 1] } } }))) {
+      return {};
+    }
+
+    if (await this.ctx.model.Role.findOne({ where: { name, status: { $in: [0, 1] }, id: { $not: id } } })) {
+      return { msg: '角色名重复' };
+    }
+
     let result = await this.ctx.model.Role.update({ name, remark, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
     return { length: result[0] };
   }
@@ -66,7 +82,7 @@ class RoleService extends Service {
 
   async setStatus({ status, id }) {
     if (status == 2) {
-      return { msg: '非法操作!' };
+      return { msg: '无效状态码' };
     }
 
     let role = await this.ctx.model.Role.findById(id, {
