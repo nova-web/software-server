@@ -21,9 +21,6 @@ module.exports = app => {
             msg: '角色名不能为空！'
           }
         },
-        unique: {
-          msg: '角色名称重复'
-        },
         allowNull: false,
         comment: '角色名称'
       },
@@ -36,7 +33,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [[0, 1, 2]],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 1,

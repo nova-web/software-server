@@ -3,7 +3,7 @@ const Controller = require('egg').Controller;
 class RoleController extends Controller {
   //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.role.getRoles();
+    const list = await this.ctx.service.role.getRoles(this.ctx.request.query);
     this.ctx.success(list);
   }
 

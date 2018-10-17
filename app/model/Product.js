@@ -46,7 +46,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['package_01', 'package_02']],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 'package_01',
@@ -57,7 +57,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15']],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 'stage_13',
@@ -68,7 +68,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['area_01', 'area_02']],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 'area_01',
@@ -79,7 +79,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['dept_01', 'dept_02', 'dept_03']],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 'dept_01',
@@ -91,7 +91,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 'pro_state_01',
@@ -116,7 +116,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [[0, 1, 2]],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 1,

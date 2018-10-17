@@ -4,16 +4,15 @@ const md5 = require('md5');
 class AclService extends Service {
   async getAcls() {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: { $in: [0, 1] } } });
-    let filterdAcls = await this.getFilteredAcls(acls);
 
     //生成权限树
     let aclTree = [];
-    filterdAcls.forEach(item => {
+    acls.forEach(item => {
       if (!item.parentId) {
         aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
       }
     });
-    this.createTree(aclTree, filterdAcls);
+    this.createTree(aclTree, acls);
     return aclTree;
   }
 
@@ -70,7 +69,7 @@ class AclService extends Service {
 
   async setStatus({ status, id }) {
     if (status == 2) {
-      return { msg: '非法操作!' };
+      return { msg: '无效状态码' };
     }
 
     let acl = await this.ctx.model.Acl.findById(id, {
@@ -157,7 +156,7 @@ class AclService extends Service {
     return acls.filter(a => userAclIds.includes(a.id));
   }
 
-  //获取权限树
+  //获取用户权限树
   async getUserAclTree() {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
@@ -172,18 +171,39 @@ class AclService extends Service {
     return aclTree;
   }
 
-  //获取权限码
+  //获取用户权限码
   async getUserAclCodes() {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
     return filterdAcls.map(a => ({ name: a.name, code: a.code }));
   }
 
-  //获取权限URL
+  //获取用户权限URL
   async getUserAclUrls() {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
     return filterdAcls.map(a => a.url).filter(i => i);
+  }
+
+  //获取角色权限码
+  async getRoleAcls({ id }) {
+    let result = [];
+    let role = await this.ctx.model.Role.findById(id, {
+      include: [
+        {
+          model: this.ctx.model.Acl,
+          as: 'acls',
+          where: { status: 1 }
+        }
+      ],
+      where: { status: { $in: [0, 1] } }
+    });
+
+    if (role) {
+      result = role.acls.map(a => a.id);
+    }
+
+    return result;
   }
 }
 

@@ -56,6 +56,11 @@ class AclController extends Controller {
     const list = await this.ctx.service.acl.getUserAclCodes(this.ctx.request.body);
     this.ctx.success(list);
   }
+
+  async getRoleAcls() {
+    const list = await this.ctx.service.acl.getRoleAcls(this.ctx.request.query);
+    this.ctx.success(list);
+  }
 }
 
 module.exports = AclController;

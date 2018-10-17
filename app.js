@@ -25,11 +25,5 @@ module.exports = app => {
       Acl.belongsToMany(Role, { as: 'roles', through: 'sys_role_acl', foreignKey: 'acl_id' });
       await app.model.sync();
     });
-
-    app.model.User.bulkCreate(db.user);
-    app.model.Role.bulkCreate(db.role);
-    app.model.Dict.bulkCreate(db.dict);
-    app.model.Config.bulkCreate(db.config);
-    app.model.Acl.bulkCreate(db.acl);
   });
 };

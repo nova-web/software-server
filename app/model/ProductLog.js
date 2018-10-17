@@ -56,7 +56,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [[0, 1, 2]],
-            msg: '非法状态码'
+            msg: '无效状态码'
           }
         },
         defaultValue: 1,

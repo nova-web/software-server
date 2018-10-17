@@ -4,6 +4,13 @@ module.exports = options => {
     let token = ctx.request.header.token;
     if (token) {
       let payload = ctx.app.jwt.decode(token);
+
+      if (!payload) {
+        ctx.status = 401;
+        ctx.fail('无效token');
+        return;
+      }
+
       let userToken = ctx.cookies.get(`user-${payload.userId}`);
       if (token === userToken) {
         try {

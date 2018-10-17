@@ -1,5 +1,5 @@
 module.exports = options => {
-  return async function checktoken(ctx, next) {
+  return async function checkauth(ctx, next) {
     console.log('middleware [checkauth]');
     if (ctx.userId === 0) {
       await next();

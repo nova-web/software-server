@@ -100,55 +100,32 @@ module.exports = {
   ],
   user: [
     {
-      name: '用户1',
+      name: 'qss',
       code: 'Nova0001',
-      username: 'user1',
-      password: md5('user1'),
+      username: 'qss',
+      password: md5('qss'),
       phone: '88888888',
-      email: 'user1@novastar.tech',
-      remark: 'user1',
+      email: 'qss@novastar.tech',
+      remark: '强树树',
       createdBy: 0,
       updatedBy: 0
     },
     {
-      name: '用户2',
+      name: 'muyuan',
       code: 'Nova0002',
-      username: 'user2',
-      password: md5('user2'),
+      username: 'muyuan',
+      password: md5('muyuan'),
       phone: '88888888',
-      email: 'user2@novastar.tech',
-      remark: 'user2',
-      createdBy: 0,
-      updatedBy: 0
-    },
-    {
-      name: '用户3',
-      code: 'Nova0003',
-      username: 'user3',
-      password: md5('user3'),
-      phone: '88888888',
-      email: 'user3@novastar.tech',
-      remark: 'user3',
+      email: 'muyuan@novastar.tech',
+      remark: '穆远',
       createdBy: 0,
       updatedBy: 0
     }
   ],
   role: [
     {
-      name: '角色1',
-      remark: 'role1',
-      createdBy: 0,
-      updatedBy: 0
-    },
-    {
-      name: '角色2',
-      remark: 'role2',
-      createdBy: 0,
-      updatedBy: 0
-    },
-    {
-      name: '角色3',
-      remark: 'role3',
+      name: 'admin',
+      remark: 'admin',
       createdBy: 0,
       updatedBy: 0
     }
@@ -161,14 +138,6 @@ module.exports = {
     }
   ],
   acl: [
-    {
-      name: '产品管理',
-      url: '',
-      code: 'CPGL',
-      remark: '',
-      createdBy: 1,
-      updatedBy: 1
-    },
     {
       name: '权限管理',
       url: '',
@@ -184,6 +153,15 @@ module.exports = {
       remark: '',
       createdBy: 1,
       updatedBy: 1,
+      parentId: 1
+    },
+    {
+      name: '用户查询',
+      url: 'get/users',
+      code: 'YHCX',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
       parentId: 2
     },
     {
@@ -193,7 +171,7 @@ module.exports = {
       remark: '',
       createdBy: 1,
       updatedBy: 1,
-      parentId: 3
+      parentId: 2
     },
     {
       name: '用户修改',
@@ -202,7 +180,7 @@ module.exports = {
       remark: '',
       createdBy: 1,
       updatedBy: 1,
-      parentId: 3
+      parentId: 2
     },
     {
       name: '用户删除',
@@ -211,7 +189,168 @@ module.exports = {
       remark: '',
       createdBy: 1,
       updatedBy: 1,
-      parentId: 3
+      parentId: 2
+    },
+    {
+      name: '用户设置状态',
+      url: 'post/setUserStatus',
+      code: 'YHSZZT',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 2
+    },
+    {
+      name: '角色管理',
+      url: '',
+      code: 'JSGL',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 1
+    },
+    {
+      name: '角色查询',
+      url: 'get/roles',
+      code: 'JSCX',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '角色新增',
+      url: 'post/roles',
+      code: 'JSXZ',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '角色修改',
+      url: 'put/roles',
+      code: 'JSXG',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '角色删除',
+      url: 'delete/roles',
+      code: 'JSSC',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '角色设置状态',
+      url: 'post/setRoleStatus',
+      code: 'JSSZZT',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '角色授权',
+      url: 'post/setAuthorize',
+      code: 'JSSQ',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '用户角色',
+      url: 'get/getUserRoles',
+      code: 'YHJS',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 8
+    },
+    {
+      name: '功能管理',
+      url: '',
+      code: 'GNGL',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 1
+    },
+    {
+      name: '功能查询',
+      url: 'get/acls',
+      code: 'GNCX',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '功能新增',
+      url: 'post/acls',
+      code: 'GNXZ',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '功能修改',
+      url: 'put/acls',
+      code: 'GNXG',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '功能删除',
+      url: 'delete/acls',
+      code: 'GNSC',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '功能设置状态',
+      url: 'post/setAclStatus',
+      code: 'GNSZZT',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '用户功能',
+      url: 'get/getUserAclTree',
+      code: 'YHGN',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '用户权限码',
+      url: 'get/getUserAclCodes',
+      code: 'YHQXM',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1,
+      parentId: 16
+    },
+    {
+      name: '产品管理',
+      url: '',
+      code: 'CPGL',
+      remark: '',
+      createdBy: 1,
+      updatedBy: 1
     }
   ]
 };
