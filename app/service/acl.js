@@ -107,10 +107,13 @@ class AclService extends Service {
 
   //根据权限id过滤权限(找出所有父级权限id)
   filterAcls(id, userParentAclIds, acls) {
-    let parentId = acls.filter(item => item.id === id)[0].parentId;
-    if (parentId) {
-      userParentAclIds.push(parentId);
-      this.filterAcls(parentId, userParentAclIds, acls);
+    let parentAcl = acls.filter(item => item.id === id);
+    if (parentAcl.length) {
+      let parentId = parentAcl[0].parentId;
+      if (parentId) {
+        userParentAclIds.push(parentId);
+        this.filterAcls(parentId, userParentAclIds, acls);
+      }
     }
   }
 
@@ -125,12 +128,12 @@ class AclService extends Service {
         {
           model: this.ctx.model.Role,
           as: 'roles',
-          // where: { status: 1 },
+          where: { status: 1 },
           include: [
             {
               model: this.ctx.model.Acl,
-              as: 'acls'
-              // where: { status: 1 }
+              as: 'acls',
+              where: { status: 1 }
             }
           ]
         }
@@ -138,7 +141,6 @@ class AclService extends Service {
     });
 
     //获取用户权限ids
-    //TODO此处要过滤有效的角色和有效的权限
     let userAclIds = [];
     user.roles.forEach(r => {
       userAclIds = userAclIds.concat(r.acls.map(a => a.id));
