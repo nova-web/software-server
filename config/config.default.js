@@ -14,8 +14,11 @@ module.exports = appInfo => {
   config.checktoken = {
     ignore: ['/login', '/packagelist', '/download/*']
   };
+  config.checkuser = {
+    ignore: ['/login']
+  };
   config.checkauth = {
-    ignore: ['/login', '/getUserRoles']
+    ignore: ['/login']
   };
 
   config.security = {

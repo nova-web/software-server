@@ -18,8 +18,8 @@ class AclService extends Service {
 
   async addAcl({ name, remark, code, url, parentId }) {
     if (parentId) {
-      let parentAcl = await this.ctx.model.Acl.findById(parentId, { where: { status: { $in: [0, 1] } } });
-      if (!parentAcl) {
+      let parentAcl = await this.ctx.model.Acl.findById(parentId);
+      if (!(parentAcl && [0, 1].includes(parentAcl.status))) {
         return {
           msg: '无效的父级权限！'
         };
@@ -197,11 +197,10 @@ class AclService extends Service {
           as: 'acls',
           where: { status: 1 }
         }
-      ],
-      where: { status: { $in: [0, 1] } }
+      ]
     });
 
-    if (role) {
+    if (role && [0, 1].includes(role.status)) {
       result = role.acls.map(a => a.id);
     }
 

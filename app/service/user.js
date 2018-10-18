@@ -84,11 +84,10 @@ class UserService extends Service {
           model: this.ctx.app.model.Role,
           as: 'roles'
         }
-      ],
-      where: { status: { $in: [0, 1] } }
+      ]
     });
 
-    if (!user) {
+    if (!(user && [0, 1].includes[user.status])) {
       return { length: 0 };
     }
 

@@ -44,7 +44,8 @@ class RoleService extends Service {
   }
 
   async updateRole(id, { name, remark }) {
-    if (!(await this.ctx.model.Role.findById(id, { where: { status: { $in: [0, 1] } } }))) {
+    let role = await this.ctx.model.Role.findById(id);
+    if (!(role && [0, 1].includes[user.status])) {
       return {};
     }
 
@@ -110,11 +111,10 @@ class RoleService extends Service {
           model: this.ctx.model.Acl,
           as: 'acls'
         }
-      ],
-      where: { status: { $in: [0, 1] } }
+      ]
     });
 
-    if (!role) {
+    if (!(role && [0, 1].includes(role.status))) {
       return { length: 0 };
     }
 
