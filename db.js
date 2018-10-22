@@ -4,13 +4,18 @@ module.exports = {
   dict: [
     {
       type: 'area',
-      name: '国内',
+      name: '全部',
       code: 'area_01'
     },
     {
       type: 'area',
-      name: '国外',
+      name: '国内',
       code: 'area_02'
+    },
+    {
+      type: 'area',
+      name: '国外',
+      code: 'area_03'
     },
     {
       type: 'pro_status',
@@ -133,8 +138,8 @@ module.exports = {
   config: [
     {
       type: 'service',
-      createdBy: 1,
-      updatedBy: 1
+      createdBy: 0,
+      updatedBy: 0
     }
   ],
   acl: [
@@ -143,16 +148,16 @@ module.exports = {
       url: '',
       code: 'QXGL',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1
+      createdBy: 0,
+      updatedBy: 0
     },
     {
       name: '用户管理',
       url: '',
       code: 'YHGL',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 1
     },
     {
@@ -160,8 +165,8 @@ module.exports = {
       url: 'get/users',
       code: 'YHCX',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 2
     },
     {
@@ -169,8 +174,8 @@ module.exports = {
       url: 'post/users',
       code: 'YHXZ',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 2
     },
     {
@@ -178,8 +183,8 @@ module.exports = {
       url: 'put/users',
       code: 'YHXG',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 2
     },
     {
@@ -187,8 +192,8 @@ module.exports = {
       url: 'delete/users',
       code: 'YHSC',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 2
     },
     {
@@ -196,8 +201,8 @@ module.exports = {
       url: 'post/setUserStatus',
       code: 'YHSZZT',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 2
     },
     {
@@ -205,8 +210,8 @@ module.exports = {
       url: '',
       code: 'JSGL',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 1
     },
     {
@@ -214,8 +219,8 @@ module.exports = {
       url: 'get/roles',
       code: 'JSCX',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -223,8 +228,8 @@ module.exports = {
       url: 'post/roles',
       code: 'JSXZ',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -232,8 +237,8 @@ module.exports = {
       url: 'put/roles',
       code: 'JSXG',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -241,8 +246,8 @@ module.exports = {
       url: 'delete/roles',
       code: 'JSSC',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -250,8 +255,8 @@ module.exports = {
       url: 'post/setRoleStatus',
       code: 'JSSZZT',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -259,8 +264,8 @@ module.exports = {
       url: 'post/setAuthorize',
       code: 'JSSQ',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -268,8 +273,8 @@ module.exports = {
       url: 'get/getUserRoles',
       code: 'YHJS',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 8
     },
     {
@@ -277,8 +282,8 @@ module.exports = {
       url: '',
       code: 'GNGL',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 1
     },
     {
@@ -286,8 +291,8 @@ module.exports = {
       url: 'get/acls',
       code: 'GNCX',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -295,8 +300,8 @@ module.exports = {
       url: 'post/acls',
       code: 'GNXZ',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -304,8 +309,8 @@ module.exports = {
       url: 'put/acls',
       code: 'GNXG',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -313,8 +318,8 @@ module.exports = {
       url: 'delete/acls',
       code: 'GNSC',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -322,8 +327,8 @@ module.exports = {
       url: 'post/setAclStatus',
       code: 'GNSZZT',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -331,8 +336,8 @@ module.exports = {
       url: 'get/getUserAclTree',
       code: 'YHGN',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -340,8 +345,17 @@ module.exports = {
       url: 'get/getUserAclCodes',
       code: 'YHQXM',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: 0,
+      updatedBy: 0,
+      parentId: 16
+    },
+    {
+      name: '角色功能',
+      url: 'get/getRoleAcls',
+      code: 'JSGN',
+      remark: '',
+      createdBy: 0,
+      updatedBy: 0,
       parentId: 16
     },
     {
@@ -349,8 +363,26 @@ module.exports = {
       url: '',
       code: 'CPGL',
       remark: '',
-      createdBy: 1,
-      updatedBy: 1
+      createdBy: 0,
+      updatedBy: 0
+    },
+    {
+      name: '产品查询',
+      url: '',
+      code: 'CPCX',
+      remark: '',
+      createdBy: 0,
+      updatedBy: 0,
+      parentId: 25
+    },
+    {
+      name: '产品新增',
+      url: '',
+      code: 'CPXZ',
+      remark: '',
+      createdBy: 0,
+      updatedBy: 0,
+      parentId: 25
     }
   ]
 };

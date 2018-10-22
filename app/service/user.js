@@ -69,7 +69,7 @@ class UserService extends Service {
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });
-    user.setRoles(role);
+    await user.setRoles(role);
     return { result: user };
   }
 
@@ -87,7 +87,7 @@ class UserService extends Service {
       ]
     });
 
-    if (!(user && [0, 1].includes[user.status])) {
+    if (!(user && [0, 1].includes(user.status))) {
       return { length: 0 };
     }
 
@@ -104,7 +104,7 @@ class UserService extends Service {
 
     let result = await this.ctx.model.User.update(columns, { where: { id, status: { $in: [0, 1] } } });
     let role = await this.ctx.model.Role.findAll({ where: { id: { $in: roles }, status: 1 } });
-    user.setRoles(role);
+    await user.setRoles(role);
 
     return { length: result[0] };
   }

@@ -4,7 +4,7 @@ var moment = require('moment');
 
 module.exports = app => {
   const Sequelize = app.Sequelize;
-  const { STRING, INTEGER, DATE, TEXT } = Sequelize;
+  const { STRING, INTEGER, DATE, TEXT, BLOB } = Sequelize;
 
   const Product = app.model.define(
     'nova_product',
@@ -17,10 +17,18 @@ module.exports = app => {
       modelId: {
         field: 'model_id',
         type: STRING(30),
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
         comment: '设备modelId'
       },
       name: {
         type: STRING(30),
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
         comment: '产品名称'
       },
       model: {
@@ -35,10 +43,6 @@ module.exports = app => {
       projectManager: {
         field: 'project_manager',
         type: STRING(30),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
         comment: '项目经理'
       },
       type: {
@@ -46,18 +50,18 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['package_01', 'package_02']],
-            msg: '无效状态码'
+            msg: '无效产品类型'
           }
         },
         defaultValue: 'package_01',
-        comment: '软硬件：1硬件|2软件'
+        comment: '产品类型：1硬件|2软件'
       },
       stage: {
         type: STRING(30),
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15']],
-            msg: '无效状态码'
+            msg: '无效产品阶段'
           }
         },
         defaultValue: 'stage_13',
@@ -67,23 +71,23 @@ module.exports = app => {
         type: STRING(30),
         validate: {
           isIn: {
-            args: [['area_01', 'area_02']],
-            msg: '无效状态码'
+            args: [['area_01', 'area_02', 'area_03']],
+            msg: '无效区域'
           }
         },
         defaultValue: 'area_01',
-        comment: '产品所属区域：1国内 | 2国外'
+        comment: '产品所属区域：1全国 | 2国内 | 3国外'
       },
       dept: {
         type: STRING(30),
         validate: {
           isIn: {
             args: [['dept_01', 'dept_02', 'dept_03']],
-            msg: '无效状态码'
+            msg: '无效产品线'
           }
         },
         defaultValue: 'dept_01',
-        comment: '产品线：1视频 | 2同步 | 3云显'
+        comment: '所属产品线：1视频 | 2同步 | 3云显'
       },
       publishState: {
         field: 'publish_state',
@@ -91,7 +95,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
-            msg: '无效状态码'
+            msg: '无效发布状态'
           }
         },
         defaultValue: 'pro_state_01',
@@ -110,6 +114,11 @@ module.exports = app => {
         field: 'product_desc',
         type: TEXT,
         comment: '产品简介'
+      },
+      logo: {
+        field: 'logo',
+        type: BLOB,
+        comment: '产品示意图'
       },
       status: {
         type: INTEGER,

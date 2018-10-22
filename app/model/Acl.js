@@ -21,9 +21,6 @@ module.exports = app => {
       },
       code: {
         type: STRING(30),
-        unique: {
-          msg: '权限码重复'
-        },
         validate: {
           notEmpty: true
         },
@@ -31,13 +28,13 @@ module.exports = app => {
       },
       url: {
         type: STRING(30),
-        allowNull: false,
         comment: '权限url'
       },
       name: {
-        unique: {
-          msg: '权限名称重复'
+        validate: {
+          notEmpty: true
         },
+        allowNull: false,
         type: STRING(30),
         comment: '权限名称'
       },

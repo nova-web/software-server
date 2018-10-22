@@ -18,7 +18,7 @@ module.exports = appInfo => {
     ignore: ['/login']
   };
   config.checkauth = {
-    ignore: ['/login']
+    ignore: ['/login', '/getUserAclCodes']
   };
 
   config.security = {
@@ -29,10 +29,10 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'mysql',
-    host: 'localhost',
+    host: '172.16.42.133',
     password: 'root',
     port: 3306,
-    database: 'software-upgrade',
+    database: 'softwareUpgrade',
     username: 'root',
     timezone: '+08:00' //东八时区
     // define: { raw: true }

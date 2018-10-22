@@ -20,9 +20,17 @@ class AclService extends Service {
     if (parentId) {
       let parentAcl = await this.ctx.model.Acl.findById(parentId);
       if (!(parentAcl && [0, 1].includes(parentAcl.status))) {
-        return {
-          msg: '无效的父级权限！'
-        };
+        return { msg: '无效的父级权限！' };
+      }
+    }
+
+    if (await this.ctx.model.Acl.findOne({ where: { code, status: { $in: [0, 1] } } })) {
+      return { msg: '权限码重复' };
+    }
+
+    if (url) {
+      if (await this.ctx.model.Acl.findOne({ where: { url, status: { $in: [0, 1] } } })) {
+        return { msg: '权限地址重复' };
       }
     }
 
@@ -39,6 +47,16 @@ class AclService extends Service {
   }
 
   async updateAcl(id, { name, code, url, remark }) {
+    if (await this.ctx.model.Acl.findOne({ where: { code, status: { $in: [0, 1] }, id: { $not: id } } })) {
+      return { msg: '权限码重复' };
+    }
+
+    if (url) {
+      if (await this.ctx.model.Acl.findOne({ where: { url, status: { $in: [0, 1] }, id: { $not: id } } })) {
+        return { msg: '权限地址重复' };
+      }
+    }
+
     let result = await this.ctx.model.Acl.update({ name, remark, code, url, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
     return { length: result[0] };
   }
@@ -128,12 +146,10 @@ class AclService extends Service {
         {
           model: this.ctx.model.Role,
           as: 'roles',
-          where: { status: 1 },
           include: [
             {
               model: this.ctx.model.Acl,
-              as: 'acls',
-              where: { status: 1 }
+              as: 'acls'
             }
           ]
         }
@@ -142,8 +158,8 @@ class AclService extends Service {
 
     //获取用户权限ids
     let userAclIds = [];
-    user.roles.forEach(r => {
-      userAclIds = userAclIds.concat(r.acls.map(a => a.id));
+    user.roles.filter(r => r.status == 1).forEach(r => {
+      userAclIds = userAclIds.concat(r.acls.filter(a => a.status == 1).map(a => a.id));
     });
 
     //获取用户父级权限ids

@@ -36,6 +36,11 @@ class FileController extends Controller {
       logger.info('customName', customName);
       const stream = fs.createReadStream(file.path);
       const fileName = customName ? customName + path.extname(file.name) : file.name;
+
+      // if (!fs.existsSync(path)) { 创建文件夹
+      //  fs.mkdirSync(path);
+      // }
+
       const target = path.join(this.config.baseDir, 'app/public/upload', fileName);
       const writeStream = fs.createWriteStream(target);
       try {
