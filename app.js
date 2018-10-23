@@ -10,6 +10,7 @@ module.exports = app => {
     }
     ctx.fail(errMsg);
   });
+
   app.on('request', ctx => {
     console.log(`--------------${ctx.request.method}请求${ctx.request.url}--------------`);
   });

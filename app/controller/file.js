@@ -51,6 +51,7 @@ class FileController extends Controller {
       }
       urls.push(target);
     }
+    console.log(urls);
     ctx.body = { status: 1 };
     ctx.status = 200;
   }

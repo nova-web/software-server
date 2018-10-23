@@ -1,6 +1,17 @@
 const Service = require('egg').Service;
+const formidable = require('formidable');
 
 class ProductService extends Service {
+  async parse(req) {
+    const form = new formidable.IncomingForm();
+    return new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        console.log('parse', form);
+        resolve({ fields, files });
+      });
+    });
+  }
+
   async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, publishState, type, name } = {}) {
     let result = { count: 0, rows: [] };
     pageSize = Number.parseInt(pageSize);
@@ -27,7 +38,12 @@ class ProductService extends Service {
     return result;
   }
 
-  async addProduct({ name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc, modelId, logo }) {
+  async addProduct() {
+    // { name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc, modelId, logo }
+    console.log('addProduct');
+    const extraParams = await this.parse(this.ctx.req);
+    console.log('extraParams');
+
     if (await this.ctx.model.Product.findOne({ where: { modelId, status: { $in: [0, 1] } } })) {
       return { msg: 'modelId重复' };
     }

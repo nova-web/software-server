@@ -13,7 +13,7 @@ module.exports = options => {
           break;
         }
       }
-      if (access) {
+      if (ctx.request.method.toLowerCase() == 'get' || access) {
         await next();
       } else {
         ctx.status = 403;

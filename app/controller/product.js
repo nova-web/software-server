@@ -8,7 +8,7 @@ class ProductController extends Controller {
   }
 
   //新增数据 post
-  async create() {
+  async addProduct() {
     const { result, msg = '参数不正确！' } = await this.ctx.service.product.addProduct(this.ctx.request.body);
     if (result) {
       this.ctx.success({ id: result.id });
