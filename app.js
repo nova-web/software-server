@@ -19,11 +19,14 @@ module.exports = app => {
     const Acl = app.model.Acl;
     const Role = app.model.Role;
     const User = app.model.User;
+    const Product = app.model.Product;
+    const ProductPackage = app.model.ProductPackage;
     app.beforeStart(async () => {
       User.belongsToMany(Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'user_id' });
       Role.belongsToMany(User, { as: 'users', through: 'sys_role_user', foreignKey: 'role_id' });
       Role.belongsToMany(Acl, { as: 'acls', through: 'sys_role_acl', foreignKey: 'role_id' });
       Acl.belongsToMany(Role, { as: 'roles', through: 'sys_role_acl', foreignKey: 'acl_id' });
+      ProductPackage.belongsTo(Product, { as: 'product' });
       await app.model.sync();
     });
   });

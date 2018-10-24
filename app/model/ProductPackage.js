@@ -51,10 +51,6 @@ module.exports = app => {
       publishBy: {
         field: 'publish_by',
         type: STRING(30),
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
         comment: '发布人'
       },
       stage: {
@@ -62,7 +58,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
-            msg: '无效状态码'
+            msg: '产品阶段无效状态码'
           }
         },
         defaultValue: 'stage_11',
@@ -74,7 +70,7 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
-            msg: '无效状态码'
+            msg: 'publish_state无效状态码'
           }
         },
         defaultValue: 'pro_state_01',

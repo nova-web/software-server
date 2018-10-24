@@ -29,6 +29,10 @@ module.exports = app => {
   router.resources('product', '/products', controller.product); //产品删改查
   router.post('/addProduct', controller.product.addProduct); //添加产品
 
+  //版本
+  router.resources('productPackage', '/packages', controller.package);
+  router.post('/addPackage', controller.package.addPackage);
+
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
   router.post('/upload', controller.file.upload);

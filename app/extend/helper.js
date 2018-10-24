@@ -59,5 +59,25 @@ module.exports = {
       }
     }
     return result;
+  },
+  whereDate(obj) {
+    if (obj.start && obj.end) {
+      return {
+        $gte: new Date(obj.start),
+        $lte: new Date(obj.end)
+      };
+    } else if (obj.start) {
+      return {
+        $gte: new Date(obj.start)
+      };
+    } else if (obj.end) {
+      return {
+        $lte: new Date(obj.end)
+      };
+    } else {
+      return {
+        $lte: new Date()
+      };
+    }
   }
 };
