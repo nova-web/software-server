@@ -16,25 +16,37 @@ class PackageService extends Service {
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
     status = Number.parseInt(status || 1);
-
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
+      order: [['updatedBy', 'ASC']],
       limit: pageSize,
       where: {
         status,
-        updatedAt: {
-          ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd })
-        },
+        updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
         ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishState })
       },
-      include: [
-        {
-          model: this.ctx.app.model.Product,
-          as: 'product'
-        }
-      ],
+      include: [{ model: this.ctx.app.model.Product, as: 'product' }, { model: this.ctx.app.model.User, as: 'uuser' }, { model: this.ctx.app.model.User, as: 'cuser' }],
       distinct: true
     });
+    let rows = [];
+    packages.rows.forEach(_package => {
+      rows.push({
+        createdAt: _package.createdAt,
+        updatedAt: _package.updatedAt,
+        id: _package.id,
+        version: _package.version,
+        url: _package.url,
+        versionLog: _package.versionLog,
+        stage: this.app.dict[_package.stage],
+        publishState: this.app.dict[_package.publishState],
+        size: _package.size,
+        status: _package.status,
+        productName: _package.product.name,
+        updateUser: _package.uuser.name,
+        createdUser: _package.cuser.name
+      });
+    });
+    packages.rows = rows;
     return packages;
   }
   /**
@@ -50,20 +62,20 @@ class PackageService extends Service {
   async addPackage({ version, productId, versionLog, stage, publishState, url, size }) {
     if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId, status: { $in: [0, 1] } } })) {
       return { msg: 'version重复' };
-    } else {
-      let _package = await this.ctx.model.ProductPackage.create({
-        version,
-        productId,
-        versionLog,
-        stage,
-        size,
-        publishState,
-        createdBy: this.ctx.userId,
-        updatedBy: this.ctx.userId,
-        url
-      });
-      return { result: _package };
     }
+    let _package = await this.ctx.model.ProductPackage.create({
+      version,
+      productId,
+      versionLog,
+      stage,
+      size,
+      publishState,
+      createdBy: this.ctx.userId,
+      updatedBy: this.ctx.userId,
+      url
+    });
+
+    return { result: _package };
   }
   /**
    * 修改版本包
@@ -80,9 +92,9 @@ class PackageService extends Service {
     if (await this.ctx.model.ProductPackage.findById(id)) {
       let result = await this.ctx.model.ProductPackage.update({ version, productId, versionLog, stage, publishState, url, size, updatedBy: this.ctx.userId }, { where: { id } });
       return result.length;
-    } else {
-      return { msg: '没有此数据' };
     }
+
+    return { msg: '没有此数据' };
   }
 
   /**
@@ -93,9 +105,9 @@ class PackageService extends Service {
     if (await this.ctx.model.ProductPackage.findById(id)) {
       let result = await this.ctx.model.ProductPackage.update({ status: 2 }, { where: { id } });
       return result.length;
-    } else {
-      return { msg: '没有此数据' };
     }
+
+    return { msg: '没有此数据' };
   }
 }
 

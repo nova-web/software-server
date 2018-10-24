@@ -20,7 +20,6 @@ class PackageController extends Controller {
   //更新数据 put
   async update() {
     const len = await this.ctx.service.package.updatePackage(this.ctx.params.id, this.ctx.request.body);
-    console.log(len);
     if (len) {
       this.ctx.success({ status: 1 });
     } else {
