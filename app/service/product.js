@@ -1,17 +1,6 @@
 const Service = require('egg').Service;
-const formidable = require('formidable');
 
 class ProductService extends Service {
-  async parse(req) {
-    const form = new formidable.IncomingForm();
-    return new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        console.log('parse', form);
-        resolve({ fields, files });
-      });
-    });
-  }
-
   async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, publishState, type, name } = {}) {
     let result = { count: 0, rows: [] };
     pageSize = Number.parseInt(pageSize);
@@ -25,6 +14,7 @@ class ProductService extends Service {
 
     result.count = products.count;
     products.rows.forEach(product => {
+      console.log(product.logo);
       // let roles = [];
       // product.roles.forEach(role => {
       //   roles.push(this.ctx.helper.pick(role, ['id', 'name']));
@@ -39,10 +29,8 @@ class ProductService extends Service {
   }
 
   async addProduct() {
-    // { name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc, modelId, logo }
-    console.log('addProduct');
-    const extraParams = await this.parse(this.ctx.req);
-    console.log('extraParams');
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    let { name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc, modelId } = extraParams && extraParams.fields;
 
     if (await this.ctx.model.Product.findOne({ where: { modelId, status: { $in: [0, 1] } } })) {
       return { msg: 'modelId重复' };
@@ -53,13 +41,13 @@ class ProductService extends Service {
       model,
       type,
       stage,
-      fitPro: fitPro.join(','),
+      fitPro: JSON.parse(fitPro).join(','),
       area,
       dept,
       projectManager,
       productDesc,
       modelId,
-      logo,
+      logo: await this.ctx.service.file.uploadImg(extraParams.files.logo),
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });

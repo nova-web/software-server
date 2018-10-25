@@ -12,13 +12,13 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = ['checktoken', 'checkuser', 'checkauth'];
   config.checktoken = {
-    ignore: ['/login', '/packagelist', '/download/*']
+    ignore: ['/', '/login', '/packagelist', '/download/*']
   };
   config.checkuser = {
-    ignore: ['/login']
+    ignore: ['/', '/login']
   };
   config.checkauth = {
-    ignore: ['/login', '/getUserAclCodes']
+    ignore: ['/', '/login', '/getUserAclCodes']
   };
 
   config.security = {
@@ -29,7 +29,7 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'mysql',
-    host: 'localhost',
+    host: '172.16.6.188',
     password: 'root',
     port: 3306,
     database: 'software-upgrade',

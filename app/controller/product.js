@@ -3,13 +3,13 @@ const Controller = require('egg').Controller;
 class ProductController extends Controller {
   //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.product.getProducts();
+    const list = await this.ctx.service.product.getProducts(this.ctx.request.query);
     this.ctx.success(list);
   }
 
   //新增数据 post
-  async addProduct() {
-    const { result, msg = '参数不正确！' } = await this.ctx.service.product.addProduct(this.ctx.request.body);
+  async create() {
+    const { result, msg = '参数不正确！' } = await this.ctx.service.product.addProduct();
     if (result) {
       this.ctx.success({ id: result.id });
     } else {

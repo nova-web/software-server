@@ -26,14 +26,15 @@ module.exports = app => {
   router.get('/getUserAclCodes', controller.acl.getUserAclCodes); //获取用户拥有的权限码
   router.get('/getRoleAcls', controller.acl.getRoleAcls); //获取角色拥有的权限id
   //产品
-  router.resources('product', '/products', controller.product); //产品删改查
-  router.post('/addProduct', controller.product.addProduct); //添加产品
+  router.resources('product', '/products', controller.product); //产品添删改查
+  //文件
+  router.post('/upload', controller.file.upload); //上传文件
 
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
-  router.post('/upload', controller.file.upload);
   router.get('/download/*', controller.file.download);
-  router.resources('package', '/package', controller.package);
+  router.get('/downloadImg/*', controller.file.downloadImage);
+  router.resources('package', '/packages', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);
   router.post('/logout', controller.login.logout);
 
