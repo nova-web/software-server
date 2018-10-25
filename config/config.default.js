@@ -12,13 +12,13 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = ['checktoken', 'checkuser', 'checkauth'];
   config.checktoken = {
-    ignore: ['/', '/login', '/packagelist', '/download/*']
+    ignore: ['/login', '/packagelist', '/download/*']
   };
   config.checkuser = {
-    ignore: ['/', '/login']
+    ignore: ['/login']
   };
   config.checkauth = {
-    ignore: ['/', '/login', '/getUserAclCodes']
+    ignore: ['/login', '/getUserAclCodes']
   };
 
   config.security = {
@@ -45,21 +45,26 @@ module.exports = appInfo => {
   // };
 
   // //静态资源配置TODO
-  // config.assets = {
-  //   publicPath: '/public/',
-  //   devServer: {
-  //     debug: false,
-  //     command: 'umi dev',
-  //     port: 7001,
-  //     env: {
-  //       APP_ROOT: process.cwd() + '/app/assets',
-  //       BROWSER: 'none',
-  //       ESLINT: 'none',
-  //       // SOCKET_SERVER: 'http://127.0.0.1:7003',
-  //       PUBLIC_PATH: 'http://127.0.0.1:7001'
+  //   config.assets = {
+  //     publicPath: '/public/',
+  //     devServer: {
+  //       debug: false,
+  //       command: 'umi dev',
+  //       port: 7001,
+  //       env: {
+  //         APP_ROOT: process.cwd() + '/app/assets',
+  //         BROWSER: 'none',
+  //         ESLINT: 'none',
+  //         // SOCKET_SERVER: 'http://127.0.0.1:7003',
+  //         PUBLIC_PATH: 'http://127.0.0.1:7001'
+  //       }
   //     }
-  //   }
-  // };
+  //   };
+
+  config.static = {
+    prefix: '/',
+    dir: path.join(appInfo.baseDir, 'app/public')
+  };
 
   config.onerror = {
     all(err, ctx) {}

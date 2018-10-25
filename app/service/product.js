@@ -14,7 +14,10 @@ class ProductService extends Service {
 
     result.count = products.count;
     products.rows.forEach(product => {
-      console.log(product.logo);
+      let temp = this.ctx.helper.pick(product, ['id', 'name', 'model', 'type', 'stage', 'fitPro', 'area', 'dept', 'productDesc', 'modelId', 'logo', 'updatedAt']);
+      Object.assign(temp, {
+        type: this.app.dict[product.type]
+      });
       // let roles = [];
       // product.roles.forEach(role => {
       //   roles.push(this.ctx.helper.pick(role, ['id', 'name']));
@@ -22,7 +25,7 @@ class ProductService extends Service {
       // if (!roleId || roles.findIndex(item => item.id == roleId) !== -1) {
       //   result.rows.push(Object.assign(this.ctx.helper.pick(product, ['id', 'code', 'name', 'username', 'phone', 'email', 'updatedAt', 'status']), { roles }));
       // }
-      result.rows.push(Object.assign(this.ctx.helper.pick(product, ['id', 'name', 'model', 'type', 'stage', 'fitPro', 'area', 'dept', 'productDesc', 'modelId', 'logo', 'updatedAt'])));
+      result.rows.push(temp);
     });
 
     return result;

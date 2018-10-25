@@ -20,12 +20,13 @@ class FileController extends Controller {
     this.ctx.body = await this.ctx.service.file.download();
   }
 
-  async downloadImage() {
-    this.ctx.type = 'jpg';
-    let res = await this.ctx.service.file.downloadImage();
-    console.log(res);
-    this.ctx.body = res.res;
-  }
+  // async downloadImage() {
+  //   this.ctx.type = 'binary';
+
+  //   let res = await this.ctx.service.file.downloadImage();
+  //   console.log(this.ctx);
+  //   this.ctx.body = res;
+  // }
 }
 
 module.exports = FileController;

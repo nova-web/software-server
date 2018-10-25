@@ -37,7 +37,7 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
   router.get('/download/*', controller.file.download);
-  router.get('/downloadImg/*', controller.file.downloadImage);
+  // router.get('/downloadImg/*', controller.file.downloadImage);
   router.resources('package', '/packages', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);
   router.post('/logout', controller.login.logout);

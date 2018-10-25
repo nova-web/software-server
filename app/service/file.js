@@ -74,7 +74,7 @@ class FileController extends Controller {
       try {
         // 写入文件
         await awaitWriteStream(rs.pipe(ws));
-        result = '/downloadImg/public/upload/images/' + fileName;
+        result = '/images/' + fileName;
       } catch (err) {
         // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
         await sendToWormhole(rs);
@@ -85,17 +85,18 @@ class FileController extends Controller {
     return result;
   }
 
-  async downloadImage() {
-    console.log(this.ctx.params);
-    const url = 'http://cdn2.ettoday.net/images/1200/1200526.jpg';
-    // return await this.ctx.curl(url, {
-    //   streaming: true
-    // });
+  // async downloadImage() {
+  //   const url = 'http://cdn2.ettoday.net/images/1200/1200526.jpg';
+  //   // return await this.ctx.curl(url, {
+  //   //   streaming: true
+  //   // });
 
-    let filePath = path.join(this.config.baseDir, 'app/public/images', '15403766373841712.png');
-    console.log(filePath);
-    return fs.createReadStream(filePath);
-  }
+  //   let filePath = path.join(this.config.baseDir, 'app/public/images', '15403766373841712.png');
+  //   console.log(filePath);
+  //   var content = fs.readFileSync(filePath, 'binary');
+  //   // return fs.createReadStream(filePath);
+  //   return content;
+  // }
 }
 
 module.exports = FileController;
