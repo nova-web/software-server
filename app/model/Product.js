@@ -101,10 +101,6 @@ module.exports = app => {
         defaultValue: 'pro_state_01',
         comment: '发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架'
       },
-      version: {
-        type: STRING(30),
-        comment: '版本号'
-      },
       fitPro: {
         field: 'fit_pro',
         type: STRING,

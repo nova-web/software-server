@@ -27,6 +27,7 @@ module.exports = app => {
       Role.belongsToMany(User, { as: 'users', through: 'sys_role_user', foreignKey: 'role_id' });
       Role.belongsToMany(Acl, { as: 'acls', through: 'sys_role_acl', foreignKey: 'role_id' });
       Acl.belongsToMany(Role, { as: 'roles', through: 'sys_role_acl', foreignKey: 'acl_id' });
+      Product.hasMany(ProductPackage, { as: 'packages', foreignKey: 'product_id' });
       ProductPackage.belongsTo(Product, { as: 'product' });
       ProductPackage.belongsTo(User, { as: 'uuser', foreignKey: 'updated_by' });
       ProductPackage.belongsTo(User, { as: 'cuser', foreignKey: 'created_by' });

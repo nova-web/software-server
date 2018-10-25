@@ -6,9 +6,9 @@ const formidable = require('formidable');
 const Controller = require('egg').Controller;
 
 class FileController extends Controller {
-  async index() {
-    this.ctx.body = '<a download href="/download/VX5s/v1.rar">v1.rar</a><br><a download href="/download/VX5s/v2.rar">v2.rar</a>';
-  }
+  // async index() {
+  //   this.ctx.body = '<a download href="/download/VX5s/v1.rar">v1.rar</a><br><a download href="/download/VX5s/v2.rar">v2.rar</a>';
+  // }
 
   async parse(req) {
     const form = new formidable.IncomingForm();
@@ -50,14 +50,6 @@ class FileController extends Controller {
     }
   }
 
-  async download() {
-    // this.ctx.params['0']
-    // let path = this.ctx.params['0'];
-    const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
-    // this.ctx.attachment('hello.rar');
-    return fs.createReadStream(filePath);
-  }
-
   async uploadImg(file) {
     let result = '';
     if (file) {
@@ -80,9 +72,16 @@ class FileController extends Controller {
         await sendToWormhole(rs);
         throw err;
       }
-      console.log(this);
     }
     return result;
+  }
+
+  async download() {
+    // this.ctx.params['0']
+    // let path = this.ctx.params['0'];
+    const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
+    // this.ctx.attachment('hello.rar');
+    return fs.createReadStream(filePath);
   }
 
   // async downloadImage() {
@@ -97,6 +96,13 @@ class FileController extends Controller {
   //   // return fs.createReadStream(filePath);
   //   return content;
   // }
+
+  delFile(url) {
+    url = path.join(this.config.baseDir, 'app/public', url);
+    if (fs.existsSync(url)) {
+      fs.unlinkSync(url);
+    }
+  }
 }
 
 module.exports = FileController;

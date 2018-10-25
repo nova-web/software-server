@@ -27,12 +27,14 @@ module.exports = app => {
   router.get('/getRoleAcls', controller.acl.getRoleAcls); //获取角色拥有的权限id
   //产品
   router.resources('product', '/products', controller.product); //产品添删改查
-  //文件
-  router.post('/upload', controller.file.upload); //上传文件
-
+  router.get('/getAllProducts', controller.product.getAllProducts); //下拉查询所有产品
   //版本
   router.resources('productPackage', '/packages', controller.package);
   router.post('/addPackage', controller.package.addPackage);
+  //文件
+  router.post('/upload', controller.file.upload); //上传文件
+  //字典
+  router.get('/dict', controller.dict.getDict); //字典
 
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);

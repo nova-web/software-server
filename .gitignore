@@ -11,4 +11,4 @@ run/
 *.sw*
 *.un~
 app/assets
-app/public/upload
+app/public/

@@ -19,22 +19,27 @@ class ProductController extends Controller {
 
   //更新数据 put
   async update() {
-    const len = await this.ctx.service.product.updateData(this.ctx.params.id, this.ctx.request.body);
-    if (len) {
+    const { length = 0, msg = '产品不存在！' } = await this.ctx.service.product.updateProduct(this.ctx.params.id, this.ctx.request.body);
+    if (length) {
       this.ctx.success({ status: 1 });
     } else {
-      this.ctx.fail('产品不存在！');
+      this.ctx.fail(msg);
     }
   }
 
   //删除数据 delete
   async destroy() {
-    const len = await this.ctx.service.product.delData(this.ctx.params.id);
-    if (len) {
+    const { length = 0, msg = '产品不存在！' } = await this.ctx.service.product.delProduct(this.ctx.params.id);
+    if (length) {
       this.ctx.success({ status: 1 });
     } else {
-      this.ctx.fail('产品不存在！');
+      this.ctx.fail(msg);
     }
+  }
+
+  async getAllProducts() {
+    const list = await this.ctx.service.product.getAllProducts();
+    this.ctx.success(list);
   }
 }
 
