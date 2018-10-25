@@ -30,6 +30,10 @@ module.exports = app => {
   //文件
   router.post('/upload', controller.file.upload); //上传文件
 
+  //版本
+  router.resources('productPackage', '/packages', controller.package);
+  router.post('/addPackage', controller.package.addPackage);
+
   router.get('/', controller.home.index);
   router.get('/packagelist', controller.file.index);
   router.get('/download/*', controller.file.download);
