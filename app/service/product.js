@@ -57,8 +57,7 @@ class ProductService extends Service {
       dept,
       projectManager,
       productDesc,
-      // logo: await this.ctx.service.file.uploadImg(extraParams.files.logo),
-      logo: await this.ctx.service.file.upload(extraParams.files.logo, name),
+      logo: await this.ctx.service.file.uploadImg(extraParams.files.logo),
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });

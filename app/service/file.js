@@ -24,7 +24,7 @@ class FileController extends Controller {
    * @param customName 单文件自定义文件名
    * @param isAjax 上传方式
    */
-  async upload(file, modelId) {
+  async upload(file, folderName, fileName) {
     let result = {
       url: '',
       size: ''
@@ -33,30 +33,26 @@ class FileController extends Controller {
       // 获取 steam
       const rs = fs.createReadStream(file.path);
       // 生成文件名
-      const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      fileName = fileName + '-' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
       // 创建文件夹;
-      let folderPath = path.join(this.config.baseDir, 'app/public/upload', modelId);
-      console.log(folderPath, modelId);
+      let folderPath = path.join(this.config.baseDir, 'app/public/upload', folderName);
       if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath);
       }
-
-      // const urls = [];
-      // for (let key in extraParams.files) {
-      //   const file = extraParams.files[key];
-      //   const stream = fs.createReadStream(file.path);
-      //   const fileName = customName ? customName + path.extname(file.name) : file.name;
-
-      //   const target = path.join(this.config.baseDir, 'app/public/upload', fileName);
-      //   const writeStream = fs.createWriteStream(target);
-      //   try {
-      //     await awaitWriteStream(stream.pipe(writeStream));
-      //   } catch (err) {
-      //     await sendToWormhole(stream);
-      //     throw err;
-      //   }
-      //   urls.push(target);
-      // }
+      // 生成写入路径
+      const target = path.join(folderPath, fileName);
+      // 写入流
+      const ws = fs.createWriteStream(target);
+      try {
+        // 写入文件
+        await awaitWriteStream(rs.pipe(ws));
+        result.url = '/upload/' + folderName + '/' + fileName;
+        result.size = file.size;
+      } catch (err) {
+        // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+        await sendToWormhole(rs);
+        throw err;
+      }
     }
     return result;
   }
@@ -70,7 +66,6 @@ class FileController extends Controller {
       const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
       // 生成写入路径
       const target = path.join(this.config.baseDir, 'app/public/images', fileName);
-      console.log(target);
       // 写入流
       const ws = fs.createWriteStream(target);
       try {

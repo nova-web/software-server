@@ -60,19 +60,19 @@ class PackageService extends Service {
    * @param {size} 版本文件大小
    */
   async addPackage() {
-    console.log(1111);
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    console.log(extraParams);
-    let { version, productId, versionLog, stage, publishStatus } = extraParams && extraParams.fields;
+    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
 
-    if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId, status: { $in: [0, 1] } } })) {
+    let product = await this.ctx.model.Product.findById(productId);
+    if (!(product && product.status == 1)) {
+      return { msg: '产品不存在' };
+    }
+
+    if (await this.ctx.model.ProductPackage.findOne({ where: { version, productId, status: 1 } })) {
       return { msg: 'version重复' };
     }
 
-    let product = await this.ctx.model.Product.findOne({ where: { Id: productId } });
-    console.log(product.modelId);
-    console.log(extraParams.files);
-    let fileObj = await this.ctx.service.file.uploadImg(extraParams.files.package, product.modelId);
+    let fileObj = await this.ctx.service.file.upload(extraParams.files.package, product.modelId, version);
 
     let _package = await this.ctx.model.ProductPackage.create({
       version,
@@ -80,10 +80,9 @@ class PackageService extends Service {
       versionLog,
       stage,
       size: fileObj.size,
-      publishStatus,
+      url: fileObj.url,
       createdBy: this.ctx.userId,
-      updatedBy: this.ctx.userId,
-      url: fileObj.url
+      updatedBy: this.ctx.userId
     });
 
     return { result: _package };
