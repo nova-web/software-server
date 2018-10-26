@@ -35,7 +35,7 @@ class PackageService extends Service {
         updatedAt: _package.updatedAt,
         id: _package.id,
         version: _package.version,
-        url: this.ctx.header.host + '/' + _package.url,
+        url: this.ctx.header.host + _package.url,
         versionLog: _package.versionLog,
         stage: this.app.dict[_package.stage],
         publishStatus: this.app.dict[_package.publishStatus],
@@ -185,25 +185,25 @@ class PackageService extends Service {
 
   //试用
   async tryout({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
     return { length: result[0] };
   }
 
   //撤回
   async withdraw({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_01' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_01', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
     return { length: result[0] };
   }
 
   //发布
   async publish({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId, publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
     return { length: result[0] };
   }
 
   //下架
   async obtained({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_04' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_04', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
     return { length: result[0] };
   }
 }
