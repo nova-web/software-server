@@ -197,7 +197,7 @@ class PackageService extends Service {
 
   //发布
   async publish({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
     return { length: result[0] };
   }
 
