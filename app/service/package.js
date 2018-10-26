@@ -60,18 +60,14 @@ class PackageService extends Service {
    * @param {size} 版本文件大小
    */
   async addPackage() {
-    console.log(1111);
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    console.log(extraParams);
-    let { version, productId, versionLog, stage, publishStatus } = extraParams && extraParams.fields;
+    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
 
     if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId, status: { $in: [0, 1] } } })) {
       return { msg: 'version重复' };
     }
 
     let product = await this.ctx.model.Product.findOne({ where: { Id: productId } });
-    console.log(product.modelId);
-    console.log(extraParams.files);
     let fileObj = await this.ctx.service.file.uploadImg(extraParams.files.package, product.modelId);
 
     let _package = await this.ctx.model.ProductPackage.create({
@@ -80,7 +76,6 @@ class PackageService extends Service {
       versionLog,
       stage,
       size: fileObj.size,
-      publishStatus,
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId,
       url: fileObj.url
@@ -99,8 +94,14 @@ class PackageService extends Service {
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
-  async updatePackage(id, { version, productId, versionLog, stage, publishStatus, url, size }) {
-    if (await this.ctx.model.ProductPackage.findById(id)) {
+  async updatePackage() {
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
+    let fileObj = await this.ctx.service.file.uploadImg(extraParams.files.package, product.modelId);
+
+    if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId } })) {
+      return { msg: 'version重复' };
+    } else {
       let result = await this.ctx.model.ProductPackage.update({ version, productId, versionLog, stage, publishStatus, url, size, updatedBy: this.ctx.userId }, { where: { id } });
       return result.length;
     }
