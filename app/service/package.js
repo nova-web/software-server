@@ -25,7 +25,7 @@ class PackageService extends Service {
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
         ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishStatus })
       },
-      include: [{ model: this.ctx.app.model.Product, as: 'product' }, { model: this.ctx.app.model.User, as: 'uuser' }, { model: this.ctx.app.model.User, as: 'cuser' }],
+      include: [{ model: this.ctx.app.model.Product, as: 'product' }],
       distinct: true
     });
     let rows = [];
@@ -35,15 +35,13 @@ class PackageService extends Service {
         updatedAt: _package.updatedAt,
         id: _package.id,
         version: _package.version,
-        url: _package.url,
+        url: this.ctx.header.host + '/' + _package.url,
         versionLog: _package.versionLog,
         stage: this.app.dict[_package.stage],
         publishStatus: this.app.dict[_package.publishStatus],
         size: _package.size,
         status: _package.status,
-        productName: _package.product.name,
-        updateUser: _package.uuser.name,
-        createdUser: _package.cuser.name
+        productName: _package.product.name
       });
     });
     packages.rows = rows;
@@ -98,12 +96,47 @@ class PackageService extends Service {
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
-  async updatePackage(id, { version, productId, versionLog, stage, publishStatus, url, size }) {
-    if (await this.ctx.model.ProductPackage.findById(id)) {
-      let result = await this.ctx.model.ProductPackage.update({ version, productId, versionLog, stage, publishStatus, url, size, updatedBy: this.ctx.userId }, { where: { id } });
-      return result.length;
-    }
+  async updatePackage(id) {
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
+      let product = await this.ctx.model.Product.findById(productId);
+      if (!(product && product.status == 1)) {
+        return { msg: '产品不存在' };
+      }
+      let ppackage = await this.ctx.model.ProductPackage.findOne({
+        where: {
+          version,
+          productId,
+          id: {
+            $not: id
+          }
+        }
+      });
+      if (ppackage) {
+        return { msg: 'version重复' };
+      }
+      let params = {
+        version,
+        productId,
+        versionLog,
+        stage,
+        updatedBy: this.ctx.userId
+      };
+      if (extraParams.files.package) {
+        this.ctx.service.file.delFile(productPackage.url);
+        let fileObj = await this.ctx.service.file.upload(extraParams.files.package, product.modelId, version);
 
+        Object.assign(params, {
+          size: fileObj.size,
+          url: fileObj.url
+        });
+      }
+
+      let result = await this.ctx.model.ProductPackage.update(params, { where: { id } });
+      return result;
+    }
     return { msg: '没有此数据' };
   }
 
@@ -164,7 +197,7 @@ class PackageService extends Service {
 
   //发布
   async publish({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
     return { length: result[0] };
   }
 
