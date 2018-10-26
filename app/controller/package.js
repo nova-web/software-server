@@ -37,6 +37,11 @@ class PackageController extends Controller {
     }
   }
 
+  async newlist() {
+    const list = await this.ctx.service.package.newlist(this.ctx.request.query);
+    this.ctx.success(list);
+  }
+
   //试用
   async tryout() {
     const { length = 0, msg = '操作异常' } = await this.ctx.service.package.tryout(this.ctx.request.body);

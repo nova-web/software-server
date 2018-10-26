@@ -121,6 +121,37 @@ class PackageService extends Service {
     return { msg: '没有此数据' };
   }
 
+  //获取可升级的版本列表
+  async newlist({ modelId, version = '' }) {
+    console.log(this.ctx);
+    let list = [];
+    let product = await this.ctx.model.Product.findOne({
+      where: { modelId, status: 1 },
+      include: [
+        {
+          model: this.ctx.model.ProductPackage,
+          as: 'packages',
+          where: {
+            status: 1,
+            version: {
+              $gt: version
+            }
+          },
+          order: [['version', 'DESC']]
+        }
+      ]
+    });
+    if (product && product.packages.length) {
+      list = product.packages.map(item => {
+        return {
+          url: item.url,
+          version: item.version
+        };
+      });
+    }
+    return list;
+  }
+
   //试用
   async tryout({ id }) {
     let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02' }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
