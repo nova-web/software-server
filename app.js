@@ -16,7 +16,6 @@ module.exports = app => {
   });
 
   app.on('server', server => {
-    console.log(server);
     const Acl = app.model.Acl;
     const Role = app.model.Role;
     const User = app.model.User;

@@ -3,7 +3,6 @@ const Service = require('egg').Service;
 class ProductService extends Service {
   async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, publishStatus, type, name } = {}) {
     let result = { count: 0, rows: [] };
-    console.log('ssssssssssssss', pageSize);
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
 
@@ -32,6 +31,7 @@ class ProductService extends Service {
       } else {
         temp.fitPro = [];
       }
+      temp.logo = this.ctx.header.host + '/' + product.logo;
       result.rows.push(temp);
     });
 
@@ -57,7 +57,7 @@ class ProductService extends Service {
       dept,
       projectManager,
       productDesc,
-      logo: await this.ctx.service.file.uploadImg(extraParams.files.logo),
+      logo: await this.ctx.service.file.uploadImg(extraParams.files.logo, modelId),
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });
@@ -102,8 +102,7 @@ class ProductService extends Service {
       include: [
         {
           model: this.ctx.model.ProductPackage,
-          as: 'packages',
-          where: { status: 1 }
+          as: 'packages'
         }
       ]
     });
@@ -113,8 +112,13 @@ class ProductService extends Service {
         return { msg: `未发布状态才能删除` };
       }
 
-      if (product.packages) {
-        return { msg: `移除产品包【${product.packages.map(p => p.version).join('、')}】,再删除产品！` };
+      if (product.packages && product.packages.filter(item => item.status == 1).length) {
+        return {
+          msg: `移除产品包【${product.packages
+            .filter(item => item.status == 1)
+            .map(p => p.version)
+            .join('、')}】,再删除产品！`
+        };
       }
     }
 

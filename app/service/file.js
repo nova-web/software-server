@@ -57,13 +57,18 @@ class FileController extends Controller {
     return result;
   }
 
-  async uploadImg(file) {
+  async uploadImg(file, folderName) {
     let result = '';
     if (file) {
       // 获取 steam
       const rs = fs.createReadStream(file.path);
       // 生成文件名
-      const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      const fileName = folderName + '.' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      // 创建文件夹;
+      const folderPath = path.join(this.config.baseDir, 'app/public/upload', folderName);
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
+      }
       // 生成写入路径
       const target = path.join(this.config.baseDir, 'app/public/images', fileName);
       // 写入流
@@ -96,7 +101,6 @@ class FileController extends Controller {
   //   // });
 
   //   let filePath = path.join(this.config.baseDir, 'app/public/images', '15403766373841712.png');
-  //   console.log(filePath);
   //   var content = fs.readFileSync(filePath, 'binary');
   //   // return fs.createReadStream(filePath);
   //   return content;
