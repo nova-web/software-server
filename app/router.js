@@ -28,8 +28,12 @@ module.exports = app => {
   //产品
   router.resources('product', '/products', controller.product); //产品添删改查
   router.get('/getAllProducts', controller.product.getAllProducts); //下拉查询所有产品
+  router.post('/tryout', controller.product.tryout); //试用
+  router.post('/withdraw', controller.product.withdraw); //撤回
+  router.post('/publish', controller.product.publish); //发布
+  router.post('/obtained', controller.product.obtained); //下架
   //版本
-  router.resources('productPackage', '/packages', controller.package);
+  router.resources('productPackage', '/packages', controller.package); //版本添删改查
   router.post('/addPackage', controller.package.addPackage);
   //文件
   router.post('/upload', controller.file.upload); //上传文件
@@ -40,7 +44,6 @@ module.exports = app => {
   router.get('/packagelist', controller.file.index);
   router.get('/download/*', controller.file.download);
   // router.get('/downloadImg/*', controller.file.downloadImage);
-  router.resources('package', '/packages', controller.package);
   router.resources('syslog', '/syslog', controller.syslog);
   router.post('/logout', controller.login.logout);
 

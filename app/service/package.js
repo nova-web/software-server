@@ -9,10 +9,10 @@ class PackageService extends Service {
    * @param {version} 版本号
    * @param {status} 版本状态
    * @param {stage} 版本阶段
-   * @param {publishState} 发布状态
+   * @param {publishStatus} 发布状态
    * @param {updatedAt} 更新时间
    */
-  async getPackages({ pageSize = this.app.config.pageSize, pageNum = 1, productId, version, status, stage, publishState, updatedStart, updatedEnd } = {}) {
+  async getPackages({ pageSize = this.app.config.pageSize, pageNum = 1, productId, version, status, stage, publishStatus, updatedStart, updatedEnd } = {}) {
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
     status = Number.parseInt(status || 1);
@@ -23,7 +23,7 @@ class PackageService extends Service {
       where: {
         status,
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
-        ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishState })
+        ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishStatus })
       },
       include: [{ model: this.ctx.app.model.Product, as: 'product' }, { model: this.ctx.app.model.User, as: 'uuser' }, { model: this.ctx.app.model.User, as: 'cuser' }],
       distinct: true
@@ -38,7 +38,7 @@ class PackageService extends Service {
         url: _package.url,
         versionLog: _package.versionLog,
         stage: this.app.dict[_package.stage],
-        publishState: this.app.dict[_package.publishState],
+        publishStatus: this.app.dict[_package.publishStatus],
         size: _package.size,
         status: _package.status,
         productName: _package.product.name,
@@ -55,11 +55,11 @@ class PackageService extends Service {
    * @param {productId} 产品Id
    * @param {versionLog} 版本日志
    * @param {stage} 阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产
-   * @param {publishState} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
+   * @param {publishStatus} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
-  async addPackage({ version, productId, versionLog, stage, publishState, url, size }) {
+  async addPackage({ version, productId, versionLog, stage, publishStatus, url, size }) {
     if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId, status: { $in: [0, 1] } } })) {
       return { msg: 'version重复' };
     }
@@ -69,7 +69,7 @@ class PackageService extends Service {
       versionLog,
       stage,
       size,
-      publishState,
+      publishStatus,
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId,
       url
@@ -84,13 +84,13 @@ class PackageService extends Service {
    * @param {productId} 产品Id
    * @param {versionLog} 版本日志
    * @param {stage} 阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产
-   * @param {publishState} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
+   * @param {publishStatus} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
-  async updatePackage(id, { version, productId, versionLog, stage, publishState, url, size }) {
+  async updatePackage(id, { version, productId, versionLog, stage, publishStatus, url, size }) {
     if (await this.ctx.model.ProductPackage.findById(id)) {
-      let result = await this.ctx.model.ProductPackage.update({ version, productId, versionLog, stage, publishState, url, size, updatedBy: this.ctx.userId }, { where: { id } });
+      let result = await this.ctx.model.ProductPackage.update({ version, productId, versionLog, stage, publishStatus, url, size, updatedBy: this.ctx.userId }, { where: { id } });
       return result.length;
     }
 

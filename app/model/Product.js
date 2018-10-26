@@ -89,16 +89,16 @@ module.exports = app => {
         defaultValue: 'dept_01',
         comment: '所属产品线：1视频 | 2同步 | 3云显'
       },
-      publishState: {
-        field: 'publish_state',
+      publishStatus: {
+        field: 'publish_status',
         type: STRING(30),
         validate: {
           isIn: {
-            args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
+            args: [['pro_status_01', 'pro_status_02', 'pro_status_03', 'pro_status_04']],
             msg: '无效发布状态'
           }
         },
-        defaultValue: 'pro_state_01',
+        defaultValue: 'pro_status_01',
         comment: '发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架'
       },
       fitPro: {

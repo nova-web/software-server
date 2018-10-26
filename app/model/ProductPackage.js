@@ -58,22 +58,22 @@ module.exports = app => {
         validate: {
           isIn: {
             args: [['stage_01', 'stage_02', 'stage_03', 'stage_11', 'stage_12', 'stage_13', 'stage_14', 'stage_15', 'stage_16']],
-            msg: '产品阶段无效状态码'
+            msg: '产品阶段码无效'
           }
         },
         defaultValue: 'stage_11',
         comment: '阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产'
       },
-      publishState: {
-        field: 'publish_state',
+      publishStatus: {
+        field: 'publish_status',
         type: STRING(30),
         validate: {
           isIn: {
-            args: [['pro_state_01', 'pro_state_02', 'pro_state_03', 'pro_state_04']],
-            msg: 'publish_state无效状态码'
+            args: [['pro_status_01', 'pro_status_02', 'pro_status_03', 'pro_status_04']],
+            msg: '发布状态码无效'
           }
         },
-        defaultValue: 'pro_state_01',
+        defaultValue: 'pro_status_01',
         comment: '发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架'
       },
       size: {
