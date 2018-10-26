@@ -51,6 +51,7 @@ module.exports = {
   // },
   whereFilter(obj) {
     let result = {};
+    console.log(obj);
     for (key in obj) {
       if (obj[key].length) {
         result[key] = {

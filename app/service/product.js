@@ -3,6 +3,7 @@ const Service = require('egg').Service;
 class ProductService extends Service {
   async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, publishStatus, type, name } = {}) {
     let result = { count: 0, rows: [] };
+    console.log('ssssssssssssss', pageSize);
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
 
