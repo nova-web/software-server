@@ -12,9 +12,9 @@ class PackageService extends Service {
    * @param {publishStatus} 发布状态
    * @param {updatedAt} 更新时间
    */
-  async getPackages({ pageSize = this.app.config.pageSize, pageNum = 1, productId, version, status, stage, publishStatus, updatedStart, updatedEnd } = {}) {
-    pageSize = Number.parseInt(pageSize);
-    pageNum = Number.parseInt(pageNum);
+  async getPackages({ pageSize, pageNum, productId, version, status, stage, publishStatus, updatedStart, updatedEnd } = {}) {
+    pageSize = pageSize ? Number.parseInt(pageSize) : this.app.config.pageSize;
+    pageNum = pageNum ? Number.parseInt(pageNum) : 1;
     status = Number.parseInt(status || 1);
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
@@ -59,20 +59,31 @@ class PackageService extends Service {
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
-  async addPackage({ version, productId, versionLog, stage, publishStatus, url, size }) {
+  async addPackage() {
+    console.log(1111);
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    console.log(extraParams);
+    let { version, productId, versionLog, stage, publishStatus } = extraParams && extraParams.fields;
+
     if (await this.ctx.model.ProductPackage.findOne({ where: { version: version, productId: productId, status: { $in: [0, 1] } } })) {
       return { msg: 'version重复' };
     }
+
+    let product = await this.ctx.model.Product.findOne({ where: { Id: productId } });
+    console.log(product.modelId);
+    console.log(extraParams.files);
+    let fileObj = await this.ctx.service.file.uploadImg(extraParams.files.package, product.modelId);
+
     let _package = await this.ctx.model.ProductPackage.create({
       version,
       productId,
       versionLog,
       stage,
-      size,
+      size: fileObj.size,
       publishStatus,
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId,
-      url
+      url: fileObj.url
     });
 
     return { result: _package };

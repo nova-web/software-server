@@ -34,6 +34,7 @@ module.exports = appInfo => {
     port: 3306,
     database: 'software-upgrade',
     username: 'root',
+    // logging: false,
     timezone: '+08:00' //东八时区
     // define: { raw: true }
   };
