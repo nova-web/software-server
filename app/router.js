@@ -34,6 +34,7 @@ module.exports = app => {
   router.post('/product/obtained', controller.product.obtained); //下架
   //版本
   router.resources('productPackage', '/packages', controller.package); //版本添删改查
+  router.get('/package/newlist', controller.package.newlist); //查询可升级版本列表
   router.post('/package/tryout', controller.package.tryout); //试用
   router.post('/package/withdraw', controller.package.withdraw); //撤回
   router.post('/package/publish', controller.package.publish); //发布
