@@ -39,16 +39,10 @@ module.exports = app => {
   router.post('/package/withdraw', controller.package.withdraw); //撤回
   router.post('/package/publish', controller.package.publish); //发布
   router.post('/package/obtained', controller.package.obtained); //下架
-  //文件
-  router.post('/upload', controller.file.upload); //上传文件
   //字典
   router.get('/dict', controller.dict.getDict); //字典
-
-  router.get('/', controller.home.index);
-  router.get('/packagelist', controller.file.index);
-  router.get('/download/*', controller.file.download);
+  //系统日志
   router.resources('syslog', '/syslog', controller.syslog);
-  router.post('/logout', controller.login.logout);
 
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);

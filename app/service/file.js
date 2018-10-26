@@ -86,13 +86,13 @@ class FileController extends Controller {
     return result;
   }
 
-  async download() {
-    // this.ctx.params['0']
-    // let path = this.ctx.params['0'];
-    const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
-    // this.ctx.attachment('hello.rar');
-    return fs.createReadStream(filePath);
-  }
+  // async download() {
+  //   // this.ctx.params['0']
+  //   // let path = this.ctx.params['0'];
+  //   const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
+  //   // this.ctx.attachment('hello.rar');
+  //   return fs.createReadStream(filePath);
+  // }
 
   // async downloadImage() {
   //   const url = 'http://cdn2.ettoday.net/images/1200/1200526.jpg';
