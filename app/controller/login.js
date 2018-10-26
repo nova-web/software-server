@@ -26,10 +26,6 @@ class LoginController extends Controller {
       ctx.fail('用户名或密码错误');
     }
   }
-
-  async logout() {
-    ctx.cookies.set('token', '');
-  }
 }
 
 module.exports = LoginController;

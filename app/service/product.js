@@ -31,7 +31,7 @@ class ProductService extends Service {
       } else {
         temp.fitPro = [];
       }
-      temp.logo = this.ctx.header.host + '/' + product.logo;
+      temp.logo = this.ctx.header.host + product.logo;
       result.rows.push(temp);
     });
 
@@ -40,7 +40,7 @@ class ProductService extends Service {
 
   async addProduct() {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    let { name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc, modelId } = extraParams && extraParams.fields;
+    let { name, model, type, stage, fitPro, area, dept, projectManager, productDesc, modelId } = extraParams && extraParams.fields;
 
     if (await this.ctx.model.Product.findOne({ where: { modelId, status: 1 } })) {
       return { msg: 'modelId重复' };
@@ -52,7 +52,7 @@ class ProductService extends Service {
       modelId,
       type,
       stage,
-      fitPro: JSON.parse(fitPro).join(','),
+      fitPro,
       area,
       dept,
       projectManager,
@@ -67,7 +67,7 @@ class ProductService extends Service {
 
   async updateProduct(id) {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    let { name, model, type, stage, fitPro = [], area, dept, projectManager, productDesc } = extraParams && extraParams.fields;
+    let { name, model, type, stage, fitPro, area, dept, projectManager, productDesc } = extraParams && extraParams.fields;
 
     let product = await this.ctx.model.Product.findById(id);
     if (!(product && product.status == 1)) {
@@ -79,7 +79,7 @@ class ProductService extends Service {
       model,
       type,
       stage,
-      fitPro: JSON.parse(fitPro).join(','),
+      fitPro,
       area,
       dept,
       projectManager,
@@ -87,7 +87,7 @@ class ProductService extends Service {
       updatedBy: this.ctx.userId
     };
 
-    let logo = await this.ctx.service.file.uploadImg(extraParams.files.logo);
+    let logo = await this.ctx.service.file.uploadImg(extraParams.files.logo, product.modelId);
     if (logo) {
       Object.assign(params, { logo });
       this.ctx.service.file.delFile(product.logo);
