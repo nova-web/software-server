@@ -35,7 +35,7 @@ class PackageService extends Service {
         updatedAt: _package.updatedAt,
         id: _package.id,
         version: _package.version,
-        url: this.ctx.header.host + _package.url,
+        url: this.ctx.app.config.apihost + _package.url,
         versionLog: _package.versionLog,
         stage: this.app.dict[_package.stage],
         publishStatus: this.app.dict[_package.publishStatus],
@@ -155,6 +155,7 @@ class PackageService extends Service {
 
   //获取可升级的版本列表
   async newlist({ modelId, version = '' }) {
+    console.log(this.ctx);
     let list = [];
     let product = await this.ctx.model.Product.findOne({
       where: { modelId, status: 1 },
@@ -175,7 +176,7 @@ class PackageService extends Service {
     if (product && product.packages.length) {
       list = product.packages.map(item => {
         return {
-          url: item.url,
+          url: this.ctx.app.config.apihost + item.url,
           version: item.version
         };
       });

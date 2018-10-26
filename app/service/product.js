@@ -31,7 +31,7 @@ class ProductService extends Service {
       } else {
         temp.fitPro = [];
       }
-      temp.logo = this.ctx.header.host + product.logo;
+      temp.logo = this.ctx.app.config.apihost + product.logo;
       result.rows.push(temp);
     });
 

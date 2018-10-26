@@ -76,5 +76,7 @@ module.exports = appInfo => {
     exp: 360000 //秒
   };
 
+  config.apihost = 'http://172.16.6.188:7001';
+
   return config;
 };
