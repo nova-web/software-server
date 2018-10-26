@@ -24,37 +24,47 @@ class FileController extends Controller {
    * @param customName 单文件自定义文件名
    * @param isAjax 上传方式
    */
-  async upload() {
-    const { ctx, logger } = this;
-    const extraParams = await this.parse(ctx.req);
-    let { multipleFile, customName, isAjax } = extraParams && extraParams['fields'];
-    const urls = [];
-    for (let key in extraParams.files) {
-      const file = extraParams.files[key];
-      const stream = fs.createReadStream(file.path);
-      const fileName = customName ? customName + path.extname(file.name) : file.name;
-
-      // if (!fs.existsSync(path)) { 创建文件夹
-      //  fs.mkdirSync(path);
-      // }
-
-      const target = path.join(this.config.baseDir, 'app/public/upload', fileName);
-      const writeStream = fs.createWriteStream(target);
-      try {
-        await awaitWriteStream(stream.pipe(writeStream));
-      } catch (err) {
-        await sendToWormhole(stream);
-        throw err;
+  async upload(file, modelId) {
+    let result = {
+      url: '',
+      size: ''
+    };
+    if (file) {
+      // 获取 steam
+      const rs = fs.createReadStream(file.path);
+      // 生成文件名
+      const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      // 创建文件夹;
+      let folderPath = path.join(this.config.baseDir, 'app/public/upload', modelId);
+      console.log(folderPath, modelId);
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
       }
-      urls.push(target);
+
+      // const urls = [];
+      // for (let key in extraParams.files) {
+      //   const file = extraParams.files[key];
+      //   const stream = fs.createReadStream(file.path);
+      //   const fileName = customName ? customName + path.extname(file.name) : file.name;
+
+      //   const target = path.join(this.config.baseDir, 'app/public/upload', fileName);
+      //   const writeStream = fs.createWriteStream(target);
+      //   try {
+      //     await awaitWriteStream(stream.pipe(writeStream));
+      //   } catch (err) {
+      //     await sendToWormhole(stream);
+      //     throw err;
+      //   }
+      //   urls.push(target);
+      // }
     }
+    return result;
   }
 
   async uploadImg(file) {
     let result = '';
     if (file) {
       // 获取 steam
-      console.log(file.path);
       const rs = fs.createReadStream(file.path);
       // 生成文件名
       const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
