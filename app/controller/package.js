@@ -8,7 +8,7 @@ class PackageController extends Controller {
   }
 
   //新增数据 post
-  async addPackage() {
+  async create() {
     const { result, msg = '参数不正确！' } = await this.ctx.service.package.addPackage(this.ctx.request.body);
     if (result) {
       this.ctx.success({ id: result.id });
@@ -34,6 +34,46 @@ class PackageController extends Controller {
       this.ctx.success({ status: 1 });
     } else {
       this.ctx.fail('Package不存在！');
+    }
+  }
+
+  //试用
+  async tryout() {
+    const { length = 0, msg = '操作异常' } = await this.ctx.service.package.tryout(this.ctx.request.body);
+    if (length) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  //撤回
+  async withdraw() {
+    const { length = 0, msg = '操作异常' } = await this.ctx.service.package.withdraw(this.ctx.request.body);
+    if (length) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  //发布
+  async publish() {
+    const { length = 0, msg = '操作异常' } = await this.ctx.service.package.publish(this.ctx.request.body);
+    if (length) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  //下架
+  async obtained() {
+    const { length = 0, msg = '操作异常' } = await this.ctx.service.package.obtained(this.ctx.request.body);
+    if (length) {
+      this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
     }
   }
 }
