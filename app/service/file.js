@@ -33,7 +33,7 @@ class FileController extends Controller {
       // 获取 steam
       const rs = fs.createReadStream(file.path);
       // 生成文件名
-      fileName = fileName + '-' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      fileName = fileName + '.' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
       // 创建文件夹;
       let folderPath = path.join(this.config.baseDir, 'app/public/upload', folderName);
       if (!fs.existsSync(folderPath)) {
