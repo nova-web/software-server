@@ -24,43 +24,48 @@ class FileController extends Controller {
    * @param customName 单文件自定义文件名
    * @param isAjax 上传方式
    */
-  async upload() {
-    const { ctx, logger } = this;
-    const extraParams = await this.parse(ctx.req);
-    let { multipleFile, customName, isAjax } = extraParams && extraParams['fields'];
-    const urls = [];
-    for (let key in extraParams.files) {
-      const file = extraParams.files[key];
-      const stream = fs.createReadStream(file.path);
-      const fileName = customName ? customName + path.extname(file.name) : file.name;
-
-      // if (!fs.existsSync(path)) { 创建文件夹
-      //  fs.mkdirSync(path);
-      // }
-
-      const target = path.join(this.config.baseDir, 'app/public/upload', fileName);
-      const writeStream = fs.createWriteStream(target);
+  async upload(file, folderName, fileName) {
+    let result = {
+      url: '',
+      size: ''
+    };
+    if (file) {
+      // 获取 steam
+      const rs = fs.createReadStream(file.path);
+      // 生成文件名
+      fileName = fileName + '.' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
+      // 创建文件夹;
+      let folderPath = path.join(this.config.baseDir, 'app/public/upload', folderName);
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
+      }
+      // 生成写入路径
+      const target = path.join(folderPath, fileName);
+      // 写入流
+      const ws = fs.createWriteStream(target);
       try {
-        await awaitWriteStream(stream.pipe(writeStream));
+        // 写入文件
+        await awaitWriteStream(rs.pipe(ws));
+        result.url = '/upload/' + folderName + '/' + fileName;
+        result.size = file.size;
       } catch (err) {
-        await sendToWormhole(stream);
+        // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+        await sendToWormhole(rs);
         throw err;
       }
-      urls.push(target);
     }
+    return result;
   }
 
   async uploadImg(file) {
     let result = '';
     if (file) {
       // 获取 steam
-      console.log(file.path);
       const rs = fs.createReadStream(file.path);
       // 生成文件名
       const fileName = Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
       // 生成写入路径
       const target = path.join(this.config.baseDir, 'app/public/images', fileName);
-      console.log(target);
       // 写入流
       const ws = fs.createWriteStream(target);
       try {
