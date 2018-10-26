@@ -52,7 +52,7 @@ module.exports = {
   whereFilter(obj) {
     let result = {};
     for (key in obj) {
-      if (obj[key].length) {
+      if (obj[key] && obj[key].length) {
         result[key] = {
           $like: `%${obj[key]}%`
         };

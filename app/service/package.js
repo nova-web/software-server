@@ -16,6 +16,7 @@ class PackageService extends Service {
     pageSize = pageSize ? Number.parseInt(pageSize) : this.app.config.pageSize;
     pageNum = pageNum ? Number.parseInt(pageNum) : 1;
     status = Number.parseInt(status || 1);
+    console.log({ productId, version, status, stage, publishStatus });
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       order: [['updatedBy', 'ASC']],
