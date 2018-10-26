@@ -210,14 +210,13 @@ class AclService extends Service {
       include: [
         {
           model: this.ctx.model.Acl,
-          as: 'acls',
-          where: { status: 1 }
+          as: 'acls'
         }
       ]
     });
 
     if (role && [0, 1].includes(role.status)) {
-      result = role.acls.map(a => a.id);
+      result = role.acls.filter(item => item.status == 1).map(a => a.id);
     }
 
     return result;

@@ -24,7 +24,6 @@ class FileController extends Controller {
   //   this.ctx.type = 'binary';
 
   //   let res = await this.ctx.service.file.downloadImage();
-  //   console.log(this.ctx);
   //   this.ctx.body = res;
   // }
 }
