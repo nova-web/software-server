@@ -10,7 +10,10 @@ class ProductService extends Service {
     let products = await this.ctx.model.Product.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
-      where: { status: 1 },
+      where: {
+        status: 1,
+        ...this.ctx.helper.whereFilter({ publishStatus, type, name })
+      },
       include: [
         {
           model: this.ctx.model.ProductPackage,
@@ -121,8 +124,9 @@ class ProductService extends Service {
         };
       }
     }
-
-    this.ctx.service.file.delFile(product.logo);
+    if (product.logo) {
+      this.ctx.service.file.delFile(product.logo);
+    }
     const result = await this.ctx.model.Product.update({ status: 2 }, { where: { id, status: 1 } });
     return result;
   }
