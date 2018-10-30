@@ -20,7 +20,6 @@ class PackageController extends Controller {
   //更新数据 put
   async update() {
     const { length = 0, msg = '版本不存在！' } = await this.ctx.service.package.updatePackage(this.ctx.params.id, this.ctx.request.body);
-    console.log(length);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {
