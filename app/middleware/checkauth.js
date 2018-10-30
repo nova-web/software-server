@@ -13,7 +13,6 @@ module.exports = options => {
           break;
         }
       }
-      // console.log(urls, url, access);
       if (ctx.request.method.toLowerCase() == 'get' || access) {
         await next();
       } else {

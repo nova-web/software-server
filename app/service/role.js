@@ -17,7 +17,7 @@ class RoleService extends Service {
       limit: pageSize,
       where: {
         status,
-        ...this.ctx.helper.whereFilter({ name })
+        ...this.ctx.helper.whereAnd({ name })
       }
     });
 

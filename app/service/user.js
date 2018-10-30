@@ -18,7 +18,7 @@ class UserService extends Service {
       limit: pageSize,
       where: {
         status,
-        ...this.ctx.helper.whereFilter({ username, name, code }),
+        ...this.ctx.helper.whereAnd({ username, name, code }),
         id: {
           $notIn: [this.ctx.userId]
         }

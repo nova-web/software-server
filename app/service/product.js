@@ -12,7 +12,7 @@ class ProductService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        ...this.ctx.helper.whereFilter({ publishStatus, type, name })
+        ...this.ctx.helper.whereAnd({ publishStatus, type, name })
       },
       include: [
         {
@@ -166,7 +166,6 @@ class ProductService extends Service {
     } catch (e) {
       deviceInfo = '';
     }
-    console.log(this.ctx);
     const product = await this.ctx.model.Product.findOne({ where: { modelId, status: 1 } });
     if (!product) {
       return { msg: '产品不存在' };
@@ -183,40 +182,29 @@ class ProductService extends Service {
     return { result: productLog };
   }
 
-  async getLogs({ pageSize = this.app.config.pageSize, pageNum = 1, publishStatus, type, name } = {}) {
+  async getLogs({ pageSize = this.app.config.pageSize, pageNum = 1, ipName: deviceName, ipName: softwareIp, deviceId } = {}) {
     let result = { count: 0, rows: [] };
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
 
-    let productsAll = await this.getAllProducts();
-    let products = await this.ctx.model.Product.findAndCountAll({
+    let logs = await this.ctx.model.ProductLog.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
       where: {
         status: 1,
-        ...this.ctx.helper.whereFilter({ publishStatus, type, name })
-      },
-      include: [
-        {
-          model: this.ctx.model.ProductPackage,
-          as: 'packages',
-          order: [['version', 'DESC']],
-          limit: 1,
-          where: { status: 1 }
-        }
-      ]
+        ...this.ctx.helper.whereAnd({ deviceId }),
+        ...this.ctx.helper.whereOr({ softwareIp, deviceName })
+      }
     });
 
-    result.count = products.count;
-    products.rows.forEach(product => {
-      let temp = this.ctx.helper.pick(product, ['id', 'name', 'model', 'modelId', 'type', 'stage', 'area', 'dept', 'productDesc', 'modelId', 'logo', 'publishStatus', 'projectManager', 'updatedAt']);
-      temp.version = product.packages.length ? product.packages[0].version : '';
-      if (product.fitPro) {
-        temp.fitPro = productsAll.filter(item => product.fitPro.split(',').includes(item.id + ''));
-      } else {
-        temp.fitPro = [];
+    result.count = logs.count;
+    logs.rows.forEach(product => {
+      let temp = this.ctx.helper.pick(product, ['deviceId', 'deviceName', 'softwareIp', 'version', 'deviceStatus', 'createdAt']);
+      try {
+        temp.deviceInfo = JSON.parse(product.deviceInfo);
+      } catch (e) {
+        temp.deviceInfo = {};
       }
-      temp.logo = this.ctx.app.config.apihost + product.logo;
       result.rows.push(temp);
     });
 
