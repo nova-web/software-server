@@ -7,6 +7,16 @@ class ProductController extends Controller {
     this.ctx.success(list);
   }
 
+  //查询产品详情
+  async show() {
+    const { result, msg = '产品不存在！' } = await this.ctx.service.product.getProduct(this.ctx.params.id);
+    if (result) {
+      this.ctx.success({ result });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
   //新增数据 post
   async create() {
     const { result, msg = '参数不正确！' } = await this.ctx.service.product.addProduct();
