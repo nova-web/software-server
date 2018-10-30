@@ -36,8 +36,8 @@ class PackageService extends Service {
         version: _package.version,
         url: this.ctx.app.config.apihost + _package.url,
         versionLog: _package.versionLog,
-        stage: this.app.dict[_package.stage],
-        publishStatus: this.app.dict[_package.publishStatus],
+        stage: _package.stage,
+        publishStatus: _package.publishStatus,
         size: _package.size,
         status: _package.status,
         productName: _package.product.name
@@ -83,10 +83,10 @@ class PackageService extends Service {
     });
     //操作日志
     this.ctx.service.syslog.writeLog({
-      target: '【产品：' + product.product + '】' + '【版本：' + version + '】',
-      operateType: 2,
+      target: '【产品：' + product.name + '】' + '【版本：' + version + '】',
+      operateType: 0,
       ip: this.ctx.req.connection.remoteAddress,
-      operateContent: this.ctx.name + '新增' + '【产品：' + product.product + '】的' + '【' + version + '】版本'
+      operateContent: this.ctx.name + '新增' + '【产品：' + product.name + '】的' + '【' + version + '】版本'
     });
     return { result: _package };
   }
@@ -140,8 +140,17 @@ class PackageService extends Service {
       }
 
       let result = await this.ctx.model.ProductPackage.update(params, { where: { id } });
+      let oldProduct = await this.ctx.model.Product.findById(productPackage.productId);
+      //操作日志
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '修改' + '【产品：' + oldProduct.name + '】的【' + productPackage.version + '】版本：' + '【' + [oldProduct.name, productPackage.version, productPackage.url, productPackage.size, productPackage.versionLog, this.app.dict[productPackage.stage]].join(',') + '】版本' + '为' + '【' + product.name + ',' + version + (params.url ? params.url : '') + ',' + (params.size ? params.size : '') + ',' + versionLog + ',' + this.app.dict[stage] + '】'
+      });
       return result;
     }
+
     return { msg: '没有此数据' };
   }
 
@@ -150,8 +159,15 @@ class PackageService extends Service {
    * @param {id} id
    */
   async delPackage(id) {
-    if (await this.ctx.model.ProductPackage.findById(id)) {
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
       let result = await this.ctx.model.ProductPackage.update({ status: 2 }, { where: { id } });
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '删除' + '【产品：' + productPackage.name + '】的【' + productPackage.version + '】版本'
+      });
       return result.length;
     }
 
@@ -190,26 +206,66 @@ class PackageService extends Service {
 
   //试用
   async tryout({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
-    return { length: result[0] };
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
+      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '将' + '【产品：' + productPackage.name + '】的【' + productPackage.version + '】版本的版本类型从' + this.app.dict[productPackage.stage] + '修改为试用版本'
+      });
+      return result;
+    }
+    return { msg: '没有此数据' };
   }
 
   //撤回
   async withdraw({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_01', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
-    return { length: result[0] };
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
+      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_01', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '撤回了' + '【产品：' + productPackage.name + '】的【' + productPackage.version + '】'
+      });
+      return result;
+    }
+    return { msg: '没有此数据' };
   }
 
   //发布
   async publish({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId, publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
-    return { length: result[0] };
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
+      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId, publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '发布了' + '【产品：' + productPackage.name + '】的【' + productPackage.version + '】'
+      });
+      return result;
+    }
+    return { msg: '没有此数据' };
   }
 
   //下架
   async obtained({ id }) {
-    let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_04', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
-    return { length: result[0] };
+    let productPackage = await this.ctx.model.ProductPackage.findById(id);
+    if (productPackage) {
+      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_04', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
+      this.ctx.service.syslog.writeLog({
+        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
+        operateType: 1,
+        ip: this.ctx.req.connection.remoteAddress,
+        operateContent: this.ctx.name + '下架了' + '【产品：' + productPackage.name + '】的【' + productPackage.version + '】'
+      });
+      return result;
+    }
+    return { msg: '没有此数据' };
   }
 }
 

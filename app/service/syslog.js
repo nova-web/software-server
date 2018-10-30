@@ -19,7 +19,7 @@ class SyslogService extends Service {
       limit: pageSize,
       where: {
         createdAt: { ...this.ctx.helper.whereDate({ start: startTime, end: endTime }) },
-        ...this.ctx.helper.whereFilter({ operateType, operateContent })
+        ...this.ctx.helper.whereAnd({ operateType, operateContent })
       },
       include: [
         {
@@ -34,7 +34,7 @@ class SyslogService extends Service {
     });
 
     let rows = [];
-    const logType = ['操作类型', '新增', '修改', '删除', '授权', '试用', '撤回', '发布', '下架'];
+    const logType = ['新增', '修改', '删除', '授权', '试用', '撤回', '发布', '下架'];
     logs.rows.forEach(_log => {
       rows.push({
         operator: _log.operator.name,
@@ -50,7 +50,7 @@ class SyslogService extends Service {
   }
 
   async writeLog({ target, operateType, ip, operateContent }) {
-    let log = await this.ctx.model.Syslog.create({
+    let log = await this.ctx.model.Log.create({
       target,
       operateType,
       ip,
