@@ -14,15 +14,6 @@ module.exports = app => {
         primaryKey: true,
         autoIncrement: true
       },
-      productId: {
-        field: 'product_id',
-        type: INTEGER,
-        validate: {
-          notEmpty: true
-        },
-        allowNull: false,
-        comment: '产品id'
-      },
       deviceId: {
         field: 'device_id',
         type: STRING(30),
@@ -30,7 +21,16 @@ module.exports = app => {
           notEmpty: true
         },
         allowNull: false,
-        comment: '设备id'
+        comment: '设备SN'
+      },
+      deviceName: {
+        field: 'device_name',
+        type: INTEGER,
+        validate: {
+          notEmpty: true
+        },
+        allowNull: false,
+        comment: '产品id'
       },
       softwareIp: {
         field: 'software_ip',
@@ -46,8 +46,8 @@ module.exports = app => {
         type: TEXT,
         comment: '设备信息'
       },
-      deviceState: {
-        field: 'device_state',
+      deviceStatus: {
+        field: 'device_status',
         type: STRING,
         comment: '设备异常状态'
       },

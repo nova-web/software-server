@@ -76,5 +76,15 @@ module.exports = appInfo => {
     exp: 360000 //秒
   };
 
+  config.apihost = 'http://172.16.6.188:7001';
+
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 7001,
+      hostname: '0.0.0.0'
+    }
+  };
+
   return config;
 };
