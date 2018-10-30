@@ -26,7 +26,7 @@ class SyslogService extends Service {
           model: this.ctx.app.model.User,
           as: 'operator',
           where: {
-            ...this.ctx.helper.whereFilter({ name: operator })
+            ...this.ctx.helper.whereAnd({ name: operator })
           }
         }
       ],

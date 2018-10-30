@@ -41,11 +41,10 @@ module.exports = app => {
   router.post('/package/withdraw', controller.package.withdraw); //撤回
   router.post('/package/publish', controller.package.publish); //发布
   router.post('/package/obtained', controller.package.obtained); //下架
-
   //字典
   router.get('/dict', controller.dict.getDict); //字典
   //操作审计
-  router.get('/log/logs', controller.syslog.getLogs);
+  router.get('/logs', controller.syslog.getLogs); //系统日志查询
 
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);
