@@ -22,7 +22,7 @@ class PackageService extends Service {
       limit: pageSize,
       where: {
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
-        ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishStatus })
+        ...this.ctx.helper.whereAnd({ productId, version, status, stage, publishStatus })
       },
       include: [{ model: this.ctx.app.model.Product, as: 'product' }],
       distinct: true
@@ -160,7 +160,6 @@ class PackageService extends Service {
 
   //获取可升级的版本列表
   async newlist({ modelId, version = '' }) {
-    console.log(this.ctx);
     let list = [];
     let product = await this.ctx.model.Product.findOne({
       where: { modelId, status: 1 },

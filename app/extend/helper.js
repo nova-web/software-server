@@ -40,16 +40,7 @@ module.exports = {
   pick(obj, arr) {
     return arr.reduce((iter, val) => (val in obj && (iter[val] = obj[val]), iter), {});
   },
-  // unpick(obj, arr) {
-  //   let newObj = {};
-  //   for (key in obj) {
-  //     if (!arr.includes(key)) {
-  //       newObj[key] = obj[key];
-  //     }
-  //   }
-  //   return newObj;
-  // },
-  whereFilter(obj) {
+  whereAnd(obj) {
     let result = {};
     for (key in obj) {
       if (obj[key] && obj[key].length) {
@@ -57,6 +48,14 @@ module.exports = {
           $like: `%${obj[key]}%`
         };
       }
+    }
+    return result;
+  },
+  whereOr(obj) {
+    let result = {};
+    let filters = this.whereAnd(obj);
+    if (Object.keys(filters).length) {
+      result = { $or: filters };
     }
     return result;
   },

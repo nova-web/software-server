@@ -11,7 +11,6 @@ module.exports = options => {
       }
 
       let userToken = ctx.cookies.get(`user-${payload.userId}`);
-      console.log(userToken, payload.userId);
       if (token === userToken) {
         try {
           ctx.userId = payload.userId;
