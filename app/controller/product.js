@@ -82,6 +82,22 @@ class ProductController extends Controller {
       this.ctx.fail(msg);
     }
   }
+
+  //查看日志
+  async log() {
+    const list = await this.ctx.service.product.getLogs(this.ctx.request.query);
+    this.ctx.success(list);
+  }
+
+  //上报日志
+  async report() {
+    const { result, msg = '参数不正确！' } = await this.ctx.service.product.report(this.ctx.request.body);
+    if (result) {
+      this.ctx.success({ id: result.id });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
 }
 
 module.exports = ProductController;

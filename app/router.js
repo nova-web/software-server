@@ -32,6 +32,8 @@ module.exports = app => {
   router.post('/product/withdraw', controller.product.withdraw); //撤回
   router.post('/product/publish', controller.product.publish); //发布
   router.post('/product/obtained', controller.product.obtained); //下架
+  router.get('/product/logs', controller.product.log); //产品日志统计分析
+  router.post('/product/report', controller.product.report); //产品日志上报
   //版本
   router.resources('productPackage', '/packages', controller.package); //版本添删改查
   router.get('/package/newlist', controller.package.newlist); //查询可升级版本列表
