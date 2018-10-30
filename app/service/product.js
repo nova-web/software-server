@@ -27,7 +27,7 @@ class ProductService extends Service {
 
     result.count = products.count;
     products.rows.forEach(product => {
-      let temp = this.ctx.helper.pick(product, ['id', 'name', 'model', 'modelId', 'type', 'stage', 'area', 'dept', 'productDesc', 'modelId', 'logo', 'publishStatus', 'projectManager', 'updatedAt']);
+      let temp = this.ctx.helper.pick(product, ['id', 'name', 'model', 'modelId', 'type', 'stage', 'area', 'dept', 'productDesc', 'publishStatus', 'projectManager', 'updatedAt']);
       temp.version = product.packages.length ? product.packages[0].version : '';
       if (product.fitPro) {
         temp.fitPro = productsAll.filter(item => product.fitPro.split(',').includes(item.id + ''));
@@ -39,6 +39,32 @@ class ProductService extends Service {
     });
 
     return result;
+  }
+
+  async getProduct(id) {
+    let result;
+    let product = await this.ctx.model.Product.findById(id, {
+      include: [
+        {
+          model: this.ctx.model.ProductPackage,
+          as: 'packages',
+          order: [['version', 'DESC']],
+          limit: 1,
+          where: { status: 1 }
+        }
+      ]
+    });
+    if (product && product.status == 1) {
+      result = this.ctx.helper.pick(product, ['name', 'type', 'stage', 'area', 'dept', 'productDesc', 'publishStatus', 'projectManager']);
+      result.version = product.packages.length ? product.packages[0].version : '';
+      if (product.fitPro) {
+        result.fitPro = productsAll.filter(item => product.fitPro.split(',').includes(item.id + ''));
+      } else {
+        result.fitPro = [];
+      }
+      result.logo = this.ctx.app.config.apihost + product.logo;
+    }
+    return { result };
   }
 
   async addProduct() {
