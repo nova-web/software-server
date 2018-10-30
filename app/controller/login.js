@@ -19,7 +19,7 @@ class LoginController extends Controller {
 
     const result = await ctx.service.login.login(ctx.request.body);
     if (result) {
-      let token = app.jwt.sign({ userId: result.id }, ctx.app.config.jwt.secret, { expiresIn: ctx.app.config.jwt.exp });
+      let token = app.jwt.sign({ userId: result.id, name: result.name }, ctx.app.config.jwt.secret, { expiresIn: ctx.app.config.jwt.exp });
       this.ctx.cookies.set(`user-${result.id}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
       ctx.success(Object.assign(result.dataValues, { token }));
     } else {

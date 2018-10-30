@@ -16,13 +16,11 @@ class PackageService extends Service {
     pageSize = pageSize ? Number.parseInt(pageSize) : this.app.config.pageSize;
     pageNum = pageNum ? Number.parseInt(pageNum) : 1;
     status = Number.parseInt(status || 1);
-    console.log({ productId, version, status, stage, publishStatus });
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
-      order: [['updatedBy', 'ASC']],
+      order: [['updatedAt', 'ASC']],
       limit: pageSize,
       where: {
-        status,
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
         ...this.ctx.helper.whereFilter({ productId, version, status, stage, publishStatus })
       },
@@ -83,7 +81,13 @@ class PackageService extends Service {
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });
-
+    //操作日志
+    this.ctx.service.syslog.writeLog({
+      target: '【产品：' + product.product + '】' + '【版本：' + version + '】',
+      operateType: 2,
+      ip: this.ctx.req.connection.remoteAddress,
+      operateContent: this.ctx.name + '新增' + '【产品：' + product.product + '】的' + '【' + version + '】版本'
+    });
     return { result: _package };
   }
   /**

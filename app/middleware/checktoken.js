@@ -4,7 +4,6 @@ module.exports = options => {
     let token = ctx.request.header.token;
     if (token) {
       let payload = ctx.app.jwt.decode(token);
-
       if (!payload) {
         ctx.status = 401;
         ctx.fail('无效token');
@@ -15,6 +14,7 @@ module.exports = options => {
       if (token === userToken) {
         try {
           ctx.userId = payload.userId;
+          ctx.name = payload.name;
           ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
           ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
         } catch (error) {

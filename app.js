@@ -21,6 +21,7 @@ module.exports = app => {
     const User = app.model.User;
     const Product = app.model.Product;
     const ProductPackage = app.model.ProductPackage;
+    const Log = app.model.Log;
     app.beforeStart(async () => {
       User.belongsToMany(Role, { as: 'roles', through: 'sys_role_user', foreignKey: 'user_id' });
       Role.belongsToMany(User, { as: 'users', through: 'sys_role_user', foreignKey: 'role_id' });
@@ -30,6 +31,7 @@ module.exports = app => {
       ProductPackage.belongsTo(Product, { as: 'product' });
       ProductPackage.belongsTo(User, { as: 'uuser', foreignKey: 'updated_by' });
       ProductPackage.belongsTo(User, { as: 'cuser', foreignKey: 'created_by' });
+      Log.belongsTo(User, { as: 'operator', foreignKey: 'created_by' });
       await app.model.sync();
       let dicts = await app.model.Dict.findAll();
       let _dicts = {};

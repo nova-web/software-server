@@ -28,17 +28,12 @@ module.exports = app => {
           }
         },
         defaultValue: 1,
-        comment: '操作类型：0新增|1修改|2删除'
+        comment: '操作类型：0新增|1修改|2删除3授权|4试用|5撤回|6发布|7下架'
       },
       ip: {
         field: 'ip',
         type: STRING(30),
         comment: '操作主机ip'
-      },
-      operateTime: {
-        field: 'operate_time',
-        type: DATE,
-        comment: '操作时间'
       },
       operateContent: {
         field: 'operate_content',
