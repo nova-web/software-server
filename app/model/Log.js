@@ -23,12 +23,12 @@ module.exports = app => {
         type: INTEGER,
         validate: {
           isIn: {
-            args: [[0, 1, 2]],
+            args: [[0, 1, 2, 3, 4, 5, 6, 7]],
             msg: '无效状态码'
           }
         },
         defaultValue: 1,
-        comment: '操作类型：0新增|1修改|2删除3授权|4试用|5撤回|6发布|7下架'
+        comment: '操作类型：0新增|1修改|2删除|3授权|4试用|5撤回|6发布|7下架'
       },
       ip: {
         field: 'ip',

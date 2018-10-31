@@ -12,7 +12,7 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = ['checktoken', 'checkuser', 'checkauth'];
   config.checktoken = {
-    ignore: ['/login', '/packagelist', '/download/*']
+    ignore: ['/login']
   };
   config.checkuser = {
     ignore: ['/login']
