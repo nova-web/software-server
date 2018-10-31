@@ -43,6 +43,7 @@ class PackageService extends Service {
         createdAt: _package.createdAt,
         updatedAt: _package.updatedAt,
         id: _package.id,
+        productId: _package.productId,
         version: _package.version,
         url: this.ctx.app.config.apihost + _package.url,
         versionLog: _package.versionLog,
