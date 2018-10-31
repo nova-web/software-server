@@ -44,11 +44,7 @@ module.exports = app => {
   //字典
   router.get('/dict', controller.dict.getDict); //字典
   //操作审计
-<<<<<<< HEAD
   router.get('/logs', controller.syslog.getLogs);
-=======
-  router.get('/logs', controller.syslog.getLogs); //系统日志查询
->>>>>>> origin/master
 
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);
