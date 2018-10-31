@@ -26,7 +26,7 @@ class SyslogService extends Service {
           model: this.ctx.app.model.User,
           as: 'operator',
           where: {
-            ...this.ctx.helper.whereFilter({ name: operator })
+            ...this.ctx.helper.whereAnd({ name: operator })
           }
         }
       ],
@@ -49,11 +49,11 @@ class SyslogService extends Service {
     return logs;
   }
 
-  async writeLog({ target, operateType, ip, operateContent }) {
+  async writeLog({ target, operateType, operateContent }) {
     let log = await this.ctx.model.Log.create({
       target,
       operateType,
-      ip,
+      ip: this.ctx.req.connection.remoteAddress,
       operateContent,
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
