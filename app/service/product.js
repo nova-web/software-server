@@ -123,7 +123,6 @@ class ProductService extends Service {
     }
 
     let result = await this.ctx.model.Product.update(params, { where: { id, status: 1 } });
-    console.log(result);
     return { length: result[0] };
   }
 
