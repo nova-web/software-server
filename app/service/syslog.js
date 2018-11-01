@@ -10,7 +10,7 @@ class SyslogService extends Service {
    * @param {startTime} 开始时间
    * @param {endTime} 结束时间
    */
-  async getLogs({ pageSize, pageNum, operator, operateType, operateContent, startTime, endTime }) {
+  async getLogs({ pageSize, pageNum, operator, target, operateType, operateContent, startTime, endTime }) {
     pageSize = pageSize ? Number.parseInt(pageSize) : this.app.config.pageSize;
     pageNum = pageNum ? Number.parseInt(pageNum) : 1;
     let logs = await this.ctx.model.Log.findAndCountAll({
@@ -19,7 +19,7 @@ class SyslogService extends Service {
       limit: pageSize,
       where: {
         createdAt: { ...this.ctx.helper.whereDate({ start: startTime, end: endTime }) },
-        ...this.ctx.helper.whereAnd({ operateType, operateContent })
+        ...this.ctx.helper.whereAnd({ operateType, target, operateContent })
       },
       include: [
         {
