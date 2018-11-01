@@ -21,7 +21,7 @@ class PackageService extends Service {
       order: [['updatedAt', 'ASC']],
       limit: pageSize,
       where: {
-        status: 1,
+        status: status,
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
         ...this.ctx.helper.whereAndLike({ version }),
         ...this.ctx.helper.whereAndEq({ publishStatus })
