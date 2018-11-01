@@ -3,7 +3,7 @@ const Controller = require('egg').Controller;
 class SysControlController extends Controller {
   //查询所有数据 get
   async index() {
-    const list = await this.ctx.service.syscontrol.getProducts();
+    const list = await this.ctx.service.syscontrol.getProducts(this.ctx.request.query);
     this.ctx.success(list);
   }
 

@@ -19,14 +19,15 @@ class SyslogService extends Service {
       limit: pageSize,
       where: {
         createdAt: { ...this.ctx.helper.whereDate({ start: startTime, end: endTime }) },
-        ...this.ctx.helper.whereAnd({ operateType, target, operateContent })
+        ...this.ctx.helper.whereAndLike({ operateContent, target }),
+        ...this.ctx.helper.whereAndEq({ operateType })
       },
       include: [
         {
           model: this.ctx.app.model.User,
           as: 'operator',
           where: {
-            ...this.ctx.helper.whereAnd({ name: operator })
+            ...this.ctx.helper.whereAndLike({ name: operator })
           }
         }
       ],

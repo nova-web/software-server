@@ -12,7 +12,8 @@ class ProductService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        ...this.ctx.helper.whereAnd({ publishStatus, type, name })
+        ...this.ctx.helper.whereAndLike({ name }),
+        ...this.ctx.helper.whereAndEq({ publishStatus, type })
       },
       include: [
         {
@@ -218,8 +219,8 @@ class ProductService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        ...this.ctx.helper.whereAnd({ deviceId }),
-        ...this.ctx.helper.whereOr({ softwareIp, deviceName })
+        ...this.ctx.helper.whereAndLike({ deviceId }),
+        ...this.ctx.helper.whereOrLike({ softwareIp, deviceName })
       }
     });
 

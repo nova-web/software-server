@@ -40,7 +40,16 @@ module.exports = {
   pick(obj, arr) {
     return arr.reduce((iter, val) => (val in obj && (iter[val] = obj[val]), iter), {});
   },
-  whereAnd(obj) {
+  whereAndEq(obj) {
+    let result = {};
+    for (key in obj) {
+      if (obj[key] && obj[key].length) {
+        result[key] = obj[key];
+      }
+    }
+    return result;
+  },
+  whereAndLike(obj) {
     let result = {};
     for (key in obj) {
       if (obj[key] && obj[key].length) {
@@ -51,9 +60,9 @@ module.exports = {
     }
     return result;
   },
-  whereOr(obj) {
+  whereOrLike(obj) {
     let result = {};
-    let filters = this.whereAnd(obj);
+    let filters = this.whereAndLike(obj);
     if (Object.keys(filters).length) {
       result = { $or: filters };
     }

@@ -21,16 +21,17 @@ class PackageService extends Service {
       order: [['updatedAt', 'ASC']],
       limit: pageSize,
       where: {
-        status: 1,
-        updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) }
-        // ...this.ctx.helper.whereAnd({ version, status, stage, publishStatus })
+        status: status,
+        updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
+        ...this.ctx.helper.whereAndLike({ version }),
+        ...this.ctx.helper.whereAndEq({ publishStatus })
       },
       include: [
         {
           model: this.ctx.app.model.Product,
           as: 'product',
           where: {
-            ...this.ctx.helper.whereAnd({ name: productName })
+            ...this.ctx.helper.whereAndLike({ name: productName })
           }
         }
       ],
