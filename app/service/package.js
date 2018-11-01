@@ -29,9 +29,7 @@ class PackageService extends Service {
           model: this.ctx.app.model.Product,
           as: 'product',
           where: {
-            name: {
-              $like: `%${productName}%`
-            }
+            ...this.ctx.helper.whereAnd({ name: productName })
           }
         }
       ],
