@@ -45,6 +45,8 @@ module.exports = app => {
   router.get('/dict', controller.dict.getDict); //字典
   //操作审计
   router.get('/logs', controller.syslog.getLogs);
+  //系统控制
+  router.resources('syscontrol', '/syscontrol', controller.syscontrol); //产品服务的查改
 
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);

@@ -35,7 +35,7 @@ module.exports = appInfo => {
     database: 'software-upgrade',
     username: 'root',
     timezone: '+08:00', //东八时区
-    logging: true
+    logging: false
     // define: { raw: true }
   };
 
