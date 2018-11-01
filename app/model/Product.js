@@ -116,6 +116,32 @@ module.exports = app => {
         type: BLOB,
         comment: '产品示意图'
       },
+      service: {
+        type: INTEGER,
+        validate: {
+          isIn: {
+            args: [[0, 1]],
+            msg: '操作异常'
+          }
+        },
+        defaultValue: 1,
+        comment: '更新开关：0关闭 | 1开启'
+      },
+      serviceTime: {
+        field: 'service_time',
+        type: DATE,
+        get(val) {
+          let time = this.getDataValue(val);
+          if (time) {
+            time = moment(time).format('YYYY-MM-DD HH:mm:ss');
+          }
+          return time || '';
+        },
+        set(val) {
+          return this.setDataValue('serviceTime', moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+        },
+        comment: '更新开关的时间'
+      },
       status: {
         type: INTEGER,
         validate: {

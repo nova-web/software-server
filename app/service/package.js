@@ -201,7 +201,7 @@ class PackageService extends Service {
         }
       ]
     });
-    if (product && product.packages.length) {
+    if (product && product.service && product.packages.length) {
       list = product.packages.map(item => {
         return {
           url: this.ctx.app.config.apihost + item.url,
