@@ -10,16 +10,17 @@ module.exports = options => {
         return;
       }
 
-      let userToken = ctx.cookies.get(`user-${payload.userId}`);
+      let userToken = ctx.cookies.get(`user-${payload.userId}`, { encrypt: true });
+      console.log(token, userToken);
       if (token === userToken) {
         try {
           ctx.userId = payload.userId;
           ctx.name = payload.name;
           ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
-          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
+          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000, encrypt: true });
         } catch (error) {
           ctx.app.jwt.sign({ userId: payload.userId }, ctx.app.config.jwt.secret, { expiresIn: ctx.app.config.jwt.exp });
-          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000 });
+          ctx.cookies.set(`user-${payload.userId}`, token, { maxAge: ctx.app.config.jwt.exp * 1000, encrypt: true });
         }
       } else {
         ctx.status = 401;
