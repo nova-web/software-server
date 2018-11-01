@@ -22,8 +22,8 @@ class PackageService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
-        ...this.ctx.helper.whereAnd({ version, status, stage, publishStatus })
+        updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) }
+        // ...this.ctx.helper.whereAnd({ version, status, stage, publishStatus })
       },
       include: [
         {
