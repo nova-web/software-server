@@ -216,7 +216,11 @@ class AclService extends Service {
     });
 
     if (role && [0, 1].includes(role.status)) {
-      result = role.acls.filter(item => item.status == 1).map(a => a.id);
+      result = role.acls
+        .filter(item => {
+          return item.status == 1 && item.url;
+        })
+        .map(a => a.id);
     }
 
     return result;
