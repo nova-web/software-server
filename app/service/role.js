@@ -72,7 +72,7 @@ class RoleService extends Service {
         return { msg: '有效角色不能删除！' };
       }
 
-      if (role.users.length && status == 0) {
+      if (role.users.some(u => [0, 1].includes(u.status)) && status == 0) {
         return { msg: `角色正在被用户${role.users.map(r => r.name).join('、')}使用中！` };
       }
     }
@@ -95,7 +95,7 @@ class RoleService extends Service {
       ]
     });
 
-    if (role && role.users.length && status == 0) {
+    if (role && role.users.some(u => [0, 1].includes(u.status)) && status == 0) {
       return { msg: `角色正在被用户${role.users.map(r => r.name).join('、')}使用中！` };
     }
 
