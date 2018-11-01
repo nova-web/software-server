@@ -60,7 +60,7 @@ module.exports = {
     }
     return result;
   },
-  whereOr(obj) {
+  whereOrLike(obj) {
     let result = {};
     let filters = this.whereAndLike(obj);
     if (Object.keys(filters).length) {

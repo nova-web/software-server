@@ -11,7 +11,8 @@ class SysControlService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        ...this.ctx.helper.whereAnd({ service, name })
+        service,
+        ...this.ctx.helper.whereAndLike({ name })
       }
     });
 
