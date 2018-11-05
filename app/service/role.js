@@ -40,12 +40,14 @@ class RoleService extends Service {
       updatedBy: this.ctx.userId
     });
 
+    //操作日志
+    this.ctx.service.syslog.writeLog('角色', 0, '新增角色：' + role.name);
     return { result: role };
   }
 
   async updateRole(id, { name, remark }) {
     let role = await this.ctx.model.Role.findById(id);
-    if (!(role && [0, 1].includes(user.status))) {
+    if (!(role && [0, 1].includes(role.status))) {
       return {};
     }
 
@@ -54,6 +56,11 @@ class RoleService extends Service {
     }
 
     let result = await this.ctx.model.Role.update({ name, remark, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
+    if (result.length) {
+      //操作日志
+      let diff = this.ctx.helper.compareDiff(role, { name, remark });
+      this.ctx.service.syslog.writeLog('角色', 1, '修改角色：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+    }
     return { length: result[0] };
   }
 
@@ -78,6 +85,10 @@ class RoleService extends Service {
     }
 
     let result = await this.ctx.model.Role.update({ status: 2 }, { where: { id, status: 0 } });
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('角色', 2, '删除角色：' + role.name);
+    }
     return { length: result[0] };
   }
 
@@ -100,10 +111,14 @@ class RoleService extends Service {
     }
 
     let result = await this.ctx.model.Role.update({ status }, { where: { id, status: { $in: [0, 1] } } });
-
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('角色', status ? 8 : 9, '设置角色状态为：' + (status ? '有效' : '无效'));
+    }
     return { length: result[0] };
   }
 
+  //授权
   async setAcls({ acls = [], id }) {
     let role = await this.ctx.model.Role.findById(id, {
       include: [
@@ -120,7 +135,13 @@ class RoleService extends Service {
 
     let acl = await this.ctx.model.Acl.findAll({ where: { id: { $in: acls }, status: 1 } });
     await role.setAcls(acl);
-    return { length: role };
+
+    if (role) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('角色', 3, '给角色[' + role.name + ']授权：[' + acl.map(item => item.name).join('，') + ']');
+    }
+
+    return { length: acl };
   }
 
   async getUserRoles() {

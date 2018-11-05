@@ -57,6 +57,7 @@ class RoleController extends Controller {
     }
   }
 
+  //获取用户拥有的角色
   async getUserRoles() {
     const list = await this.ctx.service.role.getUserRoles();
     this.ctx.success(list);

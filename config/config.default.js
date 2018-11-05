@@ -11,14 +11,17 @@ module.exports = appInfo => {
 
   // add your config here
   config.middleware = ['checktoken', 'checkuser', 'checkauth'];
+  //不检查登录
   config.checktoken = {
-    ignore: ['/login']
+    ignore: ['/login', '/package/newlist', '/product/report']
   };
+  //不检查用户
   config.checkuser = {
-    ignore: ['/login']
+    ignore: ['/login', '/package/newlist', '/product/report']
   };
+  //不检查权限
   config.checkauth = {
-    ignore: ['/login', '/getUserAclCodes']
+    ignore: ['/login', '/package/newlist', '/product/report', '/getUserAclCodes', '/dict', '/product/all', '/getUserAclTree']
   };
 
   config.security = {
@@ -38,7 +41,7 @@ module.exports = appInfo => {
     database: 'software-upgrade',
     username: 'root',
     timezone: '+08:00', //东八时区
-    logging: true
+    logging: false
     // define: { raw: true }
   };
 

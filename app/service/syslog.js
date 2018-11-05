@@ -25,7 +25,7 @@ class SyslogService extends Service {
     });
 
     let rows = [];
-    const logType = ['新增', '修改', '删除', '授权', '试用', '撤回', '发布', '下架'];
+    const logType = ['新增', '修改', '删除', '授权', '试用', '撤回', '发布', '下架', '置为有效', '置为无效'];
     logs.rows.forEach(_log => {
       rows.push({
         operator: _log.operator,

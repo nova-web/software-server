@@ -65,6 +65,7 @@ class ProductService extends Service {
       }
       result.logo = this.ctx.app.config.apihost + product.logo;
     }
+
     return { result };
   }
 
@@ -92,6 +93,8 @@ class ProductService extends Service {
       updatedBy: this.ctx.userId
     });
 
+    //操作日志
+    this.ctx.service.syslog.writeLog('产品', 0, '新增产品：' + product.name);
     return { result: product };
   }
 
@@ -124,6 +127,11 @@ class ProductService extends Service {
     }
 
     let result = await this.ctx.model.Product.update(params, { where: { id, status: 1 } });
+    if (result.length) {
+      //操作日志
+      let diff = this.ctx.helper.compareDiff(product, params);
+      this.ctx.service.syslog.writeLog('产品', 1, '修改产品：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+    }
     return { length: result[0] };
   }
 
@@ -138,8 +146,8 @@ class ProductService extends Service {
     });
 
     if (product && product.status === 1) {
-      if (product.publishStatus !== 'pro_status_01') {
-        return { msg: `未发布状态才能删除` };
+      if (product.publishStatus === 'pro_status_01' || product.publishStatus === 'pro_status_01') {
+        return { msg: `使用中的产品无法删除` };
       }
 
       if (product.packages && product.packages.filter(item => item.status == 1).length) {
@@ -155,6 +163,11 @@ class ProductService extends Service {
       this.ctx.service.file.delFile(product.logo);
     }
     const result = await this.ctx.model.Product.update({ status: 2 }, { where: { id, status: 1 } });
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('产品', 2, '删除产品：' + product.name);
+    }
+
     return { length: result[0] };
   }
 
@@ -166,27 +179,48 @@ class ProductService extends Service {
   //试用
   async tryout({ id }) {
     let result = await this.ctx.model.Product.update({ publishStatus: 'pro_status_02', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
+    if (result.length) {
+      //操作日志
+      let product = await this.ctx.model.Product.findById(id);
+      this.ctx.service.syslog.writeLog('产品', 4, '试用产品：' + product.name);
+    }
     return { length: result[0] };
   }
 
   //撤回
   async withdraw({ id }) {
     let result = await this.ctx.model.Product.update({ publishStatus: 'pro_status_01', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
+    if (result.length) {
+      //操作日志
+      let product = await this.ctx.model.Product.findById(id);
+      this.ctx.service.syslog.writeLog('产品', 5, '撤回产品：' + product.name);
+    }
     return { length: result[0] };
   }
 
   //发布
   async publish({ id }) {
     let result = await this.ctx.model.Product.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+    if (result.length) {
+      //操作日志
+      let product = await this.ctx.model.Product.findById(id);
+      this.ctx.service.syslog.writeLog('产品', 6, '发布产品：' + product.name);
+    }
     return { length: result[0] };
   }
 
   //下架
   async obtained({ id }) {
     let result = await this.ctx.model.Product.update({ publishStatus: 'pro_status_04', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
+    if (result.length) {
+      //操作日志
+      let product = await this.ctx.model.Product.findById(id);
+      this.ctx.service.syslog.writeLog('产品', 7, '下架产品：' + product.name);
+    }
     return { length: result[0] };
   }
 
+  //上报日志
   async report({ modelId, deviceId, version, deviceInfo, deviceStatus }) {
     try {
       deviceInfo = JSON.stringify(deviceInfo);

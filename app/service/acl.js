@@ -43,6 +43,9 @@ class AclService extends Service {
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });
+
+    //操作日志
+    this.ctx.service.syslog.writeLog('权限', 0, '新增权限：' + acl.name);
     return { result: acl };
   }
 
@@ -57,7 +60,13 @@ class AclService extends Service {
       }
     }
 
+    let acl = await this.ctx.model.Acl.findById(id);
     let result = await this.ctx.model.Acl.update({ name, remark, code, url, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
+    if (result.length) {
+      //操作日志
+      let diff = this.ctx.helper.compareDiff(acl, { name, remark, code, url, updatedBy: this.ctx.userId });
+      this.ctx.service.syslog.writeLog('权限', 1, '修改权限：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+    }
     return { length: result[0] };
   }
 
@@ -82,6 +91,10 @@ class AclService extends Service {
     }
 
     let result = await this.ctx.model.Acl.update({ status: 2 }, { where: { id, status: 0 } });
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('权限', 2, '删除权限：' + acl.name);
+    }
     return { length: result[0] };
   }
 
@@ -104,7 +117,10 @@ class AclService extends Service {
     }
 
     let result = await this.ctx.model.Acl.update({ status }, { where: { id, status: { $in: [0, 1] } } });
-
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('权限', status ? 8 : 9, '设置权限状态为：' + (status ? '有效' : '无效'));
+    }
     return { length: result[0] };
   }
 

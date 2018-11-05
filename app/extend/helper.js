@@ -87,5 +87,19 @@ module.exports = {
         $lte: new Date()
       };
     }
+  },
+  compareDiff(oldValue, newValue) {
+    let result = {
+      oldValue: [],
+      newValue: []
+    };
+
+    for (let key in newValue) {
+      if (newValue[key] != oldValue[key]) {
+        result.oldValue.push(oldValue[key]);
+        result.newValue.push(newValue[key]);
+      }
+    }
+    return result;
   }
 };

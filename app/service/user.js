@@ -61,8 +61,8 @@ class UserService extends Service {
 
     let user = await this.ctx.model.User.create({
       username,
-      phone,
-      email,
+      phone: phone || null,
+      email: email || null,
       password: md5(password),
       code,
       name,
@@ -71,9 +71,8 @@ class UserService extends Service {
     });
     await user.setRoles(role);
 
-    // this.ctx.service.syslog.writeLog({
-    //   target, operateType, operateContent
-    // });
+    //操作日志
+    this.ctx.service.syslog.writeLog('用户', 0, '新增用户：' + user.username);
     return { result: user };
   }
 
@@ -110,6 +109,12 @@ class UserService extends Service {
     let role = await this.ctx.model.Role.findAll({ where: { id: { $in: roles }, status: 1 } });
     await user.setRoles(role);
 
+    if (result.length) {
+      //操作日志
+      let diff = this.ctx.helper.compareDiff(user, columns);
+      this.ctx.service.syslog.writeLog('用户', 1, '修改用户：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+    }
+
     return { length: result[0] };
   }
 
@@ -124,6 +129,10 @@ class UserService extends Service {
     }
 
     let result = await this.ctx.model.User.update({ status: 2 }, { where: { id, status: 0 } });
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('用户', 2, '删除用户：' + user.username);
+    }
     return { length: result[0] };
   }
 
@@ -137,7 +146,10 @@ class UserService extends Service {
     }
 
     let result = await this.ctx.model.User.update({ status }, { where: { id, status: { $in: [0, 1] } } });
-
+    if (result.length) {
+      //操作日志
+      this.ctx.service.syslog.writeLog('用户', status ? 8 : 9, '设置用户状态为：' + (status ? '有效' : '无效'));
+    }
     return { length: result[0] };
   }
 }
