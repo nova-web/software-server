@@ -31,7 +31,6 @@ module.exports = app => {
       ProductPackage.belongsTo(Product, { as: 'product' });
       ProductPackage.belongsTo(User, { as: 'uuser', foreignKey: 'updated_by' });
       ProductPackage.belongsTo(User, { as: 'cuser', foreignKey: 'created_by' });
-      Log.belongsTo(User, { as: 'operator', foreignKey: 'created_by' });
       await app.model.sync();
       let dicts = await app.model.Dict.findAll();
       let _dicts = {};

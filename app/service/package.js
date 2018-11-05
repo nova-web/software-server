@@ -93,11 +93,7 @@ class PackageService extends Service {
       updatedBy: this.ctx.userId
     });
     //操作日志
-    this.ctx.service.syslog.writeLog({
-      target: '【产品：' + product.name + '】' + '【版本：' + version + '】',
-      operateType: 0,
-      operateContent: this.ctx.name + '新增' + '【产品：' + product.name + '】的' + '【' + version + '】版本'
-    });
+    this.ctx.service.syslog.writeLog('固件包', 0, '修改固件包：' + version);
     return { result: _package };
   }
   /**
@@ -152,12 +148,8 @@ class PackageService extends Service {
       let result = await this.ctx.model.ProductPackage.update(params, { where: { id } });
       let oldProduct = await this.ctx.model.Product.findById(productPackage.productId);
       //操作日志
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '修改' + '【产品：' + oldProduct.name + '】的【' + productPackage.version + '】版本：' + '【' + [oldProduct.name, productPackage.version, productPackage.url, productPackage.size, productPackage.versionLog, this.app.dict[productPackage.stage]].join(',') + '】版本' + '为' + '【' + product.name + ',' + version + ',' + (params.url ? params.url : '') + ',' + (params.size ? params.size : '') + ',' + versionLog + ',' + this.app.dict[stage] + '】'
-      });
-      return result;
+      this.ctx.service.syslog.writeLog('固件包', 1, '修改固件包：' + version);
+      return { length: result[0] };
     }
 
     return { msg: '没有此数据' };
@@ -172,12 +164,9 @@ class PackageService extends Service {
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
       let result = await this.ctx.model.ProductPackage.update({ status: 2 }, { where: { id } });
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '删除' + '【产品：' + product.name + '】的【' + productPackage.version + '】版本'
-      });
-      return result.length;
+      //操作日志
+      this.ctx.service.syslog.writeLog('固件包', 2, '删除固件包：' + productPackage.version);
+      return { length: result[0] };
     }
 
     return { msg: '没有此数据' };
@@ -219,11 +208,8 @@ class PackageService extends Service {
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
       let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_02', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_04'] } } });
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '将' + '【产品：' + product.name + '】的【' + productPackage.version + '】版本的版本类型从' + this.app.dict[productPackage.stage] + '修改为试用版本'
-      });
+      //操作日志
+      this.ctx.service.syslog.writeLog('固件包', 4, '试用固件包：' + productPackage.version);
       return result;
     }
     return { msg: '没有此数据' };
@@ -235,11 +221,8 @@ class PackageService extends Service {
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
       let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_01', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_02'] } } });
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '撤回了' + '【产品：' + product.name + '】的【' + productPackage.version + '】版本'
-      });
+      //操作日志
+      this.ctx.service.syslog.writeLog('固件包', 5, '撤回固件包：' + productPackage.version);
       return result;
     }
     return { msg: '没有此数据' };
@@ -251,11 +234,8 @@ class PackageService extends Service {
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
       let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId, publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '发布了' + '【产品：' + product.name + '】的【' + productPackage.version + '】版本'
-      });
+      //操作日志
+      this.ctx.service.syslog.writeLog('固件包', 6, '发布固件包：' + productPackage.version);
       return result;
     }
     return { msg: '没有此数据' };
@@ -267,11 +247,8 @@ class PackageService extends Service {
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
       let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_04', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_03'] } } });
-      this.ctx.service.syslog.writeLog({
-        target: '【产品：' + product.name + '】' + '【版本：' + productPackage.version + '】',
-        operateType: 1,
-        operateContent: this.ctx.name + '下架了' + '【产品：' + product.name + '】的【' + productPackage.version + '】版本'
-      });
+      //操作日志
+      this.ctx.service.syslog.writeLog('固件包', 7, '下架固件包：' + productPackage.version);
       return result;
     }
     return { msg: '没有此数据' };

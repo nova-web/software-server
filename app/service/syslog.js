@@ -15,30 +15,20 @@ class SyslogService extends Service {
     pageNum = pageNum ? Number.parseInt(pageNum) : 1;
     let logs = await this.ctx.model.Log.findAndCountAll({
       offset: pageSize * (pageNum - 1),
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       limit: pageSize,
       where: {
         createdAt: { ...this.ctx.helper.whereDate({ start: startTime, end: endTime }) },
-        ...this.ctx.helper.whereAndLike({ operateContent, target }),
+        ...this.ctx.helper.whereAndLike({ operateContent, target, operator }),
         ...this.ctx.helper.whereAndEq({ operateType })
-      },
-      include: [
-        {
-          model: this.ctx.app.model.User,
-          as: 'operator',
-          where: {
-            ...this.ctx.helper.whereAndLike({ name: operator })
-          }
-        }
-      ],
-      distinct: true
+      }
     });
 
     let rows = [];
     const logType = ['新增', '修改', '删除', '授权', '试用', '撤回', '发布', '下架'];
     logs.rows.forEach(_log => {
       rows.push({
-        operator: _log.operator.name,
+        operator: _log.operator,
         target: _log.target,
         operateType: logType[_log.operateType],
         operateContent: _log.operateContent,
@@ -50,8 +40,9 @@ class SyslogService extends Service {
     return logs;
   }
 
-  async writeLog({ target, operateType, operateContent }) {
+  async writeLog(target, operateType, operateContent) {
     let log = await this.ctx.model.Log.create({
+      operator: this.ctx.name,
       target,
       operateType,
       ip: this.ctx.req.connection.remoteAddress,

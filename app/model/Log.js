@@ -40,6 +40,11 @@ module.exports = app => {
         type: TEXT,
         comment: '操作内容'
       },
+      operator: {
+        field: 'operator',
+        type: STRING(30),
+        comment: '操作员'
+      },
       createdBy: {
         field: 'created_by',
         type: INTEGER

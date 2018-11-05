@@ -70,6 +70,10 @@ class UserService extends Service {
       updatedBy: this.ctx.userId
     });
     await user.setRoles(role);
+
+    // this.ctx.service.syslog.writeLog({
+    //   target, operateType, operateContent
+    // });
     return { result: user };
   }
 

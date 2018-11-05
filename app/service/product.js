@@ -155,7 +155,7 @@ class ProductService extends Service {
       this.ctx.service.file.delFile(product.logo);
     }
     const result = await this.ctx.model.Product.update({ status: 2 }, { where: { id, status: 1 } });
-    return result;
+    return { length: result[0] };
   }
 
   //查询所有产品

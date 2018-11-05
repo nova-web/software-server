@@ -22,9 +22,10 @@ module.exports = appInfo => {
   };
 
   config.security = {
-    csrf: {
-      headerName: 'x-csrf-token'
-    }
+    // csrf: {
+    //   headerName: 'x-csrf-token'
+    // }
+    csrf: false
   };
 
   config.pageSize = 10;
