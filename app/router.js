@@ -51,6 +51,5 @@ module.exports = app => {
   // app.model.User.bulkCreate(db.user);
   // app.model.Role.bulkCreate(db.role);
   // app.model.Dict.bulkCreate(db.dict);
-  // app.model.Config.bulkCreate(db.config);
   // app.model.Acl.bulkCreate(db.acl);
 };

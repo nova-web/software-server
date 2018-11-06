@@ -7,21 +7,19 @@ class PackageService extends Service {
    * @param {pageNum} 页码
    * @param {productId} 产品Id
    * @param {version} 版本号
-   * @param {status} 版本状态
-   * @param {stage} 版本阶段
    * @param {publishStatus} 发布状态
    * @param {updatedAt} 更新时间
    */
-  async getPackages({ pageSize, pageNum, productName, version, status, stage, publishStatus, updatedStart, updatedEnd } = {}) {
+  async getPackages({ pageSize, pageNum, productName, version, publishStatus, updatedStart, updatedEnd } = {}) {
     pageSize = pageSize ? Number.parseInt(pageSize) : this.app.config.pageSize;
     pageNum = pageNum ? Number.parseInt(pageNum) : 1;
-    status = Number.parseInt(status || 1);
+
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       order: [['updatedAt', 'ASC']],
       limit: pageSize,
       where: {
-        status: status,
+        status: 1,
         updatedAt: { ...this.ctx.helper.whereDate({ start: updatedStart, end: updatedEnd }) },
         ...this.ctx.helper.whereAndLike({ version }),
         ...this.ctx.helper.whereAndEq({ publishStatus })
@@ -40,18 +38,15 @@ class PackageService extends Service {
     let rows = [];
     packages.rows.forEach(_package => {
       rows.push({
-        createdAt: _package.createdAt,
         updatedAt: _package.updatedAt,
         id: _package.id,
         productId: _package.productId,
+        productName: _package.product.name,
         version: _package.version,
         url: this.ctx.app.config.apihost + _package.url,
         versionLog: _package.versionLog,
-        stage: _package.stage,
-        publishStatus: _package.publishStatus,
-        size: _package.size,
-        status: _package.status,
-        productName: _package.product.name
+        type: _package.type,
+        publishStatus: _package.publishStatus
       });
     });
     packages.rows = rows;
@@ -62,14 +57,14 @@ class PackageService extends Service {
    * @param {version} 版本
    * @param {productId} 产品Id
    * @param {versionLog} 版本日志
-   * @param {stage} 阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产
+   * @param {type} 版本类型：1开发版 2正式版
    * @param {publishStatus} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
   async addPackage() {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
+    let { version, productId, versionLog, type } = extraParams && extraParams.fields;
 
     let product = await this.ctx.model.Product.findById(productId);
     if (!(product && product.status == 1)) {
@@ -82,11 +77,15 @@ class PackageService extends Service {
 
     let fileObj = await this.ctx.service.file.upload(extraParams.files.package, product.modelId, version);
 
+    if (!fileObj.url) {
+      return { msg: '请上传版本包' };
+    }
+
     let _package = await this.ctx.model.ProductPackage.create({
       version,
       productId,
       versionLog,
-      stage,
+      type,
       size: fileObj.size,
       url: fileObj.url,
       createdBy: this.ctx.userId,
@@ -102,14 +101,14 @@ class PackageService extends Service {
    * @param {version} 版本
    * @param {productId} 产品Id
    * @param {versionLog} 版本日志
-   * @param {stage} 阶段：软件--1开发版 2beta版 3正式版 | 硬件--11原型机 12研发样机 13试产 14销售样机 15量产 16停产
+   * @param {type} 版本类型：1开发版 2正式版
    * @param {publishStatus} 发布状态：1未发布 | 2已试用 | 3已发布 | 4已下架
    * @param {url} 存放路径
    * @param {size} 版本文件大小
    */
   async updatePackage(id) {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    let { version, productId, versionLog, stage } = extraParams && extraParams.fields;
+    let { version, productId, versionLog, type } = extraParams && extraParams.fields;
     let productPackage = await this.ctx.model.ProductPackage.findById(id);
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productId);
@@ -132,7 +131,7 @@ class PackageService extends Service {
         version,
         productId,
         versionLog,
-        stage,
+        type,
         updatedBy: this.ctx.userId
       };
       if (extraParams.files.package) {
@@ -241,7 +240,7 @@ class PackageService extends Service {
     let productPackage = await this.ctx.model.ProductPackage.findById(id);
     if (productPackage) {
       let product = await this.ctx.model.Product.findById(productPackage.productId);
-      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId, publishBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
+      let result = await this.ctx.model.ProductPackage.update({ publishStatus: 'pro_status_03', updatedBy: this.ctx.userId }, { where: { id, status: 1, publishStatus: { $in: ['pro_status_01', 'pro_status_02', 'pro_status_04'] } } });
       if (result.length) {
         //操作日志
         this.ctx.service.syslog.writeLog('固件包', 6, '发布固件包：' + productPackage.version);
