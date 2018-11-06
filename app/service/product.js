@@ -35,7 +35,7 @@ class ProductService extends Service {
       } else {
         temp.fitPro = [];
       }
-      temp.logo = this.ctx.app.config.apihost + product.logo;
+      temp.logo = product.logo ? this.ctx.app.config.apihost + product.logo : '';
       result.rows.push(temp);
     });
 
@@ -44,6 +44,7 @@ class ProductService extends Service {
 
   async getProduct(id) {
     let result;
+    let productsAll = await this.getAllProducts();
     let product = await this.ctx.model.Product.findById(id, {
       include: [
         {
@@ -63,7 +64,7 @@ class ProductService extends Service {
       } else {
         result.fitPro = [];
       }
-      result.logo = this.ctx.app.config.apihost + product.logo;
+      result.logo = product.logo ? this.ctx.app.config.apihost + product.logo : '';
     }
 
     return { result };
@@ -146,7 +147,7 @@ class ProductService extends Service {
     });
 
     if (product && product.status === 1) {
-      if (product.publishStatus === 'pro_status_01' || product.publishStatus === 'pro_status_01') {
+      if (product.publishStatus === 'pro_status_02' || product.publishStatus === 'pro_status_03') {
         return { msg: `使用中的产品无法删除` };
       }
 

@@ -113,7 +113,7 @@ module.exports = app => {
       },
       logo: {
         field: 'logo',
-        type: BLOB,
+        type: STRING,
         comment: '产品示意图'
       },
       service: {
