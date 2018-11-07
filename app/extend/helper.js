@@ -43,7 +43,7 @@ module.exports = {
   whereAndEq(obj) {
     let result = {};
     for (key in obj) {
-      if (obj[key] && obj[key].length) {
+      if (obj[key] !== '' && obj[key] != null && obj[key] != undefined) {
         result[key] = obj[key];
       }
     }
@@ -52,7 +52,7 @@ module.exports = {
   whereAndLike(obj) {
     let result = {};
     for (key in obj) {
-      if (obj[key] && obj[key].length) {
+      if (obj[key] !== '' && obj[key] != null && obj[key] != undefined) {
         result[key] = {
           $like: `%${obj[key]}%`
         };
@@ -65,6 +65,24 @@ module.exports = {
     let filters = this.whereAndLike(obj);
     if (Object.keys(filters).length) {
       result = { $or: filters };
+    }
+    return result;
+  },
+  whereStatus(status) {
+    let result = {};
+
+    if (!(status == 0 || status == 1 || status === '')) {
+      status = -1; //非正常状态值（0,1）， 设置个数据库中不会存在的值来查询
+    }
+
+    if (status !== '' && status != null && status != undefined) {
+      result = { status };
+    } else {
+      result = {
+        status: {
+          $in: [0, 1]
+        }
+      };
     }
     return result;
   },

@@ -64,8 +64,9 @@ class AclService extends Service {
     let result = await this.ctx.model.Acl.update({ name, remark, code, url, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志
-      let diff = this.ctx.helper.compareDiff(acl, { name, remark, code, url, updatedBy: this.ctx.userId });
-      this.ctx.service.syslog.writeLog('权限', 1, '修改权限：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      // let diff = this.ctx.helper.compareDiff(acl, { name, remark, code, url, updatedBy: this.ctx.userId });
+      // this.ctx.service.syslog.writeLog('权限', 1, '修改权限：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      this.ctx.service.syslog.writeLog('权限', 1, '修改权限：' + acl.name);
     }
     return { length: result[0] };
   }
@@ -86,7 +87,7 @@ class AclService extends Service {
       }
 
       if (acl.roles.length && status == 0) {
-        return { msg: `功能正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
+        return { msg: `权限正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
       }
     }
 
@@ -113,13 +114,13 @@ class AclService extends Service {
     });
 
     if (acl && acl.roles.length && status == 0) {
-      return { msg: `功能正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
+      return { msg: `权限正在被角色【${acl.roles.map(r => r.name).join('、')}】使用中！` };
     }
 
     let result = await this.ctx.model.Acl.update({ status }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志
-      this.ctx.service.syslog.writeLog('权限', status ? 8 : 9, '设置权限状态为：' + (status ? '有效' : '无效'));
+      this.ctx.service.syslog.writeLog('权限', status ? 8 : 9, '设置权限[' + acl.name + ']状态为：' + (status ? '有效' : '无效'));
     }
     return { length: result[0] };
   }

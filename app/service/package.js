@@ -92,7 +92,7 @@ class PackageService extends Service {
       updatedBy: this.ctx.userId
     });
     //操作日志
-    this.ctx.service.syslog.writeLog('固件包', 0, '新增固件包：' + version);
+    this.ctx.service.syslog.writeLog('固件包', 0, '新增产品[' + product.name + ']固件包：' + version);
     return { result: _package };
   }
   /**
@@ -147,8 +147,9 @@ class PackageService extends Service {
       let result = await this.ctx.model.ProductPackage.update(params, { where: { id } });
       if (result.length) {
         //操作日志
-        let diff = this.ctx.helper.compareDiff(productPackage, params);
-        this.ctx.service.syslog.writeLog('固件包', 1, '修改固件包：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+        // let diff = this.ctx.helper.compareDiff(productPackage, params);
+        // this.ctx.service.syslog.writeLog('固件包', 1, '修改产品固件包：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+        this.ctx.service.syslog.writeLog('固件包', 1, '修改产品[' + product.name + ']固件包：' + productPackage.version);
       }
       return { length: result[0] };
     }

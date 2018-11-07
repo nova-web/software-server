@@ -1,22 +1,17 @@
 const Service = require('egg').Service;
 
 class RoleService extends Service {
-  async getRoles({ pageSize = this.app.config.pageSize, pageNum = 1, name = '', status = 1 } = {}) {
+  async getRoles({ pageSize = this.app.config.pageSize, pageNum = 1, name = '', status } = {}) {
     let result = { count: 0, rows: [] };
     let roles = {};
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
-    status = Number.parseInt(status || 1);
-
-    if (!(status == 0 || status == 1)) {
-      return [];
-    }
 
     roles = await this.ctx.model.Role.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
       where: {
-        status,
+        ...this.ctx.helper.whereStatus(status),
         ...this.ctx.helper.whereAndLike({ name })
       }
     });
@@ -58,8 +53,9 @@ class RoleService extends Service {
     let result = await this.ctx.model.Role.update({ name, remark, updatedBy: this.ctx.userId }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志
-      let diff = this.ctx.helper.compareDiff(role, { name, remark });
-      this.ctx.service.syslog.writeLog('角色', 1, '修改角色：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      // let diff = this.ctx.helper.compareDiff(role, { name, remark });
+      // this.ctx.service.syslog.writeLog('角色', 1, '修改角色：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      this.ctx.service.syslog.writeLog('角色', 1, '修改角色：' + role.name);
     }
     return { length: result[0] };
   }
@@ -113,7 +109,7 @@ class RoleService extends Service {
     let result = await this.ctx.model.Role.update({ status }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志
-      this.ctx.service.syslog.writeLog('角色', status ? 8 : 9, '设置角色状态为：' + (status ? '有效' : '无效'));
+      this.ctx.service.syslog.writeLog('角色', status ? 8 : 9, '设置角色[' + role.name + ']状态为：' + (status ? '有效' : '无效'));
     }
     return { length: result[0] };
   }
@@ -138,7 +134,8 @@ class RoleService extends Service {
 
     if (role) {
       //操作日志
-      this.ctx.service.syslog.writeLog('角色', 3, '给角色[' + role.name + ']授权：[' + acl.map(item => item.name).join('，') + ']');
+      // this.ctx.service.syslog.writeLog('角色', 3, '给角色[' + role.name + ']授权：[' + acl.map(item => item.name).join('，') + ']');
+      this.ctx.service.syslog.writeLog('角色', 3, '给角色[' + role.name + ']授权');
     }
 
     return { length: acl };

@@ -19,7 +19,7 @@ class AclController extends Controller {
 
   //更新数据 put
   async update() {
-    const { length = 0, msg = '功能不存在！' } = await this.ctx.service.acl.updateAcl(this.ctx.params.id, this.ctx.request.body);
+    const { length = 0, msg = '权限不存在！' } = await this.ctx.service.acl.updateAcl(this.ctx.params.id, this.ctx.request.body);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {
@@ -29,7 +29,7 @@ class AclController extends Controller {
 
   //删除数据 delete
   async destroy() {
-    const { length = 0, msg = '功能不存在！' } = await this.ctx.service.acl.delAcl(this.ctx.params.id);
+    const { length = 0, msg = '权限不存在！' } = await this.ctx.service.acl.delAcl(this.ctx.params.id);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {
@@ -39,7 +39,7 @@ class AclController extends Controller {
 
   //置为有效1无效0
   async setStatus() {
-    const { length = 0, msg = '功能不存在！' } = await this.ctx.service.acl.setStatus(this.ctx.request.body);
+    const { length = 0, msg = '权限不存在！' } = await this.ctx.service.acl.setStatus(this.ctx.request.body);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {

@@ -130,8 +130,9 @@ class ProductService extends Service {
     let result = await this.ctx.model.Product.update(params, { where: { id, status: 1 } });
     if (result.length) {
       //操作日志
-      let diff = this.ctx.helper.compareDiff(product, params);
-      this.ctx.service.syslog.writeLog('产品', 1, '修改产品：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      // let diff = this.ctx.helper.compareDiff(product, params);
+      // this.ctx.service.syslog.writeLog('产品', 1, '修改产品：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      this.ctx.service.syslog.writeLog('产品', 1, '修改产品：' + product.name);
     }
     return { length: result[0] };
   }

@@ -2,22 +2,17 @@ const Service = require('egg').Service;
 const md5 = require('md5');
 
 class UserService extends Service {
-  async getUsers({ pageSize = this.app.config.pageSize, pageNum = 1, name = '', code = '', username = '', roleId, status = 1 } = {}) {
+  async getUsers({ pageSize = this.app.config.pageSize, pageNum = 1, name = '', code = '', username = '', roleId, status } = {}) {
     let result = { count: 0, rows: [] };
     let users = {};
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
-    status = Number.parseInt(status || 1);
-
-    if (!(status == 0 || status == 1)) {
-      return [];
-    }
 
     users = await this.ctx.model.User.findAndCountAll({
       offset: pageSize * (pageNum - 1),
       limit: pageSize,
       where: {
-        status,
+        ...this.ctx.helper.whereStatus(status),
         ...this.ctx.helper.whereAndLike({ username, name, code }),
         id: {
           $notIn: [this.ctx.userId]
@@ -111,8 +106,9 @@ class UserService extends Service {
 
     if (result.length) {
       //操作日志
-      let diff = this.ctx.helper.compareDiff(user, columns);
-      this.ctx.service.syslog.writeLog('用户', 1, '修改用户：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      // let diff = this.ctx.helper.compareDiff(user, columns);
+      // this.ctx.service.syslog.writeLog('用户', 1, '修改用户：[' + diff.oldValue.join('，') + ']为[' + diff.newValue.join('，') + ']');
+      this.ctx.service.syslog.writeLog('用户', 1, '修改用户：' + user.username);
     }
 
     return { length: result[0] };
@@ -148,7 +144,7 @@ class UserService extends Service {
     let result = await this.ctx.model.User.update({ status }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志
-      this.ctx.service.syslog.writeLog('用户', status ? 8 : 9, '设置用户状态为：' + (status ? '有效' : '无效'));
+      this.ctx.service.syslog.writeLog('用户', status ? 8 : 9, '设置用户[' + user.username + ']状态为：' + (status ? '有效' : '无效'));
     }
     return { length: result[0] };
   }
