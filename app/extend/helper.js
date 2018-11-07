@@ -71,11 +71,15 @@ module.exports = {
   whereStatus(status) {
     let result = {};
 
+    if (status == undefined || status == null) {
+      status = '';
+    }
+
     if (!(status == 0 || status == 1 || status === '')) {
       status = -1; //非正常状态值（0,1）， 设置个数据库中不会存在的值来查询
     }
 
-    if (status !== '' && status != null && status != undefined) {
+    if (status !== '') {
       result = { status };
     } else {
       result = {

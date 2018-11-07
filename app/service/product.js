@@ -245,6 +245,7 @@ class ProductService extends Service {
     return { result: productLog };
   }
 
+  // 查询设备日志
   async getLogs({ pageSize = this.app.config.pageSize, pageNum = 1, ipName: deviceName, ipName: softwareIp, deviceId } = {}) {
     let result = { count: 0, rows: [] };
     pageSize = Number.parseInt(pageSize);

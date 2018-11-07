@@ -25,12 +25,12 @@ module.exports = app => {
       },
       deviceName: {
         field: 'device_name',
-        type: INTEGER,
+        type: STRING(30),
         validate: {
           notEmpty: true
         },
         allowNull: false,
-        comment: '产品id'
+        comment: '产品名称'
       },
       softwareIp: {
         field: 'software_ip',

@@ -1,7 +1,7 @@
 const Service = require('egg').Service;
 
 class SysControlService extends Service {
-  async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, name, service = 1 } = {}) {
+  async getProducts({ pageSize = this.app.config.pageSize, pageNum = 1, name, service } = {}) {
     let result = { count: 0, rows: [] };
     pageSize = Number.parseInt(pageSize);
     pageNum = Number.parseInt(pageNum);
@@ -11,7 +11,7 @@ class SysControlService extends Service {
       limit: pageSize,
       where: {
         status: 1,
-        service,
+        ...this.ctx.helper.whereAndEq({ service }),
         ...this.ctx.helper.whereAndLike({ name })
       }
     });
