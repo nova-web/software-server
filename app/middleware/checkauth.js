@@ -17,8 +17,8 @@ module.exports = options => {
       if (access) {
         await next();
       } else {
-        ctx.status = 403;
-        ctx.fail('访问受限');
+        ctx.status = 401;
+        ctx.fail('用户不存在');
       }
     }
   };

@@ -141,6 +141,7 @@ class UserService extends Service {
       return { msg: '无法操作当前用户' };
     }
 
+    const user = await this.ctx.model.User.findById(id);
     let result = await this.ctx.model.User.update({ status }, { where: { id, status: { $in: [0, 1] } } });
     if (result.length) {
       //操作日志

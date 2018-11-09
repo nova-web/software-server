@@ -9,6 +9,7 @@ module.exports = options => {
       if (user && user.status == 1) {
         await next();
       } else {
+        ctx.status = 401;
         ctx.fail('无效用户');
       }
     }

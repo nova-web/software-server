@@ -12,6 +12,10 @@ class FileController extends Controller {
 
   async parse(req) {
     const form = new formidable.IncomingForm();
+    form.maxFileSize = 40000000000000 * 1024 * 1024;
+    // form.on('progress', (bytesReceived, bytesExpected) => {
+    //   console.log(bytesReceived, bytesExpected);
+    // });
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         resolve({ fields, files });
