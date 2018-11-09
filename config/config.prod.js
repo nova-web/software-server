@@ -35,10 +35,10 @@ module.exports = appInfo => {
 
   config.sequelize = {
     dialect: 'mysql',
-    host: '172.16.6.188',
+    host: '172.16.6.202',
     password: 'root',
     port: 3306,
-    database: 'software-upgrade',
+    database: 'v_eus',
     username: 'root',
     timezone: '+08:00', //东八时区
     logging: false
