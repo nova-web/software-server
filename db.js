@@ -201,14 +201,6 @@ module.exports = {
     { name: '系统控制', url: '', code: 'BBXJ', remark: '', createdBy: 0, updatedBy: 0, parentId: 44 },
     { name: '系统控制查询', url: 'get/syscontrol', code: 'XTKZCX', remark: '', createdBy: 0, updatedBy: 0, parentId: 46 },
     { name: '系统控制开关', url: 'put/syscontrol', code: 'XTKZKG', remark: '', createdBy: 0, updatedBy: 0, parentId: 46 },
-    { name: '统计分析', url: 'get/product/logs', code: 'TJFX', remark: '', createdBy: 0, updatedBy: 0 },
-    {
-      name: '测试',
-      url: '',
-      code: 'CPXZ',
-      remark: '最后删掉',
-      createdBy: 0,
-      updatedBy: 0
-    }
+    { name: '统计分析', url: 'get/product/logs', code: 'TJFX', remark: '', createdBy: 0, updatedBy: 0 }
   ]
 };
