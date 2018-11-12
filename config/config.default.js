@@ -13,15 +13,15 @@ module.exports = appInfo => {
   config.middleware = ['checktoken', 'checkuser', 'checkauth'];
   //不检查登录
   config.checktoken = {
-    ignore: ['/login', '/package/newlist', '/product/report']
+    ignore: ['/login', '/package/newlist', '/product/report', '/upload*']
   };
   //不检查用户
   config.checkuser = {
-    ignore: ['/login', '/package/newlist', '/product/report']
+    ignore: ['/login', '/package/newlist', '/product/report', '/upload*']
   };
   //不检查权限
   config.checkauth = {
-    ignore: ['/login', '/package/newlist', '/product/report', '/getUserAclCodes', '/dict', '/product/all', '/getUserAclTree']
+    ignore: ['/login', '/package/newlist', '/product/report', '/upload*', '/getUserAclCodes', '/dict', '/product/all', '/getUserAclTree', '/package/preAdd', '/package/preUpdate']
   };
 
   config.security = {
@@ -42,31 +42,7 @@ module.exports = appInfo => {
     username: 'root',
     timezone: '+08:00', //东八时区
     logging: true
-    // define: { raw: true }
   };
-
-  // config.view = {
-  //   mapping: {
-  //     '.js': 'assets'
-  //   }
-  // };
-
-  // //静态资源配置TODO
-  //   config.assets = {
-  //     publicPath: '/public/',
-  //     devServer: {
-  //       debug: false,
-  //       command: 'umi dev',
-  //       port: 7001,
-  //       env: {
-  //         APP_ROOT: process.cwd() + '/app/assets',
-  //         BROWSER: 'none',
-  //         ESLINT: 'none',
-  //         // SOCKET_SERVER: 'http://127.0.0.1:7003',
-  //         PUBLIC_PATH: 'http://127.0.0.1:7001'
-  //       }
-  //     }
-  //   };
 
   config.static = {
     prefix: '/',
@@ -79,7 +55,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     secret: 'nova-eus-token',
-    exp: 360000 //秒
+    exp: 3600 //秒
   };
 
   config.apihost = 'http://172.16.6.188:7001';

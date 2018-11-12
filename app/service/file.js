@@ -6,24 +6,48 @@ const formidable = require('formidable');
 const Controller = require('egg').Controller;
 
 class FileController extends Controller {
-  // async index() {
-  //   this.ctx.body = '<a download href="/download/VX5s/v1.rar">v1.rar</a><br><a download href="/download/VX5s/v2.rar">v2.rar</a>';
-  // }
-
   async parse(req) {
     const form = new formidable.IncomingForm();
-    form.maxFileSize = 40000000000000 * 1024 * 1024;
-    // form.on('progress', (bytesReceived, bytesExpected) => {
-    //   console.log(bytesReceived, bytesExpected);
-    // });
+    form.uploadDir = './app/public/temp'; //设置临时文件存放目录
+    form.maxFileSize = 2 * 1024 * 1024 * 1024; //最大2GB
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
+        if (err) throw err;
         resolve({ fields, files });
       });
     });
   }
 
+  //文件重命名 folderName 空标识上传的是图片
+  async rename(file, folderName = '') {
+    let result = { url: '', size: '' };
+
+    if (!file) return result;
+
+    let sourcePath = path.join(this.config.baseDir, file.path);
+    let folderPath = path.join(this.config.baseDir, 'app/public/' + (folderName ? 'upload' : 'images'), folderName);
+    // 创建文件夹;
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath);
+    }
+    let extName = path.extname(file.name);
+    let fileName = file.name.replace(extName, '') + '.' + Date.now() + extName;
+    let destPath = path.join(folderPath, fileName);
+    try {
+      fs.renameSync(sourcePath, destPath);
+      if (folderName) {
+        result.url = '/upload/' + folderName + '/' + fileName;
+      } else {
+        result.url = '/images/' + fileName;
+      }
+      result.size = file.size;
+    } catch (e) {}
+    console.log(result);
+    return result;
+  }
+
   /**
+   * 【废弃】
    * 上传文件，兼容单文件和多文件
    * @param customName 单文件自定义文件名
    * @param isAjax 上传方式
@@ -89,26 +113,6 @@ class FileController extends Controller {
     }
     return result;
   }
-
-  // async download() {
-  //   // this.ctx.params['0']
-  //   // let path = this.ctx.params['0'];
-  //   const filePath = path.resolve(this.app.config.static.dir, 'upload/' + this.ctx.params['0']);
-  //   // this.ctx.attachment('hello.rar');
-  //   return fs.createReadStream(filePath);
-  // }
-
-  // async downloadImage() {
-  //   const url = 'http://cdn2.ettoday.net/images/1200/1200526.jpg';
-  //   // return await this.ctx.curl(url, {
-  //   //   streaming: true
-  //   // });
-
-  //   let filePath = path.join(this.config.baseDir, 'app/public/images', '15403766373841712.png');
-  //   var content = fs.readFileSync(filePath, 'binary');
-  //   // return fs.createReadStream(filePath);
-  //   return content;
-  // }
 
   delFile(url) {
     url = path.join(this.config.baseDir, 'app/public', url);

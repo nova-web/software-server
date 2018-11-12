@@ -42,31 +42,7 @@ module.exports = appInfo => {
     username: 'root',
     timezone: '+08:00', //东八时区
     logging: false
-    // define: { raw: true }
   };
-
-  // config.view = {
-  //   mapping: {
-  //     '.js': 'assets'
-  //   }
-  // };
-
-  // //静态资源配置TODO
-  //   config.assets = {
-  //     publicPath: '/public/',
-  //     devServer: {
-  //       debug: false,
-  //       command: 'umi dev',
-  //       port: 7001,
-  //       env: {
-  //         APP_ROOT: process.cwd() + '/app/assets',
-  //         BROWSER: 'none',
-  //         ESLINT: 'none',
-  //         // SOCKET_SERVER: 'http://127.0.0.1:7003',
-  //         PUBLIC_PATH: 'http://127.0.0.1:7001'
-  //       }
-  //     }
-  //   };
 
   config.static = {
     prefix: '/',
@@ -79,7 +55,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     secret: 'nova-eus-token',
-    exp: 360000 //秒
+    exp: 3600 //秒
   };
 
   config.apihost = 'http://172.16.6.203:7002';

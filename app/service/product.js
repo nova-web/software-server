@@ -78,6 +78,8 @@ class ProductService extends Service {
       return { msg: 'modelId重复' };
     }
 
+    let fileObj = await this.ctx.service.file.rename(extraParams.files.logo);
+
     let product = await this.ctx.model.Product.create({
       name,
       model,
@@ -89,7 +91,7 @@ class ProductService extends Service {
       dept,
       projectManager,
       productDesc,
-      logo: await this.ctx.service.file.uploadImg(extraParams.files.logo, modelId),
+      logo: fileObj.url,
       createdBy: this.ctx.userId,
       updatedBy: this.ctx.userId
     });
@@ -121,9 +123,9 @@ class ProductService extends Service {
       updatedBy: this.ctx.userId
     };
 
-    let logo = await this.ctx.service.file.uploadImg(extraParams.files.logo, product.modelId);
-    if (logo) {
-      Object.assign(params, { logo });
+    let logo = await this.ctx.service.file.rename(extraParams.files.logo);
+    if (logo.url) {
+      Object.assign(params, { logo: logo.url });
       this.ctx.service.file.delFile(product.logo);
     }
 

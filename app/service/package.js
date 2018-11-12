@@ -52,6 +52,28 @@ class PackageService extends Service {
     packages.rows = rows;
     return packages;
   }
+
+  //新增版本前获取表单并校验数据
+  async preAddPackage() {
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    let { version, productId, versionLog, type } = extraParams && extraParams.fields;
+
+    let product = await this.ctx.model.Product.findById(productId);
+    if (!(product && product.status == 1)) {
+      return { msg: '产品不存在' };
+    }
+
+    if (await this.ctx.model.ProductPackage.findOne({ where: { version, productId, status: 1 } })) {
+      return { msg: '版本名称重复' };
+    }
+
+    if (['version_01', 'version_02'].indexOf(type) === -1) {
+      return { msg: '版本类型码无效' };
+    }
+
+    return { result: extraParams.fields };
+  }
+
   /**
    * 新增版本
    * @param {version} 版本
@@ -64,6 +86,7 @@ class PackageService extends Service {
    */
   async addPackage() {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+
     let { version, productId, versionLog, type } = extraParams && extraParams.fields;
 
     let product = await this.ctx.model.Product.findById(productId);
@@ -75,7 +98,7 @@ class PackageService extends Service {
       return { msg: 'version重复' };
     }
 
-    let fileObj = await this.ctx.service.file.upload(extraParams.files.package, product.modelId, version);
+    let fileObj = await this.ctx.service.file.rename(extraParams.files.package, product.modelId);
 
     if (!fileObj.url) {
       return { msg: '请上传版本包' };
@@ -95,6 +118,28 @@ class PackageService extends Service {
     this.ctx.service.syslog.writeLog('固件包', 0, '新增产品[' + product.name + ']固件包：' + version);
     return { result: _package };
   }
+
+  //修改版本前获取表单并校验数据
+  async preUpdatePackage(id) {
+    const extraParams = await this.ctx.service.file.parse(this.ctx.req);
+    let { version, productId, versionLog, type } = extraParams && extraParams.fields;
+
+    let product = await this.ctx.model.Product.findById(productId);
+    if (!(product && product.status == 1)) {
+      return { msg: '产品不存在' };
+    }
+
+    if (await this.ctx.model.ProductPackage.findOne({ where: { version, productId, status: 1, id: { $not: id } } })) {
+      return { msg: '版本名称重复' };
+    }
+
+    if (['version_01', 'version_02'].indexOf(type) === -1) {
+      return { msg: '版本类型码无效' };
+    }
+
+    return { result: extraParams.fields };
+  }
+
   /**
    * 修改版本包
    * @param {id} id
@@ -115,18 +160,11 @@ class PackageService extends Service {
       if (!(product && product.status == 1)) {
         return { msg: '产品不存在' };
       }
-      let ppackage = await this.ctx.model.ProductPackage.findOne({
-        where: {
-          version,
-          productId,
-          id: {
-            $not: id
-          }
-        }
-      });
-      if (ppackage) {
-        return { msg: 'version重复' };
+
+      if (await this.ctx.model.ProductPackage.findOne({ where: { version, productId, status: 1, id: { $not: id } } })) {
+        return { msg: '版本名称重复' };
       }
+
       let params = {
         version,
         productId,
@@ -136,7 +174,7 @@ class PackageService extends Service {
       };
       if (extraParams.files.package) {
         this.ctx.service.file.delFile(productPackage.url);
-        let fileObj = await this.ctx.service.file.upload(extraParams.files.package, product.modelId, version);
+        let fileObj = await this.ctx.service.file.rename(extraParams.files.package, product.modelId);
 
         Object.assign(params, {
           size: fileObj.size,

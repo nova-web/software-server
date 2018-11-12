@@ -19,7 +19,7 @@ class PackageController extends Controller {
 
   //更新数据 put
   async update() {
-    const { length = 0, msg = '版本不存在！' } = await this.ctx.service.package.updatePackage(this.ctx.params.id, this.ctx.request.body);
+    const { length = 0, msg = '版本不存在！' } = await this.ctx.service.package.updatePackage(this.ctx.params.id);
     if (length) {
       this.ctx.success({ status: 1 });
     } else {
@@ -77,6 +77,26 @@ class PackageController extends Controller {
     const { length = 0, msg = '操作异常' } = await this.ctx.service.package.obtained(this.ctx.request.body);
     if (length) {
       this.ctx.success({ status: 1 });
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  //新增版本表单校验
+  async preAdd() {
+    const { result, msg = '参数不正确！' } = await this.ctx.service.package.preAddPackage();
+    if (result) {
+      this.ctx.success(result);
+    } else {
+      this.ctx.fail(msg);
+    }
+  }
+
+  //修改版本表单校验
+  async preUpdate() {
+    const { result, msg = '参数不正确！' } = await this.ctx.service.package.preUpdatePackage(this.ctx.params.id);
+    if (result) {
+      this.ctx.success(result);
     } else {
       this.ctx.fail(msg);
     }

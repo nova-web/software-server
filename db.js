@@ -196,9 +196,9 @@ module.exports = {
     { name: '版本撤回', url: 'post/package/withdraw', code: 'BBCH', remark: '', createdBy: 0, updatedBy: 0, parentId: 35 },
     { name: '版本试用', url: 'post/package/tryout', code: 'BBSY', remark: '', createdBy: 0, updatedBy: 0, parentId: 35 },
     { name: '版本下架', url: 'post/package/obtained', code: 'BBXJ', remark: '', createdBy: 0, updatedBy: 0, parentId: 35 },
-    { name: '系统管理', url: '', code: 'CTGL', remark: '', createdBy: 0, updatedBy: 0 },
+    { name: '系统管理', url: '', code: 'XTGL', remark: '', createdBy: 0, updatedBy: 0 },
     { name: '操作审计', url: 'get/logs', code: 'CZSJ', remark: '', createdBy: 0, updatedBy: 0, parentId: 44 },
-    { name: '系统控制', url: '', code: 'BBXJ', remark: '', createdBy: 0, updatedBy: 0, parentId: 44 },
+    { name: '系统控制', url: '', code: 'XTKZ', remark: '', createdBy: 0, updatedBy: 0, parentId: 44 },
     { name: '系统控制查询', url: 'get/syscontrol', code: 'XTKZCX', remark: '', createdBy: 0, updatedBy: 0, parentId: 46 },
     { name: '系统控制开关', url: 'put/syscontrol', code: 'XTKZKG', remark: '', createdBy: 0, updatedBy: 0, parentId: 46 },
     { name: '统计分析', url: 'get/product/logs', code: 'TJFX', remark: '', createdBy: 0, updatedBy: 0 }
