@@ -57,6 +57,8 @@ class SyslogService extends Service {
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress || '';
     ip = ip.match(/\d+.\d+.\d+.\d+/);
     ip = ip ? ip.join('.') : '';
+    this.ctx.logger.info(req.headers['x-forwarded-for'], req.connection.remoteAddress, req.socket.remoteAddress);
+    this.ctx.logger.info('ipAddress', ip);
     return ip;
   }
 }

@@ -42,7 +42,6 @@ class FileController extends Controller {
       }
       result.size = file.size;
     } catch (e) {}
-    console.log(result);
     return result;
   }
 
