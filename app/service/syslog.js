@@ -54,11 +54,10 @@ class SyslogService extends Service {
   }
 
   getClientIp(req) {
+    //x-forwarded-for 是从nginx服务器传过来的ip
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress || '';
     ip = ip.match(/\d+.\d+.\d+.\d+/);
     ip = ip ? ip.join('.') : '';
-    this.ctx.logger.info(req.headers['x-forwarded-for'], req.connection.remoteAddress, req.socket.remoteAddress);
-    this.ctx.logger.info('ipAddress', ip);
     return ip;
   }
 }
