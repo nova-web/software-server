@@ -16,7 +16,7 @@ class PackageService extends Service {
 
     let packages = await this.ctx.model.ProductPackage.findAndCountAll({
       offset: pageSize * (pageNum - 1),
-      order: [['updatedAt', 'ASC']],
+      order: [['updatedAt', 'DESC']],
       limit: pageSize,
       where: {
         status: 1,
