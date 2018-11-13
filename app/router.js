@@ -35,8 +35,8 @@ module.exports = app => {
   router.get('/product/logs', controller.product.log); //产品日志统计分析
   router.post('/product/report', controller.product.report); //产品日志上报(对外开放)
   //版本
-  router.post('/package/preAdd', controller.package.preAdd); //新增版本表单校验
-  router.put('/package/preUpdate/:id', controller.package.preUpdate); //修改版本表单校验
+  router.post('/package/preAdd', controller.package.preAdd); //新增版本表单校验(对内开放)
+  router.put('/package/preUpdate/:id', controller.package.preUpdate); //修改版本表单校验(对内开放)
   router.resources('productPackage', '/packages', controller.package); //版本添删改查
   router.get('/package/newlist', controller.package.newlist); //查询可升级版本列表(对外开放)
   router.post('/package/tryout', controller.package.tryout); //试用
