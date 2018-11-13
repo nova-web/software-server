@@ -26,5 +26,11 @@ module.exports = appInfo => {
     }
   };
 
+  // config.logger = {
+  //   consoleLevel: 'DEBUG',
+  //   level: 'DEBUG',
+  //   allowDebugAtProd: true
+  // };
+
   return config;
 };

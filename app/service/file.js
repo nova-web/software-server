@@ -113,11 +113,23 @@ class FileController extends Controller {
     return result;
   }
 
+  //删除文件
   delFile(url) {
     url = path.join(this.config.baseDir, 'app/public', url);
     if (fs.existsSync(url)) {
       fs.unlinkSync(url);
     }
+  }
+
+  //删除文件夹下所有文件
+  emptyDir(url) {
+    url = path.join(this.config.baseDir, 'app/public', url);
+    let files = fs.readdirSync(url);
+    files.forEach(file => {
+      if (fs.existsSync(url + '/' + file)) {
+        fs.unlinkSync(url + '/' + file);
+      }
+    });
   }
 }
 
