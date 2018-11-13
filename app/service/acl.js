@@ -2,15 +2,22 @@ const Service = require('egg').Service;
 const md5 = require('md5');
 
 class AclService extends Service {
-  async getAcls() {
+  async getAcls({ status, name } = {}) {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: { $in: [0, 1] } } });
+    let filteredAcls = await this.ctx.model.Acl.findAll({
+      where: {
+        ...this.ctx.helper.whereStatus(status),
+        ...this.ctx.helper.whereAndLike({ name })
+      }
+    });
+
+    // 根据过滤出来的权限查找顶层节点
+    let filterdAclParent = this.findFilteredParent(filteredAcls);
 
     //生成权限树
     let aclTree = [];
-    acls.forEach(item => {
-      if (!item.parentId) {
-        aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
-      }
+    filterdAclParent.forEach(item => {
+      aclTree.push(this.ctx.helper.pick(item, ['id', 'name', 'code', 'url', 'status', 'remark', 'updatedAt', 'parentId']));
     });
     this.createTree(aclTree, acls);
     return aclTree;
@@ -175,9 +182,11 @@ class AclService extends Service {
 
     //获取用户权限ids
     let userAclIds = [];
-    user.roles.filter(r => r.status == 1).forEach(r => {
-      userAclIds = userAclIds.concat(r.acls.filter(a => a.status == 1).map(a => a.id));
-    });
+    user.roles
+      .filter(r => r.status == 1)
+      .forEach(r => {
+        userAclIds = userAclIds.concat(r.acls.filter(a => a.status == 1).map(a => a.id));
+      });
 
     //获取用户父级权限ids
     let userParentAclIds = [];
@@ -241,6 +250,17 @@ class AclService extends Service {
     }
 
     return result;
+  }
+
+  // 根据过滤出来的权限查找顶层节点
+  findFilteredParent(acls) {
+    let parentAcls = [];
+    acls.forEach(item => {
+      if (!acls.some(acl => acl.id === item.parentId)) {
+        parentAcls.push(item);
+      }
+    });
+    return parentAcls;
   }
 }
 
