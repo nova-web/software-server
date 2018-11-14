@@ -95,7 +95,7 @@ class PackageService extends Service {
     }
 
     if (await this.ctx.model.ProductPackage.findOne({ where: { version, productId, status: 1 } })) {
-      return { msg: 'version重复' };
+      return { msg: '版本名称重复' };
     }
 
     let fileObj = await this.ctx.service.file.rename(extraParams.files.package, product.modelId);
@@ -229,7 +229,8 @@ class PackageService extends Service {
               $gt: version
             }
           },
-          order: [['version', 'DESC']]
+          order: [['version', 'DESC']],
+          limit: 100 //此处必须提供一个limit，否则不排序 暂定义为获取最新的100个版本
         }
       ]
     });
