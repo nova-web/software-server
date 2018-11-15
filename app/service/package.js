@@ -215,7 +215,8 @@ class PackageService extends Service {
   }
 
   //获取可升级的版本列表
-  async newlist({ modelId, version = '' }) {
+  async newlist({ modelId, version = '', limit = 1 }) {
+    limit = parseInt(limit) || 1;
     let list = [];
     let product = await this.ctx.model.Product.findOne({
       where: { modelId, status: 1 },
@@ -225,12 +226,15 @@ class PackageService extends Service {
           as: 'packages',
           where: {
             status: 1,
+            publishStatus: {
+              $in: ['pro_status_02', 'pro_status_03']
+            },
             version: {
               $gt: version
             }
           },
           order: [['version', 'DESC']],
-          limit: 100 //此处必须提供一个limit，否则不排序 暂定义为获取最新的100个版本
+          limit
         }
       ]
     });
@@ -238,7 +242,11 @@ class PackageService extends Service {
       list = product.packages.map(item => {
         return {
           url: this.ctx.app.config.apihost + item.url,
-          version: item.version
+          version: item.version,
+          log: item.versionLog,
+          createdAt: item.createdAt,
+          versionType: this.app.dict[item.type],
+          publishStatus: this.app.dict[item.publishStatus]
         };
       });
     }

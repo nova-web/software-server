@@ -37,6 +37,7 @@ class PackageController extends Controller {
     }
   }
 
+  //获取最新版本列表/版本
   async newlist() {
     const list = await this.ctx.service.package.newlist(this.ctx.request.query);
     this.ctx.success(list);
