@@ -18,7 +18,7 @@ module.exports = app => {
   router.resources('role', '/roles', controller.role); //角色添删改查
   router.post('/setRoleStatus', controller.role.setStatus); //设置角色状态
   router.post('/setAuthorize', controller.role.setAuthorize); //给角色授权
-  router.get('/getUserRoles', controller.role.getUserRoles); //获取用户拥有的角色
+  router.get('/getUserRoles', controller.role.getUserRoles); //获取用户拥有的角色(对内开放)
   //权限
   router.resources('acl', '/acls', controller.acl); //权限添删改查
   router.post('/setAclStatus', controller.acl.setStatus); //设置权限状态
