@@ -21,7 +21,7 @@ module.exports = appInfo => {
   };
   //不检查权限
   config.checkauth = {
-    ignore: ['/login', '/package/newlist', '/product/report', '/upload*', '/getUserAclCodes', '/dict', '/product/all', '/getUserAclTree', '/package/preAdd', '/package/preUpdate', '/getUserRoles']
+    ignore: ['/login', '/package/newlist', '/product/report', '/upload*', '/getUserAclCodes', '/dict', '/product/all', '/getUserAclTree', '/package/preAdd', '/package/preUpdate', '/getUserRoles', '/getRoleAcls', '/getRoles']
   };
 
   config.security = {

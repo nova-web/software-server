@@ -9,6 +9,7 @@ class ProductService extends Service {
     let productsAll = await this.getAllProducts();
     let products = await this.ctx.model.Product.findAndCountAll({
       offset: pageSize * (pageNum - 1),
+      order: [['updatedAt', 'DESC']],
       limit: pageSize,
       where: {
         status: 1,

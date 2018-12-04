@@ -19,12 +19,13 @@ module.exports = app => {
   router.post('/setRoleStatus', controller.role.setStatus); //设置角色状态
   router.post('/setAuthorize', controller.role.setAuthorize); //给角色授权
   router.get('/getUserRoles', controller.role.getUserRoles); //获取用户拥有的角色(对内开放)
+  router.get('/getRoles', controller.role.getRoles); //根据角色筛选用户(对内开放)
   //权限
   router.resources('acl', '/acls', controller.acl); //权限添删改查
   router.post('/setAclStatus', controller.acl.setStatus); //设置权限状态
   router.get('/getUserAclTree', controller.acl.getUserAclTree); //获取用户拥有的权限树(对内开放)
   router.get('/getUserAclCodes', controller.acl.getUserAclCodes); //获取用户拥有的权限码(对内开放)
-  router.get('/getRoleAcls', controller.acl.getRoleAcls); //获取角色拥有的权限id
+  router.get('/getRoleAcls', controller.acl.getRoleAcls); //获取角色拥有的权限id(对内开放)
   //产品
   router.resources('product', '/products', controller.product); //产品添删改查
   router.get('/product/all', controller.product.getAllProducts); //下拉查询所有产品(对内开放)

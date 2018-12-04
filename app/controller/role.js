@@ -62,6 +62,12 @@ class RoleController extends Controller {
     const list = await this.ctx.service.role.getUserRoles();
     this.ctx.success(list);
   }
+
+  //获取所有角色（根据角色筛选用户）
+  async getRoles() {
+    const list = await this.ctx.service.role.getRoles({ status: 1, pageSize: 1000 });
+    this.ctx.success(list);
+  }
 }
 
 module.exports = RoleController;
