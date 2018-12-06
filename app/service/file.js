@@ -12,7 +12,7 @@ class FileController extends Controller {
     form.maxFileSize = 2 * 1024 * 1024 * 1024; //最大2GB
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
-        if (err) throw err;
+        // if (err) throw err;
         resolve({ fields, files });
       });
     });
