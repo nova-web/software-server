@@ -6,7 +6,7 @@ module.exports = options => {
       let payload = ctx.app.jwt.decode(token);
       if (!payload) {
         ctx.status = 401;
-        ctx.fail('无效token');
+        ctx.fail('服务器连接异常，请重新登录');
         return;
       }
 
@@ -23,13 +23,13 @@ module.exports = options => {
         }
       } else {
         ctx.status = 401;
-        ctx.fail('token失效');
+        ctx.fail('服务器连接失效，请重新登录');
         return;
       }
       await next();
     } else {
       ctx.status = 401;
-      ctx.fail('未授权');
+      ctx.fail('服务器连接异常，请重新登录');
       return;
     }
   };

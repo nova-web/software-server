@@ -219,7 +219,7 @@ class AclService extends Service {
   async getUserAclCodes() {
     let acls = await this.ctx.model.Acl.findAll({ where: { status: 1 } });
     let filterdAcls = await this.getFilteredAcls(acls);
-    return filterdAcls.map(a => ({ name: a.name, code: a.code }));
+    return filterdAcls.map(a => ({ name: a.name, code: a.code, id: a.id }));
   }
 
   //获取用户权限URL

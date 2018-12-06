@@ -129,7 +129,21 @@ class RoleService extends Service {
       return { length: 0 };
     }
 
-    let acl = await this.ctx.model.Acl.findAll({ where: { id: { $in: acls }, status: 1 } });
+    let tempAcl = [];
+    //角色拥有的权限
+    let roleAcls = await this.ctx.service.acl.getRoleAcls({ id });
+    //当前登录人拥有的权限
+    let userAcls = await this.ctx.service.acl.getUserAclCodes();
+
+    roleAcls.forEach(id => {
+      if (!userAcls.some(u => id === u.id)) {
+        tempAcl.push(id);
+      }
+    });
+
+    tempAcl = tempAcl.concat(acls);
+
+    let acl = await this.ctx.model.Acl.findAll({ where: { id: { $in: tempAcl }, status: 1 } });
     await role.setAcls(acl);
 
     if (role) {

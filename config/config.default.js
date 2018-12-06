@@ -38,7 +38,7 @@ module.exports = appInfo => {
     host: '172.16.6.188',
     password: 'root',
     port: 3306,
-    database: 'software-upgrade',
+    database: 'v-eus',
     username: 'root',
     timezone: '+08:00', //东八时区
     logging: true
