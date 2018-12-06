@@ -171,7 +171,18 @@ class RoleService extends Service {
           }
         ]
       });
+
       roles = user.roles;
+
+      let createdRoles = await this.ctx.model.Role.findAll({ where: { status: 1, createdBy: this.ctx.userId } });
+      let tempRoles = [];
+      createdRoles.forEach(item => {
+        if (!roles.some(role => role.id === item.id)) {
+          tempRoles.push(item);
+        }
+      });
+
+      roles = roles.concat(tempRoles);
     }
 
     roles.forEach(role => {
