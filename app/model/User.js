@@ -46,9 +46,6 @@ module.exports = app => {
       },
       phone: {
         type: STRING(30),
-        validate: {
-          isDecimal: true
-        },
         comment: '手机号'
       },
       email: {

@@ -219,7 +219,13 @@ class PackageService extends Service {
     limit = parseInt(limit) || 1;
     let list = [];
     let product = await this.ctx.model.Product.findOne({
-      where: { modelId, status: 1 },
+      where: {
+        modelId,
+        status: 1,
+        publishStatus: {
+          $in: ['pro_status_02', 'pro_status_03']
+        }
+      },
       include: [
         {
           model: this.ctx.model.ProductPackage,
