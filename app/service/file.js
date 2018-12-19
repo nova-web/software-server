@@ -18,7 +18,7 @@ class FileController extends Controller {
     });
   }
 
-  //文件重命名 folderName 空标识上传的是图片
+  //文件重命名 folderName 表示识上传的是图片
   async rename(file, folderName = '') {
     let result = { url: '', size: '' };
 
@@ -87,7 +87,7 @@ class FileController extends Controller {
   async uploadImg(file, folderName) {
     let result = '';
     if (file) {
-      // 获取 steam
+      // 获取 stream
       const rs = fs.createReadStream(file.path);
       // 生成文件名
       const fileName = folderName + '.' + Date.now() + '' + Number.parseInt(Math.random() * 10000) + path.extname(file.name);
@@ -115,6 +115,8 @@ class FileController extends Controller {
 
   //删除文件
   delFile(url) {
+    if (!url) return false;
+
     url = path.join(this.config.baseDir, 'app/public', url);
     if (fs.existsSync(url)) {
       fs.unlinkSync(url);
