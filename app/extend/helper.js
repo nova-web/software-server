@@ -93,16 +93,16 @@ module.exports = {
   whereDate(obj) {
     if (obj.start && obj.end) {
       return {
-        $gte: new Date(obj.start),
-        $lte: new Date(obj.end)
+        $gte: new Date(obj.start + ' 00:00:00'),
+        $lte: new Date(obj.end + ' 23:59:59')
       };
     } else if (obj.start) {
       return {
-        $gte: new Date(obj.start)
+        $gte: new Date(obj.start + ' 00:00:00')
       };
     } else if (obj.end) {
       return {
-        $lte: new Date(obj.end)
+        $lte: new Date(obj.end + ' 23:59:59')
       };
     } else {
       return {
