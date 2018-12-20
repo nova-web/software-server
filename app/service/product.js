@@ -104,7 +104,7 @@ class ProductService extends Service {
 
   async updateProduct(id) {
     const extraParams = await this.ctx.service.file.parse(this.ctx.req);
-    let { name, model, type, stage, fitPro, area, dept, projectManager, productDesc } = extraParams && extraParams.fields;
+    let { name, model, type, stage, fitPro, area, dept, projectManager, productDesc, logoStatus } = extraParams && extraParams.fields;
 
     let product = await this.ctx.model.Product.findById(id);
     if (!(product && product.status == 1)) {
@@ -124,10 +124,17 @@ class ProductService extends Service {
       updatedBy: this.ctx.userId
     };
 
-    let logo = await this.ctx.service.file.rename(extraParams.files.logo);
-    if (logo.url) {
-      Object.assign(params, { logo: logo.url });
+    if (logoStatus === 'remove') {
+      Object.assign(params, { logo: '' });
       this.ctx.service.file.delFile(product.logo);
+    }
+
+    if (extraParams.files.logo) {
+      let logo = await this.ctx.service.file.rename(extraParams.files.logo);
+      if (logo.url) {
+        Object.assign(params, { logo: logo.url });
+        this.ctx.service.file.delFile(product.logo);
+      }
     }
 
     let result = await this.ctx.model.Product.update(params, { where: { id, status: 1 } });
