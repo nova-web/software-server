@@ -17,6 +17,7 @@ module.exports = appInfo => {
   };
 
   config.apihost = 'http://172.16.6.203:7002';
+  //config.apihost = 'http://www.v-eus.com/api'; //部署到线上环境时启用
 
   config.cluster = {
     listen: {
